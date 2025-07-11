@@ -10,7 +10,7 @@ import { AuthContext } from './AuthContext';
 const AuthProvider = ({children}) => {
 
  
-
+    const [userData, setUserData] = useState(null);
     const[user,setUser]=useState(null);
     const[loading,setLoading]=useState(true)
     const createUser=(email,password)=>{
@@ -34,20 +34,28 @@ const AuthProvider = ({children}) => {
         return signOut(auth);
     }
 
-    useEffect(()=>{
-        const unsubscribe=onAuthStateChanged(auth,currentUser=>{
-             setUser(currentUser)
-             setLoading(false)
-        })
-        return()=> {
-            unsubscribe();
-        }
+ useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
 
-    },[])
+      if (currentUser?.email) {
+        
+          const res = await fetch(`http://localhost:3000/users/email/${currentUser.email}`);
+          const data = await res.json();
+          setUserData(data); 
+    
+      } 
+    });
+
+    return () => unsubscribe();
+  }, []);
 
     const userInfo={
         user,
         setUser,
+         userData,     
+         setUserData,
         loading,
        createUser,
        userLogin,

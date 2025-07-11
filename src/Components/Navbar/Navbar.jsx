@@ -29,7 +29,7 @@ const Navbar = () => {
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <img src="/Image/blood logo.png" className="h-12 w-12 rounded-full" alt="redHope Logo" />
           <span className="self-center text-2xl font-semibold whitespace-nowrap text-red-600 dark:text-red-500">
-            redHope
+            RedHope
           </span>
         </Link>
 

@@ -115,23 +115,38 @@ const Register = () => {
       }
     }
 
-    createUser(email, password)
-      .then(() => {
-        updateProfile(auth.currentUser, {
-          displayName: name,
-          photoURL: avatarLink,
-        }).then(async () => {
-          await auth.currentUser.reload();
-          setUser({ ...auth.currentUser });
-          toast.success('Registration successful!', {
-            onClose: () => navigate(from, { replace: true }),
-          });
-        });
-      })
-      .catch(error => {
-        setErrorMessage(error.message);
-        toast.error(error.message);
+  createUser(email, password)
+  .then(() => {
+    updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: avatarLink,
+    }).then(async () => {
+      await auth.currentUser.reload();
+      setUser({ ...auth.currentUser });
+
+      // ✅ Save to MongoDB via Express API
+      await axios.post('http://localhost:3000/users', {
+        name,
+        email,
+        photoURL: avatarLink,
+        bloodGroup,
+        district,
+        upazila,
+        role: 'donor',  
+        status: 'active'  
       });
+
+      // ✅ Toast and redirect
+      toast.success('Registration successful!', {
+        onClose: () => navigate(from, { replace: true }),
+      });
+    });
+  })
+  .catch(error => {
+    setErrorMessage(error.message);
+    toast.error(error.message);
+  });
+
   };
 
   return (
