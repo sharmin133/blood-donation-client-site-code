@@ -15,6 +15,7 @@ import Register from './Components/Register/Register.jsx';
 import AuthProvider from './Components/context/AuthProvider.jsx';
 import DashboardLayouts from './Components/Pages/Dashboard/DashBoardLayouts.jsx';
 import Profile from './Components/Pages/Dashboard/Profile.jsx';
+import DashboardHome from './Components/Pages/Dashboard/DashboardHome.jsx';
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   path: '/dashboard',
   element: <DashboardLayouts />,
   children: [
+
+    {
+       index:true, element:<DashboardHome></DashboardHome>
+    },
     {
       path:'profile', element:<Profile></Profile>
     }

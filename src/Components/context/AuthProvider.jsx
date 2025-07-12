@@ -26,30 +26,35 @@ const AuthProvider = ({children}) => {
         return signInWithEmailAndPassword(auth,email,password)
     }
 
-
-   
-
     const signOutUser=()=>{
         setLoading(true)
         return signOut(auth);
     }
 
  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    setUser(currentUser);
+    setLoading(false);
 
-      if (currentUser?.email) {
-        
-          const res = await fetch(`http://localhost:3000/users/email/${currentUser.email}`);
-          const data = await res.json();
-          setUserData(data); 
-    
-      } 
-    });
+    if (currentUser?.email) {
+      try {
+        const res = await fetch(`http://localhost:3000/users/email/${currentUser.email}`);
 
-    return () => unsubscribe();
-  }, []);
+        if (!res.ok) {
+          console.warn("User not found in DB");
+          return;
+        }
+
+        const data = await res.json();
+        setUserData(data);
+      } catch (err) {
+        console.error('Failed to fetch user data:', err);
+      }
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
 
     const userInfo={
         user,

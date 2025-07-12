@@ -54,7 +54,7 @@ const Profile = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    mutation.mutate(formData); // email will be stripped before request
+    mutation.mutate(formData); 
   };
 
   if (isLoading) return <p>Loading...</p>;
