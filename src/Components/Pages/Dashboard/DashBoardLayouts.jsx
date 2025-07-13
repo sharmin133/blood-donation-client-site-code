@@ -106,7 +106,7 @@ const DashboardLayouts = () => {
           {role === "donor" && (
             <>
               <NavLink
-                to="/dashboard/available-requests"
+                to="/dashboard/create-donation-request"
                 className={({ isActive }) =>
                   `px-3 py-2 rounded text-sm font-medium ${
                     isActive
@@ -116,7 +116,7 @@ const DashboardLayouts = () => {
                 }
                 onClick={() => setSidebarOpen(false)}
               >
-                Available Requests
+              Create Donar Request
               </NavLink>
               <NavLink
                 to="/dashboard/my-requests"

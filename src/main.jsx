@@ -16,6 +16,7 @@ import AuthProvider from './Components/context/AuthProvider.jsx';
 import DashboardLayouts from './Components/Pages/Dashboard/DashBoardLayouts.jsx';
 import Profile from './Components/Pages/Dashboard/Profile.jsx';
 import DashboardHome from './Components/Pages/Dashboard/DashboardHome.jsx';
+import CreateDonarRequest from './Components/Pages/Dashboard/DonarAllRoute/CreateDonarRequest.jsx';
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -41,6 +42,9 @@ const router = createBrowserRouter([
     },
     {
       path:'profile', element:<Profile></Profile>
+    },
+    {
+      path:'create-donation-request', element:<CreateDonarRequest></CreateDonarRequest>
     }
     
   ]

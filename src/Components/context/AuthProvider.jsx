@@ -56,10 +56,13 @@ const AuthProvider = ({children}) => {
   return () => unsubscribe();
 }, []);
 
+ const userStatus = userData?.status || null;
+
     const userInfo={
         user,
         setUser,
-         userData,     
+         userData,
+         userStatus,     
          setUserData,
         loading,
        createUser,
