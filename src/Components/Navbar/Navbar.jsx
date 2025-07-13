@@ -151,8 +151,8 @@ const Navbar = () => {
               <img
                 key={user?.photoURL}
                 className="md:w-12 md:h-12 w-8 h-8 rounded-full border-2 border-red-500 cursor-pointer"
-                src={user?.photoURL || '/Image/default-avatar.png'}
-                alt={user?.displayName || 'User Avatar'}
+                src={user?.photoURL }
+                alt={user?.displayName}
                 title={user?.displayName}
               />
 
