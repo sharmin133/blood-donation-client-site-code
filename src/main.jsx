@@ -27,6 +27,7 @@ import AddBlogPage from './Components/Pages/Dashboard/AdminAllRoute/AddBlogPage.
 import EditBlogPage from './Components/Pages/Dashboard/AdminAllRoute/EditBlogPage.jsx';
 import VolunteerAllRequest from './Components/Pages/Dashboard/VolunteerAllRoute/VolunteerAllRequest.jsx';
 import BlogsPage from './Components/Pages/Blogs/BlogsPage.jsx';
+import BlogsDetailsPage from './Components/Pages/Blogs/BlogsDetailsPage.jsx';
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
 
       {
         path:'blogs', element: <BlogsPage></BlogsPage>
+      },
+
+      {
+        path:'blogs/:id', element: <BlogsDetailsPage></BlogsDetailsPage>
       }
     ]
   },
