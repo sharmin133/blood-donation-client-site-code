@@ -89,7 +89,7 @@ const DashboardLayouts = () => {
           {role === "volunteer" && (
             <>
               <NavLink
-                to="/dashboard/create-request"
+                to="/dashboard/all-blood-donation-request"
                 className={({ isActive }) =>
                   `px-3 py-2 rounded text-sm font-medium ${
                     isActive
@@ -99,7 +99,7 @@ const DashboardLayouts = () => {
                 }
                 onClick={() => setSidebarOpen(false)}
               >
-                Create Request
+                All Request
               </NavLink>
               <NavLink
                 to="/dashboard/my-requests"
@@ -113,6 +113,20 @@ const DashboardLayouts = () => {
                 onClick={() => setSidebarOpen(false)}
               >
                 My Requests
+              </NavLink>
+
+               <NavLink
+                to="/dashboard/content-management"
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded text-sm font-medium ${
+                    isActive
+                      ? "bg-red-500 text-white"
+                      : "text-red-700 hover:bg-red-200"
+                  }`
+                }
+                onClick={() => setSidebarOpen(false)}
+              >
+               Content Management
               </NavLink>
             </>
           )}
