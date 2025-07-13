@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 const AddBlogPage = () => {
   const editor = useRef(null);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -24,44 +25,52 @@ const AddBlogPage = () => {
     }
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+const handleSubmit = async e => {
+  e.preventDefault();
 
-    if (!formData.title || !formData.content || !formData.thumbnailFile) {
-      toast.error('Please fill in all fields.');
-      return;
-    }
+  if (!formData.title || !formData.content || !formData.thumbnailFile) {
+    toast.error('Please fill in all fields.');
+    return;
+  }
 
-    try {
-      // Upload image to imgBB
-      const imageData = new FormData();
-      imageData.append('image', formData.thumbnailFile);
+  setIsLoading(true); // ✅ Start loading immediately
 
-      const imgbbRes = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`,
-        imageData
-      );
+  try {
+    // Upload image to imgBB
+    const imageData = new FormData();
+    imageData.append('image', formData.thumbnailFile);
 
-      const thumbnailUrl = imgbbRes.data.data.display_url;
+    const imgbbRes = await axios.post(
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`,
+      imageData
+    );
 
-      // Save blog to database
-      const blogData = {
-        title: formData.title,
-        content: formData.content,
-        thumbnail: thumbnailUrl,
-        status: 'draft',
-        createdAt: new Date(),
-      };
+    const thumbnailUrl = imgbbRes.data.data.display_url;
 
-      await axios.post('http://localhost:3000/blogs', blogData);
+    // Save blog to database
+    const blogData = {
+      title: formData.title,
+      content: formData.content,
+      thumbnail: thumbnailUrl,
+      status: 'draft',
+      createdAt: new Date(),
+    };
 
-      toast.success('Blog created successfully!');
+    await axios.post('http://localhost:3000/blogs', blogData);
+
+    toast.success('Blog created successfully!');
+
+    setTimeout(() => {
       navigate('/dashboard/content-management');
-    } catch (error) {
-      console.error(error);
-      toast.error('Failed to create blog.');
-    }
-  };
+    }, 1000);
+  } catch (error) {
+    console.error(error);
+    toast.error('Failed to create blog.');
+  } finally {
+    setIsLoading(false); // ✅ Stop loading in both success or failure
+  }
+};
+
 
   return (
     <div className="max-w-4xl mx-auto p-6 my-10 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
@@ -121,15 +130,17 @@ const AddBlogPage = () => {
   }}
 />
         </div>
+          <div>
 
-        {/* Submit Button */}
-        <div className="text-center">
-          <button
-            type="submit"
-            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg"
-          >
-            Create Blog
-          </button>
+              <button
+  type="submit"
+  disabled={isLoading}
+  className={`bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg ${
+    isLoading && 'opacity-50 cursor-not-allowed'
+  }`}
+>
+  {isLoading ? "Creating..." : "Create Blog"}
+</button>
         </div>
       </form>
     </div>
