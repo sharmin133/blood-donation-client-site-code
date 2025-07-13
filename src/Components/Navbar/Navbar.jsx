@@ -78,7 +78,7 @@ const Navbar = () => {
 
             <li>
               <Link
-                to="/blog"
+                to="/blogs"
                 onClick={handleLinkClick}
                 className="block py-2 px-3 text-gray-900 dark:text-white hover:underline"
               >

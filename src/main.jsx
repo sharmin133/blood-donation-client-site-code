@@ -26,6 +26,7 @@ import ContentManagement from './Components/Pages/Dashboard/AdminAllRoute/Conten
 import AddBlogPage from './Components/Pages/Dashboard/AdminAllRoute/AddBlogPage.jsx';
 import EditBlogPage from './Components/Pages/Dashboard/AdminAllRoute/EditBlogPage.jsx';
 import VolunteerAllRequest from './Components/Pages/Dashboard/VolunteerAllRoute/VolunteerAllRequest.jsx';
+import BlogsPage from './Components/Pages/Blogs/BlogsPage.jsx';
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       },
        { path: 'login', element: <Login></Login>},
       { path: 'register', element:<Register></Register> },
+
+      {
+        path:'blogs', element: <BlogsPage></BlogsPage>
+      }
     ]
   },
 
@@ -91,6 +96,8 @@ const router = createBrowserRouter([
 {
   path:'all-blood-donation-request', element: <VolunteerAllRequest></VolunteerAllRequest>
 }
+
+
     
   ]
 }
