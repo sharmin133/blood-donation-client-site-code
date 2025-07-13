@@ -6,7 +6,7 @@ const ContentManagement = () => {
   const navigate = useNavigate();
 
   const handleAddBlog = () => {
-    navigate('/dashboard/add-blog');
+    navigate('/dashboard/content-management/add-blog');
   };
 
   return (
