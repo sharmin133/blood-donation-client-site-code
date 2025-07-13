@@ -17,6 +17,9 @@ import DashboardLayouts from './Components/Pages/Dashboard/DashBoardLayouts.jsx'
 import Profile from './Components/Pages/Dashboard/Profile.jsx';
 import DashboardHome from './Components/Pages/Dashboard/DashboardHome.jsx';
 import CreateDonarRequest from './Components/Pages/Dashboard/DonarAllRoute/CreateDonarRequest.jsx';
+import MyRequestAllDonar from './Components/Pages/Dashboard/DonarAllRoute/MyRequestAllDonar.jsx';
+import EditDonarRequest from './Components/Pages/Dashboard/DonarAllRoute/EditDonarRequest.jsx';
+import ViewDonarRequest from './Components/Pages/Dashboard/DonarAllRoute/ViewDonarRequest.jsx';
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -45,6 +48,17 @@ const router = createBrowserRouter([
     },
     {
       path:'create-donation-request', element:<CreateDonarRequest></CreateDonarRequest>
+    },
+    {
+                
+      path:'my-requests', element: <MyRequestAllDonar></MyRequestAllDonar>
+    },
+    {
+      path:'edit-donation-request/:id', element: <EditDonarRequest></EditDonarRequest>
+    },
+
+    {
+      path:'donation-request/:id', element: <ViewDonarRequest></ViewDonarRequest>
     }
     
   ]

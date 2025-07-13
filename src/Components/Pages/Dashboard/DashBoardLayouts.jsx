@@ -129,7 +129,7 @@ const DashboardLayouts = () => {
                 }
                 onClick={() => setSidebarOpen(false)}
               >
-                My Accepted Requests
+                My Requests
               </NavLink>
             </>
           )}
