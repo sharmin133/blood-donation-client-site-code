@@ -68,13 +68,25 @@ const Navbar = () => {
 
             <li>
               <Link
-                to="/donations"
+                to="/search"
                 onClick={handleLinkClick}
                 className="block py-2 px-3 text-gray-900 dark:text-white hover:underline"
               >
-                Donation Requests
+               Search
               </Link>
             </li>
+
+
+              <li>
+              <Link
+                to="/donation-requests"
+                onClick={handleLinkClick}
+                className="block py-2 px-3 text-gray-900 dark:text-white hover:underline"
+              >
+                Donation Request 
+              </Link>
+            </li>
+
 
             <li>
               <Link

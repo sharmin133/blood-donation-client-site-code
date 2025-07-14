@@ -28,6 +28,8 @@ import EditBlogPage from './Components/Pages/Dashboard/AdminAllRoute/EditBlogPag
 import VolunteerAllRequest from './Components/Pages/Dashboard/VolunteerAllRoute/VolunteerAllRequest.jsx';
 import BlogsPage from './Components/Pages/Blogs/BlogsPage.jsx';
 import BlogsDetailsPage from './Components/Pages/Blogs/BlogsDetailsPage.jsx';
+import SearchPage from './Components/Pages/Search/SearchPage.jsx';
+import DonationRequest from './Components/Pages/DonationRequests/DonationRequest.jsx';
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -39,6 +41,9 @@ const router = createBrowserRouter([
       },
        { path: 'login', element: <Login></Login>},
       { path: 'register', element:<Register></Register> },
+      {
+       path:'search', element: <SearchPage></SearchPage>
+      },
 
       {
         path:'blogs', element: <BlogsPage></BlogsPage>
@@ -46,7 +51,11 @@ const router = createBrowserRouter([
 
       {
         path:'blogs/:id', element: <BlogsDetailsPage></BlogsDetailsPage>
+      },
+      {
+        path:'donation-requests', element: <DonationRequest></DonationRequest>
       }
+
     ]
   },
 

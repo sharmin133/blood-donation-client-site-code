@@ -1,4 +1,4 @@
-import { Outlet, NavLink } from "react-router"; // ✅ Corrected import
+import { Outlet, NavLink } from "react-router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -166,7 +166,7 @@ const DashboardLayouts = () => {
 
       {/* Main Content */}
       <main className="flex-1 bg-gray-50 dark:bg-black text-black dark:text-white p-4">
-        {/* Hamburger for mobile */}
+     
         <button
           className="md:hidden mb-4 p-2 rounded bg-red-100 text-red-600 shadow"
           onClick={() => setSidebarOpen(!sidebarOpen)}
