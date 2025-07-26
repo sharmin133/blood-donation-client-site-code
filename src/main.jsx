@@ -32,6 +32,7 @@ import SearchPage from './Components/Pages/Search/SearchPage.jsx';
 import DonationRequest from './Components/Pages/DonationRequests/DonationRequest.jsx';
 import DonationRequestDetails from './Components/Pages/DonationRequests/DonationRequestDetails.jsx';
 import FundingPage from './Components/Pages/FundingPage/FundingPage.jsx';
+import Fund from './Components/Pages/FundingPage/Fund.jsx';
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -60,9 +61,14 @@ const router = createBrowserRouter([
       {
         path:'donation-requests/:id', element: <DonationRequestDetails></DonationRequestDetails>
       },
+
       {
-        path:'funding', element:<FundingPage></FundingPage>
+        path:'fund', element:<Fund></Fund>
+      },
+      {
+        path:'/fund-page', element:<FundingPage></FundingPage>
       }
+
 
     ]
   },

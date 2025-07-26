@@ -22,7 +22,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white border-b dark:bg-gray-900 fixed w-full z-50">
+    <nav className="bg-white border-b dark:bg-gray-900 sticky w-full z-50">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
 
         {/* Logo */}
@@ -98,17 +98,22 @@ const Navbar = () => {
               </Link>
             </li>
 
-            {user && (
-              <>
-                <li>
+             <li>
                   <Link
-                    to="/funding"
+                    to="/fund"
                     onClick={handleLinkClick}
                     className="block py-2 px-3 text-gray-900 dark:text-white hover:underline"
                   >
                     Funding
                   </Link>
                 </li>
+
+            {user && (
+              <>
+               
+
+                
+
                 <li>
                   <Link
                     to="/dashboard"
