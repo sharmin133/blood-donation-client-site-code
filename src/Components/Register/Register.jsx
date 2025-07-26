@@ -124,7 +124,7 @@ const Register = () => {
       await auth.currentUser.reload();
       setUser({ ...auth.currentUser });
 
-      // ✅ Save to MongoDB via Express API
+   
       await axios.post('http://localhost:3000/users', {
         name,
         email,
