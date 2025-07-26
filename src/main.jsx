@@ -33,6 +33,10 @@ import DonationRequest from './Components/Pages/DonationRequests/DonationRequest
 import DonationRequestDetails from './Components/Pages/DonationRequests/DonationRequestDetails.jsx';
 import FundingPage from './Components/Pages/FundingPage/FundingPage.jsx';
 import Fund from './Components/Pages/FundingPage/Fund.jsx';
+import FundDonation from './Components/Pages/Dashboard/AdminAllRoute/FundDonation.jsx';
+
+
+
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -99,12 +103,17 @@ const router = createBrowserRouter([
     {
       path:'donation-request/:id', element: <ViewDonarRequest></ViewDonarRequest>
     },
+    {
+      path:'users-fund-donation', element: <FundDonation></FundDonation>
+
+    },
 
     //admin 
 
     {
       path:'all-users', element:<AllUsers></AllUsers>
     },
+    
 
     {
       path:'all-requests', element:<AllDonationRequests></AllDonationRequests>
@@ -123,8 +132,7 @@ const router = createBrowserRouter([
 
 {
   path:'all-blood-donation-request', element: <VolunteerAllRequest></VolunteerAllRequest>
-}
-
+},
 
     
   ]

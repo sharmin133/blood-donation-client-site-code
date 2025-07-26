@@ -83,6 +83,22 @@ const DashboardLayouts = () => {
               >
                Content Management
               </NavLink>
+
+              <NavLink
+  to="/dashboard/users-fund-donation"
+  className={({ isActive }) =>
+    `px-3 py-2 rounded text-sm font-medium ${
+      isActive
+        ? "bg-red-500 text-white"
+        : "text-red-700 hover:bg-red-200"
+    }`
+  }
+  onClick={() => setSidebarOpen(false)}
+>
+  All Funds
+</NavLink>
+
+
             </>
           )}
 
@@ -128,6 +144,20 @@ const DashboardLayouts = () => {
               >
                Content Management
               </NavLink>
+
+              <NavLink
+  to="/dashboard/users-fund-donation"
+  className={({ isActive }) =>
+    `px-3 py-2 rounded text-sm font-medium ${
+      isActive
+        ? "bg-red-500 text-white"
+        : "text-red-700 hover:bg-red-200"
+    }`
+  }
+  onClick={() => setSidebarOpen(false)}
+>
+  All Funds
+</NavLink>
             </>
           )}
 
