@@ -98,10 +98,10 @@ const handleChange = e => {
   }
 };
   return (
-    <main className="max-w-5xl mx-auto p-6 pt-20">
+    <main className="min-h-screen max-w-5xl mx-auto p-6 pt-20">
       <h2 className="text-2xl font-bold mb-4 text-red-600">Search Donors 🔍</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1  gap-4 mb-6">
         <select
           name="bloodGroup"
           value={searchData.bloodGroup}

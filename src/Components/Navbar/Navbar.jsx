@@ -66,17 +66,6 @@ const Navbar = () => {
               </Link>
             </li>
 
-            <li>
-              <Link
-                to="/search"
-                onClick={handleLinkClick}
-                className="block py-2 px-3 text-gray-900 dark:text-white hover:underline"
-              >
-               Search
-              </Link>
-            </li>
-
-
               <li>
               <Link
                 to="/donation-requests"
@@ -107,15 +96,7 @@ const Navbar = () => {
                     Funding
                   </Link>
                 </li>
-                    <li>
-                  <Link
-                    to="/about"
-                    onClick={handleLinkClick}
-                    className="block py-2 px-3 text-gray-900 dark:text-white hover:underline"
-                  >
-                    About
-                  </Link>
-                </li>
+               
 
             {user && (
               <>
