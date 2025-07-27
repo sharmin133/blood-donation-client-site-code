@@ -34,6 +34,7 @@ import DonationRequestDetails from './Components/Pages/DonationRequests/Donation
 import FundingPage from './Components/Pages/FundingPage/FundingPage.jsx';
 import Fund from './Components/Pages/FundingPage/Fund.jsx';
 import FundDonation from './Components/Pages/Dashboard/AdminAllRoute/FundDonation.jsx';
+import FooterLinks from './Components/Footer/FooterLinks.jsx';
 
 
 
@@ -71,6 +72,9 @@ const router = createBrowserRouter([
       },
       {
         path:'/fund-page', element:<FundingPage></FundingPage>
+      },
+      {
+        path:'info/:section', element: <FooterLinks></FooterLinks>
       }
 
 
