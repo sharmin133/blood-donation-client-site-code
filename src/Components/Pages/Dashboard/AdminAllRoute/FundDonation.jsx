@@ -40,14 +40,14 @@ const FundDonation = () => {
       </h2>
 
       {/* Total Amount at Top */}
-      <div className="text-right mb-4 font-semibold text-red-700 dark:text-red-400">
+      <div className="text-right mb-4 text-2xl font-semibold ">
         Total Donated: ${(totalAmount / 100).toFixed(2)}
       </div>
 
       {/* Table */}
       <div className="overflow-x-auto rounded-lg shadow-md">
         <table className="min-w-full table-auto border border-gray-300 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white">
-          <thead className="bg-red-50 dark:bg-red-900 text-black dark:text-white">
+          <thead className="bg-red-50 dark:bg-red-700 text-black dark:text-white">
             <tr>
               <th className="p-3 border border-gray-300 dark:border-gray-700 text-left">Name</th>
               <th className="p-3 border border-gray-300 dark:border-gray-700 text-left">Amount</th>

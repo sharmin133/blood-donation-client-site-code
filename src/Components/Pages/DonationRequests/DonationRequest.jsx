@@ -20,8 +20,8 @@ const DonationRequest = () => {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto p-6 pt-20">
-      <h2 className="text-3xl font-bold text-red-600 mb-6">Pending Donation Requests</h2>
+    <div className="max-w-6xl min-h-screen mx-auto p-6 ">
+      <h2 className="text-4xl font-bold text-center text-red-600 mb-6">Pending Donation Requests</h2>
       {requests.length === 0 ? (
         <p className="text-gray-600 text-center">No pending requests found.</p>
       ) : (

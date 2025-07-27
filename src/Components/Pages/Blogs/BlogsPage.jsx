@@ -19,14 +19,17 @@ const BlogsPage = () => {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-red-600 mb-6 text-center">Published Blogs 📰</h1>
+    <div className="max-w-6xl mx-auto px-4 min-h-screen py-8">
+            <h1 className="text-3xl font-bold text-red-600 mb-6 text-center">
+        Explore Blood Donation Stories 🩸
+      </h1>
+
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {blogs.map(blog => (
           <div key={blog._id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
             <img src={blog.thumbnail} alt="thumbnail" className="rounded-md h-48 w-full object-cover mb-4" />
-            <h2 className="text-xl font-semibold text-red-700 mb-2">{blog.title}</h2>
-            <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+            <h2 className="text-xl font-semibold text-red-600 mb-2">{blog.title}</h2>
+            <p className="text-black dark:text-white  mb-4">
               {blog.content.replace(/<[^>]+>/g, '').slice(0, 100)}...
             </p>
             <Link

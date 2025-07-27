@@ -8,11 +8,11 @@ const DashboardLayouts = () => {
   const role = userData?.role;
 
   return (
-    <div className="min-h-screen md:flex">
+    <div className="min-h-screen bg-red-100 md:flex">
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-full w-64 bg-red-100 p-4 shadow-md z-40
+          fixed top-0 left-0 h-full w-64  p-4  z-40
           transform transition-transform duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0 md:static md:flex-shrink-0
@@ -20,17 +20,32 @@ const DashboardLayouts = () => {
       >
         <NavLink
   to="/dashboard"
-  className="text-2xl font-bold text-center text-red-600 mb-6 block hover:underline"
+  className="text-2xl font-bold text-center text-red-600 mb-6 block hover:underline hover:text-red-800"
   onClick={() => setSidebarOpen(false)}
 >
-  RedHope Dashboard
+Dashboard
 </NavLink>
 
         <nav className="flex flex-col space-y-2">
+
+             <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded font-bold ${
+                    isActive
+                      ? "bg-red-500 text-white"
+                      : "text-red-700 hover:bg-red-200"
+                  }`
+                }
+                onClick={() => setSidebarOpen(false)}
+              >
+                Home
+              </NavLink>
+
           <NavLink
             to="/dashboard/profile"
             className={({ isActive }) =>
-              `px-3 py-2 rounded text-sm font-medium ${
+              `px-3 py-2 rounded  font-bold ${
                 isActive
                   ? "bg-red-500 text-white"
                   : "text-red-700 hover:bg-red-200"
@@ -41,12 +56,14 @@ const DashboardLayouts = () => {
             My Profile
           </NavLink>
 
+       
+
           {role === "admin" && (
             <>
               <NavLink
                 to="/dashboard/all-users"
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded text-sm font-medium ${
+                  `px-3 py-2 rounded  font-bold ${
                     isActive
                       ? "bg-red-500 text-white"
                       : "text-red-700 hover:bg-red-200"
@@ -59,7 +76,7 @@ const DashboardLayouts = () => {
               <NavLink
                 to="/dashboard/all-requests"
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded text-sm font-medium ${
+                  `px-3 py-2 rounded  font-bold ${
                     isActive
                       ? "bg-red-500 text-white"
                       : "text-red-700 hover:bg-red-200"
@@ -73,7 +90,7 @@ const DashboardLayouts = () => {
                <NavLink
                 to="/dashboard/content-management"
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded text-sm font-medium ${
+                  `px-3 py-2 rounded  font-bold ${
                     isActive
                       ? "bg-red-500 text-white"
                       : "text-red-700 hover:bg-red-200"
@@ -87,7 +104,7 @@ const DashboardLayouts = () => {
               <NavLink
   to="/dashboard/users-fund-donation"
   className={({ isActive }) =>
-    `px-3 py-2 rounded text-sm font-medium ${
+    `px-3 py-2 rounded  font-bold ${
       isActive
         ? "bg-red-500 text-white"
         : "text-red-700 hover:bg-red-200"
@@ -107,7 +124,7 @@ const DashboardLayouts = () => {
               <NavLink
                 to="/dashboard/all-blood-donation-request"
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded text-sm font-medium ${
+                  `px-3 py-2 rounded  font-bold ${
                     isActive
                       ? "bg-red-500 text-white"
                       : "text-red-700 hover:bg-red-200"
@@ -117,24 +134,12 @@ const DashboardLayouts = () => {
               >
                 All Request
               </NavLink>
-              <NavLink
-                to="/dashboard/my-requests"
-                className={({ isActive }) =>
-                  `px-3 py-2 rounded text-sm font-medium ${
-                    isActive
-                      ? "bg-red-500 text-white"
-                      : "text-red-700 hover:bg-red-200"
-                  }`
-                }
-                onClick={() => setSidebarOpen(false)}
-              >
-                My Requests
-              </NavLink>
+             
 
                <NavLink
                 to="/dashboard/content-management"
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded text-sm font-medium ${
+                  `px-3 py-2 rounded font-bold ${
                     isActive
                       ? "bg-red-500 text-white"
                       : "text-red-700 hover:bg-red-200"
@@ -148,7 +153,7 @@ const DashboardLayouts = () => {
               <NavLink
   to="/dashboard/users-fund-donation"
   className={({ isActive }) =>
-    `px-3 py-2 rounded text-sm font-medium ${
+    `px-3 py-2 rounded  font-bold ${
       isActive
         ? "bg-red-500 text-white"
         : "text-red-700 hover:bg-red-200"
@@ -166,7 +171,7 @@ const DashboardLayouts = () => {
               <NavLink
                 to="/dashboard/create-donation-request"
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded text-sm font-medium ${
+                  `px-3 py-2 rounded  font-bold ${
                     isActive
                       ? "bg-red-500 text-white"
                       : "text-red-700 hover:bg-red-200"
@@ -179,7 +184,7 @@ const DashboardLayouts = () => {
               <NavLink
                 to="/dashboard/my-requests"
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded text-sm font-medium ${
+                  `px-3 py-2 rounded font-bold ${
                     isActive
                       ? "bg-red-500 text-white"
                       : "text-red-700 hover:bg-red-200"

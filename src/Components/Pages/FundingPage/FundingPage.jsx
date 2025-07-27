@@ -12,7 +12,7 @@ const FundingPage = () => {
 
 
   return (
-    <div className="max-w-md mx-auto p-6 pt-20">
+    <div className="max-w-md min-h-screen mx-auto p-6 pt-20">
     
 
       <Elements stripe={stripePromise}>

@@ -1,95 +1,146 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
-const AllDonationRequests= () => {
+const AllDonationRequests = () => {
   const [donationRequests, setDonationRequests] = useState([]);
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
-    axios.get('http://localhost:3000/donation-requests')
-      .then(res => setDonationRequests(res.data))
+    axios
+      .get("http://localhost:3000/donation-requests")
+      .then((res) => setDonationRequests(res.data))
       .catch(() => toast.error("Failed to load donation requests"));
+
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
   }, []);
 
-  const filteredRequests = donationRequests.filter(req => 
-    statusFilter === 'all' ? true : req.status === statusFilter
-  );
+  const handleStatusFilter = (status) => {
+    setStatusFilter(status);
+    setCurrentPage(1);
+  };
+
+  const filteredRequests = statusFilter
+    ? donationRequests.filter((req) => req.status === statusFilter)
+    : donationRequests;
+
+  const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+  const startIdx = (currentPage - 1) * itemsPerPage;
+  const paginatedRequests = filteredRequests.slice(startIdx, startIdx + itemsPerPage);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <ToastContainer position="top-center" autoClose={3000} />
-      <h2 className="text-3xl font-bold text-red-700 dark:text-red-500 mb-6 text-center">
+    <div className="container mx-auto px-4 py-10">
+      <h2
+        className="text-3xl font-bold text-red-700 dark:text-red-500 mb-6 text-center"
+        data-aos="fade-down"
+      >
         All Blood Donation Requests
       </h2>
 
-      {/* Filter buttons */}
-      <div className="mb-4 flex gap-4 justify-center">
-        {['all', 'pending', 'inprogress', 'done', 'canceled'].map(status => (
+      {/* Filter Buttons */}
+      <div
+        className="mb-6 flex gap-4 justify-center flex-wrap"
+        data-aos="zoom-in"
+      >
+        {["pending", "inprogress", "done", "canceled", ""].map((status, i) => (
           <button
-            key={status}
-            onClick={() => setStatusFilter(status)}
-            className={`px-4 py-2 rounded-lg border ${
-              statusFilter === status ? 'bg-red-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-black dark:text-white'
+            key={i}
+            className={`px-4 py-2 rounded-full font-semibold transition-all duration-300 border ${
+              statusFilter === status
+                ? "bg-red-600 text-white border-red-600"
+                : "bg-transparent text-red-600 dark:text-red-400 border-red-500 hover:bg-red-600 hover:text-white"
             }`}
+            onClick={() => handleStatusFilter(status)}
           >
-            {status.charAt(0).toUpperCase() + status.slice(1)}
+            {status === "" ? "All" : status.charAt(0).toUpperCase() + status.slice(1)}
           </button>
         ))}
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="table w-full border">
-          <thead className="bg-red-100 dark:bg-red-800 text-black dark:text-white">
-            <tr>
-              <th>#</th>
-              <th>Requester</th>
-              <th>Recipient</th>
-              <th>Location</th>
-              <th>Blood Group</th>
-              <th>Date</th>
-              <th>Status</th>
-             
+      {/* Donation Requests Table */}
+      <div className="overflow-x-auto" data-aos="fade-up">
+        <table className="min-w-full bg-white dark:bg-black shadow rounded-lg overflow-hidden">
+          <thead>
+            <tr className="bg-red-600 text-white dark:bg-red-700">
+              <th className="px-4 py-3 text-left">Name</th>
+              <th className="px-4 py-3 text-left">District</th>
+              <th className="px-4 py-3 text-left">Upazila</th>
+              <th className="px-4 py-3 text-left">Date</th>
+              <th className="px-4 py-3 text-left">Status</th>
             </tr>
           </thead>
           <tbody>
-            {filteredRequests.map((req, i) => (
-              <tr key={req._id}>
-                <td>{i + 1}</td>
-                <td>{req.requesterName}<br /><span className="text-xs">{req.requesterEmail}</span></td>
-                <td>{req.recipientName}</td>
-                <td>{req.recipientDistrict}, {req.recipientUpazila}</td>
-                <td className="font-bold">{req.bloodGroup}</td>
-                <td>{req.donationDate} <br />{req.donationTime}</td>
-                <td>
-                  <span className={`px-2 py-1 rounded text-xs ${
-                    req.status === 'pending' ? 'bg-yellow-200 text-yellow-800' :
-                    req.status === 'inprogress' ? 'bg-blue-200 text-blue-800' :
-                    req.status === 'done' ? 'bg-green-200 text-green-800' :
-                    req.status === 'canceled' ? 'bg-red-200 text-red-800' :
-                    ''
-                  }`}>
-                    {req.status}
-                  </span>
-                </td>
-                
-              </tr>
-            ))}
-            {filteredRequests.length === 0 && (
+            {paginatedRequests.length > 0 ? (
+              paginatedRequests.map((req, i) => (
+                <tr
+                  key={req._id}
+                  className="border-b dark:border-gray-800"
+                  data-aos="fade-up"
+                  data-aos-delay={i * 100}
+                >
+                  <td className="px-4 py-3">{req.requesterName}</td>
+                  <td className="px-4 py-3">{req.district}</td>
+                  <td className="px-4 py-3">{req.upazila}</td>
+                  <td className="px-4 py-3">{req.donationDate}</td>
+                  <td className="px-4 py-3 capitalize text-sm font-medium">
+                    <span
+                      className={`px-2 py-1 rounded-full ${
+                        req.status === "pending"
+                          ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                          : req.status === "inprogress"
+                          ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                          : req.status === "done"
+                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                      }`}
+                    >
+                      {req.status}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
-                <td colSpan="8" className="text-center py-4 text-gray-500">No requests found</td>
+                <td colSpan="5" className="text-center py-6 text-red-600 dark:text-red-400">
+                  No donation requests found.
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div
+          className="flex justify-center items-center mt-6 space-x-2"
+          data-aos="fade-up"
+          data-aos-delay="400"
+        >
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 py-1 rounded ${
+                currentPage === i + 1
+                  ? "bg-red-600 text-white"
+                  : "bg-gray-200 text-gray-800 hover:bg-red-500 hover:text-white dark:bg-gray-700 dark:text-white"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
-
-
 
 export default AllDonationRequests;

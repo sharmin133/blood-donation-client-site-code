@@ -57,7 +57,7 @@ const AllUsers = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold text-red-600 mb-4 text-center">All Users</h2>
+      <h2 className="text-4xl font-bold text-red-600 mb-4 text-center">All Users</h2>
 
       {/* Filter */}
       <div className="mb-4 flex gap-2">

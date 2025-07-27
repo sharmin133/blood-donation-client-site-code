@@ -58,14 +58,14 @@ const AdminDashboard = () => {
         <h1 className="text-4xl font-bold text-red-700 dark:text-red-500">
           Welcome back, {user?.displayName || 'Admin'}!
         </h1>
-        <p className="text-gray-700 dark:text-gray-300 mt-2">Role: {user?.role || 'Admin'}</p>
+        <p className="text-gray-700 dark:text-gray-300 text-2xl mt-2">Role: {user?.role || 'Admin'}</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <Card icon={<FaUsers />} title="Total Users" value={totalUsers} />
-        <Card icon={<FaDonate />} title="Total Funding (৳)" value={totalFunding.toLocaleString()} />
-        <Card icon={<FaTint />} title="Blood Donation Requests" value={totalRequests} />
+        <Card icon={<FaUsers fill='yellow' />} title="Total Users" value={totalUsers} />
+        <Card icon={<FaDonate fill='green' />} title="Total Funding ($)" value={`${(totalFunding / 100).toFixed(2)}`} />
+        <Card icon={<FaTint  />} title="Blood Donation Requests" value={totalRequests} />
       </div>
     </div>
   );

@@ -5,23 +5,24 @@ import { FaPlus, FaTrash, FaEdit, FaUpload, FaUndo } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 import { AuthContext } from '../../../context/AuthContext';
 
-
 const ContentManagement = () => {
   const [blogs, setBlogs] = useState([]);
   const [filter, setFilter] = useState('all');
   const [userRole, setUserRole] = useState('');
-  const navigate = useNavigate();
-  const { user } = useContext(AuthContext); // get logged-in user
+  const [currentPage, setCurrentPage] = useState(1);
+  const blogsPerPage = 5; 
 
-  // Fetch user role
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+
   useEffect(() => {
     const fetchUserRole = async () => {
       if (user?.email) {
         try {
           const res = await axios.get(`http://localhost:3000/users/email/${user.email}`);
-          setUserRole(res.data.role); // assuming role is stored in user document
+          setUserRole(res.data.role);
         } catch (error) {
-           console.log(error)
+          console.log(error);
           toast.error('Failed to fetch user role');
         }
       }
@@ -34,7 +35,7 @@ const ContentManagement = () => {
       const res = await axios.get('http://localhost:3000/blogs');
       setBlogs(res.data);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       toast.error('Failed to fetch blogs');
     }
   };
@@ -50,7 +51,7 @@ const ContentManagement = () => {
       toast.success('Blog deleted');
       fetchBlogs();
     } catch (err) {
-       console.log(err)
+      console.log(err);
       toast.error('Failed to delete blog');
     }
   };
@@ -63,12 +64,19 @@ const ContentManagement = () => {
       toast.success(`Blog ${newStatus}`);
       fetchBlogs();
     } catch (err) {
-       console.log(err)
+      console.log(err);
       toast.error('Failed to update status');
     }
   };
 
+  // Filtering blogs
   const filteredBlogs = filter === 'all' ? blogs : blogs.filter((blog) => blog.status === filter);
+
+  // Pagination logic
+  const indexOfLastBlog = currentPage * blogsPerPage;
+  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+  const currentBlogs = filteredBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
+  const totalPages = Math.ceil(filteredBlogs.length / blogsPerPage);
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -82,12 +90,15 @@ const ContentManagement = () => {
         </button>
       </div>
 
-      {/* Filter Dropdown */}
+      {/* Filter */}
       <div className="mb-4">
         <label className="font-medium text-gray-700 dark:text-white mr-2">Filter by status:</label>
         <select
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+          onChange={(e) => {
+            setFilter(e.target.value);
+            setCurrentPage(1); // reset to first page on filter change
+          }}
           className="select select-bordered"
         >
           <option value="all">All</option>
@@ -96,12 +107,12 @@ const ContentManagement = () => {
         </select>
       </div>
 
-      {/* Blog Table */}
+      {/* Table */}
       <div className="overflow-x-auto">
         <table className="table table-zebra w-full">
           <thead>
-            <tr className="text-red-700 dark:text-red-400">
-              <th>Thumbnail</th>
+            <tr className="bg-red-100 dark:bg-red-700 text-black dark:text-white">
+              <th>Image</th>
               <th>Title</th>
               <th>Status</th>
               <th>Created At</th>
@@ -109,7 +120,7 @@ const ContentManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredBlogs.map((blog) => (
+            {currentBlogs.map((blog) => (
               <tr key={blog._id}>
                 <td>
                   <img src={blog.thumbnail} alt="thumb" className="w-16 h-16 object-cover rounded" />
@@ -122,7 +133,6 @@ const ContentManagement = () => {
                 </td>
                 <td>{new Date(blog.createdAt).toLocaleDateString()}</td>
                 <td className="flex gap-2">
-                  {/* Publish/Unpublish only for Admin */}
                   {userRole === 'admin' && (
                     <button
                       onClick={() => handleStatusToggle(blog._id, blog.status)}
@@ -131,14 +141,12 @@ const ContentManagement = () => {
                       {blog.status === 'draft' ? <FaUpload /> : <FaUndo />}
                     </button>
                   )}
-                  {/* Edit available for all */}
                   <button
                     onClick={() => navigate(`/dashboard/content-management/edit-blog/${blog._id}`)}
                     className="btn btn-sm btn-info"
                   >
                     <FaEdit />
                   </button>
-                  {/* Delete only for Admin */}
                   {userRole === 'admin' && (
                     <button
                       onClick={() => handleDelete(blog._id)}
@@ -150,8 +158,42 @@ const ContentManagement = () => {
                 </td>
               </tr>
             ))}
+            {currentBlogs.length === 0 && (
+              <tr>
+                <td colSpan="5" className="text-center py-6 text-gray-500">No blogs found.</td>
+              </tr>
+            )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-6 space-x-2">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="btn btn-sm"
+        >
+          Previous
+        </button>
+
+        {[...Array(totalPages)].map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setCurrentPage(idx + 1)}
+            className={`btn btn-sm ${currentPage === idx + 1 ? 'btn-primary' : 'btn-outline'}`}
+          >
+            {idx + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="btn btn-sm"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

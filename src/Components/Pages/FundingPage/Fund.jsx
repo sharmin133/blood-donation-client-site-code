@@ -40,17 +40,25 @@ const Fund = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 min-h-screen">
+    <div className="max-w-5xl mx-auto p-4 min-h-screen">
       <div className="flex justify-between mb-4">
-        <h2 className="text-2xl font-bold text-red-700">Give Fund</h2>
-        <button onClick={handleFundClick} className="btn btn-primary">
-          Fund
+         <div className="text-center mb-6">
+        <h1 className="text-3xl md:text-4xl font-extrabold  mb-4">
+          Support Life With Your Contribution
+        </h1>
+        <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+          Your generous donation helps us provide support and resources to those in need. 
+          Every contribution matters and makes a difference.
+        </p>
+      </div>
+        <button onClick={handleFundClick} className="btn rounded-2xl p-6 text-2xl bg-red-600 hover:bg-red-800">
+         Give Fund Now
         </button>
       </div>
 
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
-          <tr className="bg-gray-100">
+          <tr className="">
             <th className="border border-gray-300 p-2 text-left">Name</th>
             <th className="border border-gray-300 p-2 text-left">Amount</th>
             <th className="border border-gray-300 p-2 text-left">Date</th>

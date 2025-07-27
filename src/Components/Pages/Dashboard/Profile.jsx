@@ -64,9 +64,9 @@ const Profile = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl text-red-500 font-semibold">My Profile</h2>
         {!editable ? (
-          <button onClick={() => setEditable(true)} className="btn btn-primary">Edit</button>
+          <button onClick={() => setEditable(true)} className="btn btn-primary bg-blue-600 ">Edit</button>
         ) : (
-          <button onClick={handleSubmit} className="btn btn-success">Save</button>
+          <button onClick={handleSubmit} className="btn btn-success bg-green-600">Save</button>
         )}
       </div>
       <form className="space-y-4">

@@ -124,8 +124,8 @@ const CheckoutForm = () => {
 
         <button
           type='submit'
-          disabled={!stripe || !amount}
-          className='btn btn-primary w-full'
+          disabled={!stripe }
+          className='btn btn-primary bg-red-600 text-2xl w-full'
         >
           Pay
         </button>

@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
 const DonorDashboard = () => {
-  const { userData } = useContext(AuthContext);
+  const {user, userData } = useContext(AuthContext);
   const [recentRequests, setRecentRequests] = useState([]);
   const navigate = useNavigate();
 
@@ -59,9 +59,10 @@ const DonorDashboard = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold text-red-600 text-center mb-6">
+      <h2 className="text-4xl font-bold text-red-600 text-center mb-6">
         Welcome, {userData?.name}!
       </h2>
+      <p className="text-gray-700 dark:text-gray-300 text-2xl mt-2">Role: {user?.role || 'Admin'}</p>
 
       {recentRequests.length > 0 && (
         <div>
