@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router'; // ✅ Corrected import
+import { Link, useLocation, useNavigate } from 'react-router';
 import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,6 +7,8 @@ import { updateProfile } from 'firebase/auth';
 import { AuthContext } from '../context/AuthContext';
 import { auth } from '../../Firebase/.firebase.init';
 import axios from 'axios';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
@@ -26,6 +28,10 @@ const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || '/';
+
+  useEffect(() => {
+    AOS.init({ duration: 800, once: true });
+  }, []);
 
   useEffect(() => {
     fetch('/districtData.json')
@@ -109,81 +115,84 @@ const Register = () => {
         );
         avatarLink = res.data.data.display_url;
       } catch (err) {
-        console.log(err)
+        console.log(err);
         toast.error('Failed to upload avatar.');
         return;
       }
     }
 
-  createUser(email, password)
-  .then(() => {
-    updateProfile(auth.currentUser, {
-      displayName: name,
-      photoURL: avatarLink,
-    }).then(async () => {
-      await auth.currentUser.reload();
-      setUser({ ...auth.currentUser });
+    createUser(email, password)
+      .then(() => {
+        updateProfile(auth.currentUser, {
+          displayName: name,
+          photoURL: avatarLink,
+        }).then(async () => {
+          await auth.currentUser.reload();
+          setUser({ ...auth.currentUser });
 
-   
-      await axios.post('http://localhost:3000/users', {
-        name,
-        email,
-        photoURL: avatarLink,
-        bloodGroup,
-        district,
-        upazila,
-        role: 'donor',  
-        status: 'active'  
+          await axios.post('http://localhost:3000/users', {
+            name,
+            email,
+            photoURL: avatarLink,
+            bloodGroup,
+            district,
+            upazila,
+            role: 'donor',
+            status: 'active',
+          });
+
+          toast.success('Registration successful!', {
+            onClose: () => navigate(from, { replace: true }),
+          });
+        });
+      })
+      .catch(error => {
+        setErrorMessage(error.message);
+        toast.error(error.message);
       });
-
-      // ✅ Toast and redirect
-      toast.success('Registration successful!', {
-        onClose: () => navigate(from, { replace: true }),
-      });
-    });
-  })
-  .catch(error => {
-    setErrorMessage(error.message);
-    toast.error(error.message);
-  });
-
   };
 
   return (
     <div className="bg-white dark:bg-black py-10 min-h-screen flex items-center justify-center px-4">
       <ToastContainer position="top-center" autoClose={3000} />
-      <div className="card mx-auto w-full max-w-md shadow-xl rounded-xl bg-white dark:bg-black p-8 border-4 border-red-600">
-        <h1 className="text-4xl font-bold text-red-700 dark:text-red-500 mb-6 text-center">Sign Up</h1>
+      <div
+        className="card mx-auto w-full max-w-md shadow-xl rounded-xl bg-white dark:bg-black p-8 border-1 border-red-600"
+        data-aos="fade-up"
+      >
+        <h1 className="text-4xl font-bold text-red-700 dark:text-red-500 mb-6 text-center" data-aos="fade-down">
+          Sign Up
+        </h1>
         <form onSubmit={handleRegister} className="space-y-4">
-          {/* Name */}
-          <div>
+          <div data-aos="fade-up" data-aos-delay="100">
             <label className="block text-sm font-semibold text-black dark:text-white">Name</label>
-            <input type="text" name="name" className="input input-bordered w-full" required />
+            <input type="text" name="name" placeholder="Name" className="input input-bordered w-full" required />
           </div>
 
-          {/* Email */}
-          <div>
+          <div data-aos="fade-up" data-aos-delay="150">
             <label className="block text-sm font-semibold text-black dark:text-white">Email</label>
-            <input type="email" name="email" className="input input-bordered w-full" required />
+            <input type="email" placeholder="Email" name="email" className="input input-bordered w-full" required />
           </div>
 
-          {/* Avatar upload */}
-          <div>
+          <div data-aos="fade-up" data-aos-delay="200">
             <label className="block text-sm font-semibold text-black dark:text-white">Photo</label>
-            <input  type="file" accept="image/*" name="avatar" className="mb-2 w-full" />
+            <input type="file" accept="image/*" name="avatar" className="input input-bordered w-full" />
           </div>
 
-          {/* Blood Group */}
-          <div>
+          <div data-aos="fade-up" data-aos-delay="250">
             <label className="block text-sm font-semibold text-black dark:text-white">Blood Group</label>
             <select name="bloodGroup" className="input input-bordered w-full" required defaultValue="">
-              <option value="" disabled>Select your blood group</option>
-              {BLOOD_GROUPS.map(bg => <option key={bg} value={bg}>{bg}</option>)}
+              <option value="" disabled>
+                Select your blood group
+              </option>
+              {BLOOD_GROUPS.map(bg => (
+                <option key={bg} value={bg}>
+                  {bg}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* District */}
-          <div>
+          <div data-aos="fade-up" data-aos-delay="300">
             <label className="block text-sm font-semibold text-black dark:text-white">District</label>
             <select
               name="district"
@@ -193,12 +202,15 @@ const Register = () => {
               required
             >
               <option value="">Select district</option>
-              {Object.keys(districtsData).map(d => <option key={d} value={d}>{d}</option>)}
+              {Object.keys(districtsData).map(d => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* Upazila */}
-          <div>
+          <div data-aos="fade-up" data-aos-delay="350">
             <label className="block text-sm font-semibold text-black dark:text-white">Upazila</label>
             <select
               name="upazila"
@@ -209,12 +221,15 @@ const Register = () => {
               disabled={!selectedDistrict}
             >
               <option value="">Select upazila</option>
-              {upazilas.map(u => <option key={u} value={u}>{u}</option>)}
+              {upazilas.map(u => (
+                <option key={u} value={u}>
+                  {u}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* Password */}
-          <div className="relative">
+          <div className="relative" data-aos="fade-up" data-aos-delay="400">
             <label className="block text-sm font-semibold text-black dark:text-white">Password</label>
             <input
               type={showPassword ? 'text' : 'password'}
@@ -231,8 +246,7 @@ const Register = () => {
             </button>
           </div>
 
-          {/* Confirm Password */}
-          <div className="relative">
+          <div className="relative" data-aos="fade-up" data-aos-delay="450">
             <label className="block text-sm font-semibold text-black dark:text-white">Confirm Password</label>
             <input
               type={showConfirmPassword ? 'text' : 'password'}
@@ -249,7 +263,12 @@ const Register = () => {
             </button>
           </div>
 
-          <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-lg py-2">
+          <button
+            type="submit"
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-lg py-2"
+            data-aos="zoom-in"
+            data-aos-delay="500"
+          >
             Sign Up
           </button>
         </form>
@@ -258,7 +277,10 @@ const Register = () => {
         {successMessage && <p className="text-green-600 mt-4 text-center">{successMessage}</p>}
 
         <p className="mt-6 text-center text-black dark:text-white">
-          Already have an account? <Link className="text-red-600 underline hover:text-red-800" to="/login">Login</Link>
+          Already have an account?{' '}
+          <Link className="text-red-600 underline hover:text-red-800" to="/login">
+            Login
+          </Link>
         </p>
       </div>
     </div>
@@ -266,5 +288,3 @@ const Register = () => {
 };
 
 export default Register;
-
-
