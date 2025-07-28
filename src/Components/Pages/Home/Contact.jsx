@@ -32,7 +32,7 @@ const Contact = () => {
 
   return (
     <section id="contact" className="py-20 px-4 md:px-10 bg-white dark:bg-black text-gray-800 dark:text-gray-200">
-      <h2 className="text-4xl md:text-5xl font-bold text-red-600 mb-3 text-center">Contact Us</h2>
+      <h2 className="text-4xl md:text-4xl font-bold  mb-3 text-center">Contact Us</h2>
       <motion.div
         initial={{ width: 0 }}
         whileInView={{ width: "6rem" }}
@@ -49,7 +49,7 @@ const Contact = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
         viewport={{ once: true }}
-        className="max-w-xl mx-auto bg-white dark:bg-gray-900 shadow-md p-6 rounded-xl"
+        className="max-w-3xl mx-auto bg-white dark:bg-gray-900 shadow-md p-6 rounded-xl"
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <input
@@ -99,7 +99,7 @@ const Contact = () => {
 
       <div className="mt-12 text-center text-gray-700 dark:text-gray-300">
         <p className="text-lg font-medium">
-          📞 Contact Number: <span className="text-red-600 font-semibold">+880 1234-567890</span>
+          📞 Contact Number: <span className="text-red-600 font-semibold">+880 1234-57890</span>
         </p>
         <p className="mt-2 text-lg font-medium">
           📍 Address: <span className="text-gray-800 dark:text-gray-100">123 Blood Bank Road, Dhaka, Bangladesh</span>

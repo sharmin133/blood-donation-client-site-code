@@ -14,7 +14,7 @@ const PrivateRoute = ({children}) => {
  }
     if(!user){
 
-        if (location.pathname === '/addRoommate') {
+        if (location.pathname === '/fund') {
       return <Navigate to="/login" state={{ from: location }} replace />;
     } else{
         return <Navigate state={location?.pathname} to='/'></Navigate>
@@ -26,3 +26,5 @@ const PrivateRoute = ({children}) => {
 };
 
 export default PrivateRoute;
+
+

@@ -3,12 +3,12 @@ import { Link } from 'react-router';
 
 const Footer = () => {
     return (
-     <footer className="bg-white rounded-lg shadow-sm dark:bg-gray-900 m-4">
+     <footer className="bg-white  shadow-sm dark:bg-gray-900 ">
   <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
     <div className="sm:flex sm:items-center sm:justify-between">
       <a href="" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
         <img src="/Image/blood logo.png" className="h-8 rounded-full" alt="" />
-        <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">RedHope</span>
+        <span className="self-center text-2xl font-semibold whitespace-nowrap text-red-500">RedHope</span>
       </a>
     <ul className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 mb-10">
         <li><Link to="/info/about" className="hover:underline">About</Link></li>

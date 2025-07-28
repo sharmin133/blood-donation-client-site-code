@@ -87,8 +87,8 @@ const AllDonationRequests = () => {
                 >
                   <td className="px-4 py-3">{req.requesterName}</td>
                   <td className="px-4 py-3">{req.district}</td>
-                  <td className="px-4 py-3">{req.upazila}</td>
-                  <td className="px-4 py-3">{req.donationDate}</td>
+                 <td className="px-4 py-3">{req.recipientDistrict}</td>
+        <td className="px-4 py-3">{req.recipientUpazila}</td>
                   <td className="px-4 py-3 capitalize text-sm font-medium">
                     <span
                       className={`px-2 py-1 rounded-full ${

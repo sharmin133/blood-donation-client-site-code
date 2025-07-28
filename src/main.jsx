@@ -35,6 +35,7 @@ import FundingPage from './Components/Pages/FundingPage/FundingPage.jsx';
 import Fund from './Components/Pages/FundingPage/Fund.jsx';
 import FundDonation from './Components/Pages/Dashboard/AdminAllRoute/FundDonation.jsx';
 import FooterLinks from './Components/Footer/FooterLinks.jsx';
+import PrivateRoute from './Components/PrivateRoute/PrivateRoute.jsx';
 
 
 
@@ -64,14 +65,14 @@ const router = createBrowserRouter([
         path:'donation-requests', element: <DonationRequest></DonationRequest>
       },
       {
-        path:'donation-requests/:id', element: <DonationRequestDetails></DonationRequestDetails>
+        path:'donation-requests/:id', element: <PrivateRoute><DonationRequestDetails></DonationRequestDetails></PrivateRoute>
       },
 
       {
-        path:'fund', element:<Fund></Fund>
+        path:'fund', element: <PrivateRoute><Fund></Fund></PrivateRoute>
       },
       {
-        path:'/fund-page', element:<FundingPage></FundingPage>
+        path:'/fund-page', element: <PrivateRoute> <FundingPage></FundingPage></PrivateRoute>
       },
       {
         path:'info/:section', element: <FooterLinks></FooterLinks>

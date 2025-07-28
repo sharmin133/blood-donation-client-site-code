@@ -6,7 +6,7 @@ const AllUsers = () => {
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 10;
+  const usersPerPage = 5;
 
   const fetchUsers = async () => {
     try {
@@ -94,23 +94,65 @@ const AllUsers = () => {
                 <td className="capitalize">{user.role}</td>
                 <td className="capitalize">{user.status}</td>
                 <td>
-                  <div className="dropdown dropdown-left">
-                    <label tabIndex={0} className="btn btn-xs btn-outline">•••</label>
-                    <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-40">
-                      {user.status === 'active' ? (
-                        <li><button onClick={() => handleStatusToggle(user._id, user.status)}>Block</button></li>
-                      ) : (
-                        <li><button onClick={() => handleStatusToggle(user._id, user.status)}>Unblock</button></li>
-                      )}
-                      {user.role !== 'volunteer' && (
-                        <li><button onClick={() => handleRoleChange(user._id, 'volunteer')}>Make Volunteer</button></li>
-                      )}
-                      {user.role !== 'admin' && (
-                        <li><button onClick={() => handleRoleChange(user._id, 'admin')}>Make Admin</button></li>
-                      )}
-                    </ul>
-                  </div>
-                </td>
+  <div className="dropdown dropdown-left">
+    <div tabIndex={0} role="button" className="btn btn-xs btn-outline">
+      •••
+    </div>
+    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-40">
+      {user.status === 'active' ? (
+        <li>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              handleStatusToggle(user._id, user.status);
+            }}
+          >
+            Block
+          </button>
+        </li>
+      ) : (
+        <li>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              handleStatusToggle(user._id, user.status);
+            }}
+          >
+            Unblock
+          </button>
+        </li>
+      )}
+      {user.role !== 'volunteer' && (
+        <li>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              handleRoleChange(user._id, 'volunteer');
+            }}
+          >
+            Make Volunteer
+          </button>
+        </li>
+      )}
+      {user.role !== 'admin' && (
+        <li>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              handleRoleChange(user._id, 'admin');
+            }}
+          >
+            Make Admin
+          </button>
+        </li>
+      )}
+    </ul>
+  </div>
+</td>
               </tr>
             ))}
           </tbody>

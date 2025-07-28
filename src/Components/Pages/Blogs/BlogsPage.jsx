@@ -20,7 +20,7 @@ const BlogsPage = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 min-h-screen py-8">
-            <h1 className="text-3xl font-bold text-red-600 mb-6 text-center">
+            <h1 className="text-3xl font-bold  mb-6 text-center">
         Explore Blood Donation Stories 🩸
       </h1>
 

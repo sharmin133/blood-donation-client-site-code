@@ -5,22 +5,23 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
+
 const DonorDashboard = () => {
   const {user, userData } = useContext(AuthContext);
   const [recentRequests, setRecentRequests] = useState([]);
   const navigate = useNavigate();
 
+
   useEffect(() => {
     if (userData?.email) {
-      axios
-        .get(`http://localhost:3000/donation-requests/requester/${userData.email}`)
-        .then(res => {
-          const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-          setRecentRequests(sorted.slice(0, 3));
-        })
-        .catch(err => console.error(err));
-    }
-  }, [userData]);
+    axios.get(`/donation-requests/requester/${userData.email}`)
+      .then(res => {
+        const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setRecentRequests(sorted.slice(0, 3));
+      })
+      .catch(err => console.error(err));
+  }
+}, [userData]);
 
  const handleDelete = async (id) => {
   const result = await Swal.fire({
@@ -62,7 +63,7 @@ const DonorDashboard = () => {
       <h2 className="text-4xl font-bold text-red-600 text-center mb-6">
         Welcome, {userData?.name}!
       </h2>
-      <p className="text-gray-700 dark:text-gray-300 text-2xl mt-2">Role: {user?.role || 'Admin'}</p>
+      <p className="text-gray-700 dark:text-gray-300 text-2xl mt-2 text-center">Role: {user?.role || 'Donar'}</p>
 
       {recentRequests.length > 0 && (
         <div>
