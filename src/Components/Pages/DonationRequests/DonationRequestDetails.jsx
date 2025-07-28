@@ -19,14 +19,14 @@ const DonationRequestDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/donation-requests/${id}`)
+      .get(`https://blood-donation-vert.vercel.app/donation-requests/${id}`)
       .then(res => setRequest(res.data))
       .catch(err => console.error('Failed to load request details:', err));
   }, [id]);
 
   const handleDonate = async () => {
     try {
-      await axios.patch(`http://localhost:3000/donation-requests/${id}`, {
+      await axios.patch(`https://blood-donation-vert.vercel.app/donation-requests/${id}`, {
         status: 'inprogress',
         donorName: user.displayName,
         donorEmail: user.email,

@@ -14,7 +14,7 @@ const MyRequestAllDonar = () => {
   useEffect(() => {
     if (user?.email) {
       axios
-        .get(`http://localhost:3000/donation-requests/requester/${user.email}`)
+        .get(`https://blood-donation-vert.vercel.app/donation-requests/requester/${user.email}`)
         .then(res => setRequests(res.data))
         .catch(err => console.error(err));
     }

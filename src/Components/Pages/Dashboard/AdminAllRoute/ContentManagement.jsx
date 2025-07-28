@@ -19,7 +19,7 @@ const ContentManagement = () => {
     const fetchUserRole = async () => {
       if (user?.email) {
         try {
-          const res = await axios.get(`http://localhost:3000/users/email/${user.email}`);
+          const res = await axios.get(`https://blood-donation-vert.vercel.app/users/email/${user.email}`);
           setUserRole(res.data.role);
         } catch (error) {
           console.log(error);
@@ -32,7 +32,7 @@ const ContentManagement = () => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/blogs');
+      const res = await axios.get('https://blood-donation-vert.vercel.app/blogs');
       setBlogs(res.data);
     } catch (err) {
       console.log(err);
@@ -47,7 +47,7 @@ const ContentManagement = () => {
   const handleDelete = async (id) => {
     if (userRole !== 'admin') return;
     try {
-      await axios.delete(`http://localhost:3000/blogs/${id}`);
+      await axios.delete(`https://blood-donation-vert.vercel.app/blogs/${id}`);
       toast.success('Blog deleted');
       fetchBlogs();
     } catch (err) {
@@ -60,7 +60,7 @@ const ContentManagement = () => {
     if (userRole !== 'admin') return;
     const newStatus = currentStatus === 'draft' ? 'published' : 'draft';
     try {
-      await axios.patch(`http://localhost:3000/blogs/${id}`, { status: newStatus });
+      await axios.patch(`https://blood-donation-vert.vercel.app/blogs/${id}`, { status: newStatus });
       toast.success(`Blog ${newStatus}`);
       fetchBlogs();
     } catch (err) {

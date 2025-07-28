@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import React, { use, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { AuthContext } from '../../context/AuthContext';
 
 const Fund = () => {
   const navigate = useNavigate();
   const [funds, setFunds] = useState([]);
-  const [loading, setLoading] = useState(true);
 
+const{user}=use(AuthContext)
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -14,17 +16,20 @@ const Fund = () => {
     navigate('/fund-page');
   };
 
-  useEffect(() => {
-    fetch('http://localhost:3000/funds')
-      .then((res) => res.json())
-      .then((data) => {
-        setFunds(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+useEffect(() => {
+    if (user?.uid) {
+      axios
+        .get(`https://blood-donation-vert.vercel.app/funds/by-user?userId=${user.uid}`)
+        .then((res) => {
+          setFunds(res.data);
+        })
+        .catch((err) => {
+          console.error("❌ Error fetching funds:", err);
+        });
+    }
+  }, [user?.uid]);
 
-  if (loading) return <p>Loading funds...</p>;
+
 
   // Calculate pagination
   const totalPages = Math.ceil(funds.length / itemsPerPage);

@@ -8,7 +8,7 @@ const BlogsPage = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/blogs');
+        const res = await axios.get('https://blood-donation-vert.vercel.app/blogs');
         const publishedBlogs = res.data.filter(blog => blog.status === 'published');
         setBlogs(publishedBlogs);
       } catch (error) {

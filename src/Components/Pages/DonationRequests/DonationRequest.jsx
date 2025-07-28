@@ -11,7 +11,7 @@ const DonationRequest = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/donation-requests');
+        const res = await axios.get('https://blood-donation-vert.vercel.app/donation-requests');
         const pending = res.data.filter(req => req.status === 'pending');
         setRequests(pending);
       } catch (err) {

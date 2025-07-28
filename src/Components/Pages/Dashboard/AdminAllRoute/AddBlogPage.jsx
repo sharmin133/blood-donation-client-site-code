@@ -56,7 +56,7 @@ const handleSubmit = async e => {
       createdAt: new Date(),
     };
 
-    await axios.post('http://localhost:3000/blogs', blogData);
+    await axios.post('https://blood-donation-vert.vercel.app/blogs', blogData);
 
     toast.success('Blog created successfully!');
 

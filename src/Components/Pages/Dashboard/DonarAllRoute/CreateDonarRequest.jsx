@@ -87,7 +87,7 @@ const CreateDonationRequest = () => {
     }
 
     try {
-      await axios.post('http://localhost:3000/donation-requests', {
+      await axios.post('https://blood-donation-vert.vercel.app/donation-requests', {
         requesterName: user.displayName,
         requesterEmail: user.email,
         recipientName,

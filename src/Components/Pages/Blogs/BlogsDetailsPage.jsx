@@ -10,7 +10,7 @@ const BlogsDetailsPage = () => {
     // Fetch blog by ID
     const fetchBlog = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/blogs/${id}`);
+        const res = await axios.get(`https://blood-donation-vert.vercel.app/blogs/${id}`);
         // Check if it's published
         if (res.data.status === 'published') {
           setBlog(res.data);

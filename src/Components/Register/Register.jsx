@@ -130,7 +130,7 @@ const Register = () => {
           await auth.currentUser.reload();
           setUser({ ...auth.currentUser });
 
-          await axios.post('http://localhost:3000/users', {
+          await axios.post('https://blood-donation-vert.vercel.app/users', {
             name,
             email,
             photoURL: avatarLink,

@@ -12,7 +12,7 @@ const AllDonationRequests = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/donation-requests")
+      .get("https://blood-donation-vert.vercel.app/donation-requests")
       .then((res) => setDonationRequests(res.data))
       .catch(() => toast.error("Failed to load donation requests"));
 

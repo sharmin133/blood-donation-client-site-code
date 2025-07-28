@@ -9,7 +9,7 @@ const ViewDonarRequest = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/donation-requests/${id}`)
+    axios.get(`https://blood-donation-vert.vercel.app/donation-requests/${id}`)
       .then(res => {
         setData(res.data);
       })

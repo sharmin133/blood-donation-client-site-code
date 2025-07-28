@@ -30,7 +30,7 @@ const EditDonarRequest = () => {
 
   // Fetch existing request
   useEffect(() => {
-    axios.get(`http://localhost:3000/donation-requests/${id}`)
+    axios.get(`https://blood-donation-vert.vercel.app/donation-requests/${id}`)
       .then(res => {
         const data = res.data;
         setFormData({
@@ -91,7 +91,7 @@ const EditDonarRequest = () => {
   const handleUpdate = async e => {
     e.preventDefault();
     try {
-     await axios.patch(`http://localhost:3000/donation-requests/${id}`, formData);
+     await axios.patch(`https://blood-donation-vert.vercel.app/donation-requests/${id}`, formData);
       toast.success('Donation request updated successfully!');
       navigate('/dashboard');
     } catch (err) {

@@ -42,7 +42,7 @@ const CheckoutForm = () => {
     };
 
     // Call backend to create payment intent
-    const res = await fetch('http://localhost:3000/create-payment', {
+    const res = await fetch('https://blood-donation-vert.vercel.app/create-payment', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ const CheckoutForm = () => {
   console.log('Payment Successful');
 
   // ✅ Save the fund info in your backend
-  await fetch('http://localhost:3000/save-fund', {
+  await fetch('https://blood-donation-vert.vercel.app/save-fund', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

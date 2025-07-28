@@ -38,7 +38,7 @@ const AuthProvider = ({children}) => {
 
     if (currentUser?.email) {
       try {
-        const res = await fetch(`http://localhost:3000/users/email/${currentUser.email}`);
+        const res = await fetch(`https://blood-donation-vert.vercel.app/users/email/${currentUser.email}`);
 
         if (!res.ok) {
           console.warn("User not found in DB");

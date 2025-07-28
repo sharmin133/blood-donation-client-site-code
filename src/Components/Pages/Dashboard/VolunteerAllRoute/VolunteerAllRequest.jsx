@@ -10,7 +10,7 @@ const VolunteerAllRequest = () => {
 
   const fetchRequests = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/donation-requests');
+      const res = await axios.get('https://blood-donation-vert.vercel.app/donation-requests');
       setRequests(res.data);
     } catch (error) {
       console.log(error);
@@ -24,7 +24,7 @@ const VolunteerAllRequest = () => {
 
   const handleStatusChange = async (id, status) => {
     try {
-      await axios.patch(`http://localhost:3000/donation-requests/${id}`, { status });
+      await axios.patch(`https://blood-donation-vert.vercel.app/donation-requests/${id}`, { status });
       toast.success('Status updated');
       fetchRequests();
     } catch (err) {

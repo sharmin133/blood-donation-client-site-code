@@ -12,7 +12,7 @@ const Profile = () => {
   const { data: userData, isLoading } = useQuery({
     queryKey: ['userProfile'],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:3000/users`);
+      const res = await axios.get(`https://blood-donation-vert.vercel.app/users`);
       return res.data.find(u => u.email === user?.email);
     },
     enabled: !!user?.email,
@@ -30,7 +30,7 @@ const Profile = () => {
     delete updateFields._id;
     delete updateFields.email;  // keep email read-only
 
-    return axios.put(`http://localhost:3000/users/${userId}`, updateFields);
+    return axios.put(`https://blood-donation-vert.vercel.app/users/${userId}`, updateFields);
   },
   onSuccess: () => {
     queryClient.invalidateQueries(['userProfile']);

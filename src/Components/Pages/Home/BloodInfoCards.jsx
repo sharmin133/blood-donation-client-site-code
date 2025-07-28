@@ -1,112 +1,106 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FaTint, FaSyringe, FaHeartbeat, FaHandsHelping } from 'react-icons/fa';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const BloodInfoCards = () => {
   const [selectedCard, setSelectedCard] = useState(null);
 
-  useEffect(() => {
-    AOS.init({ duration: 800 });
-  }, []);
-
-  const cardData = {
+  const modalContent = {
     types: {
       title: 'About Blood Types',
-      content: 'There are more than 8 blood types, including rare ones like AB-. Understanding compatibility helps save lives.',
-      icon: <FaTint />,
-      iconColor: 'text-blue-600',
+      content: `There are more than 8 known blood types based on the ABO and Rh systems. 
+Type O-negative is the universal donor, while AB-positive is the universal recipient. Knowing your blood type ensures compatibility and safety during blood transfusions. Blood type inheritance is also determined genetically.
+
+In emergency cases, hospitals often rely on O-negative blood because it can be given to almost anyone. However, only about 7% of the population has it. Therefore, donors of rare blood types are always in high demand.`
     },
     components: {
       title: 'About Blood Components',
-      content: 'Blood can be separated into red cells, plasma, and platelets—each with specific life-saving uses.',
-      icon: <FaSyringe />,
-      iconColor: 'text-green-600',
+      content: `Blood contains four key components: red blood cells, white blood cells, platelets, and plasma. Each plays a critical role in patient care. For example, plasma contains clotting factors and proteins that are vital for burn victims and those with liver disease.
+
+Component donation (like platelet or plasma donation) allows specific help for patients and is often used for cancer treatment, surgeries, and trauma care. This targeted donation helps medical teams treat patients more effectively.`
     },
     eligibility: {
       title: 'Donor Eligibility',
-      content: 'Healthy individuals aged 18-65 and weighing 50kg+ can usually donate. Ensure proper rest and nutrition before donation.',
-      icon: <FaHeartbeat />,
-      iconColor: 'text-pink-600',
+      content: `To donate blood, you must generally be between 18–65 years old, in good health, and meet a minimum weight requirement (typically 50 kg/110 lbs). You must not have had any recent infections, surgeries, or high-risk activities.
+
+Before each donation, a mini health screening checks your hemoglobin, pulse, and blood pressure. If you're unsure, consult your local blood donation center. Remember, eligibility helps ensure both donor and recipient safety.`
     },
     process: {
-      title: 'Donation Process',
-      content: 'The donation process includes registration, a health check, and donation. It typically takes 30–45 minutes.',
-      icon: <FaHandsHelping />,
-      iconColor: 'text-yellow-600',
-    },
+      title: 'The Blood Donation Process',
+      content: `Donating blood is a simple and safe process that takes about 30–45 minutes. It includes registration, a short medical screening, the donation itself (about 8–10 minutes), and a brief rest period with refreshments.
+
+After donation, your body replaces the fluid in a few hours, and red blood cells in a few weeks. Most people feel fine and return to normal activities quickly. Regular donation (every 3–4 months) can save many lives each year.`
+    }
   };
 
-  const renderCard = (key, { title, content, icon, iconColor }, delay) => (
-    <motion.div
-      key={key}
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay }}
-      viewport={{ once: true }}
-      data-aos="fade-up"
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 text-center"
-    >
+  const renderCard = (key, icon, title, summary, iconColor) => (
+    <div key={key} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 text-center">
       <div className="flex gap-3 justify-center pb-4">
-        <div className={`text-5xl ${iconColor}`}>{icon}</div>
-        <h2 className="text-2xl md:text-3xl font-bold text-red-600">{title}</h2>
+        <div className={`text-5xl ${iconColor}`}>
+          {icon}
+        </div>
+        <h2 className="text-3xl font-bold text-red-600 mb-3">{title}</h2>
       </div>
-      <p className="text-gray-700 dark:text-gray-200 mb-4">
-        {content.length > 100 ? content.slice(0, 100) + '...' : content}
-      </p>
+      <p className="text-gray-700 dark:text-gray-200 mb-4">{summary}</p>
       <button
         onClick={() => setSelectedCard(key)}
         className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
       >
         Learn More
       </button>
-    </motion.div>
+    </div>
   );
 
   return (
-    <div className="py-16 px-4 md:px-8 lg:px-16 bg-gray-50 dark:bg-gray-900">
-      <h1 className="text-4xl font-extrabold text-center text-red-600 mb-12">
-        Learn About Blood Donation
-      </h1>
-      <div className="grid md:grid-cols-2 gap-8">
-        {Object.entries(cardData).map(([key, value], index) =>
-          renderCard(key, value, index * 0.2)
+    <div className="relative bg-gray-100 dark:bg-gray-800">
+      <div className="max-w-6xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-8">
+        {renderCard(
+          'types',
+          <FaTint />,
+          'About Blood Types',
+          'There are more than 8 blood types. Knowing yours is crucial for safe transfusion.',
+          'text-blue-600'
+        )}
+        {renderCard(
+          'components',
+          <FaSyringe />,
+          'About Blood Components',
+          'Blood can be separated into red cells, plasma, and platelets to treat specific needs.',
+          'text-green-600'
+        )}
+        {renderCard(
+          'eligibility',
+          <FaHeartbeat />,
+          'Donor Eligibility',
+          'Before donating, ensure you meet health, age, and weight requirements.',
+          'text-pink-600'
+        )}
+        {renderCard(
+          'process',
+          <FaHandsHelping />,
+          'Donation Process',
+          'Learn how the simple and safe donation process works from start to finish.',
+          'text-yellow-600'
         )}
       </div>
 
-      <AnimatePresence>
-        {selectedCard && (
-          <motion.div
-            key="modal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50"
-            onClick={() => setSelectedCard(null)}
-          >
-            <motion.div
-              onClick={(e) => e.stopPropagation()}
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white dark:bg-gray-900 text-gray-800 dark:text-white p-6 rounded-xl max-w-lg w-full relative z-50 shadow-lg"
+      {selectedCard && (
+        <div className="fixed inset-0 flex items-center justify-center px-4 z-50">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-lg w-full relative z-50 shadow-lg">
+            <h2 className="text-2xl font-bold mb-4 text-red-600">
+              {modalContent[selectedCard].title}
+            </h2>
+            <p className="text-gray-800 dark:text-gray-200 whitespace-pre-line mb-6">
+              {modalContent[selectedCard].content}
+            </p>
+            <button
+              onClick={() => setSelectedCard(null)}
+              className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded"
             >
-              <h2 className="text-2xl font-bold mb-4 text-red-600">
-                {cardData[selectedCard]?.title}
-              </h2>
-              <p>{cardData[selectedCard]?.content}</p>
-              <button
-                className="absolute top-3 right-3 text-red-500 text-xl font-bold hover:text-red-700"
-                onClick={() => setSelectedCard(null)}
-              >
-                ✕
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

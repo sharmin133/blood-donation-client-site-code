@@ -26,9 +26,9 @@ const AdminDashboard = () => {
     const fetchStats = async () => {
       try {
         const [usersRes, fundingRes, requestsRes] = await Promise.all([
-          axios.get('http://localhost:3000/stats/users'),
-          axios.get('http://localhost:3000/stats/funding'),
-          axios.get('http://localhost:3000/stats/donation-requests'),
+          axios.get('https://blood-donation-vert.vercel.app/stats/users'),
+          axios.get('https://blood-donation-vert.vercel.app/stats/funding'),
+          axios.get('https://blood-donation-vert.vercel.app/stats/donation-requests'),
         ]);
         setTotalUsers(usersRes.data.totalUsers || 0);
         setTotalFunding(fundingRes.data.totalFunding || 0);

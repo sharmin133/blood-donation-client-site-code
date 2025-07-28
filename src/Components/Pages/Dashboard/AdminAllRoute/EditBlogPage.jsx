@@ -18,7 +18,7 @@ const EditBlogPage = () => {
   const [thumbnailFile, setThumbnailFile] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/blogs`)
+    axios.get(`https://blood-donation-vert.vercel.app/blogs`)
       .then(res => {
         const blog = res.data.find(item => item._id === id);
         if (blog) {
@@ -64,7 +64,7 @@ const EditBlogPage = () => {
     };
 
     try {
-      await axios.patch(`http://localhost:3000/blogs/${id}`, updatedBlog);
+      await axios.patch(`https://blood-donation-vert.vercel.app/blogs/${id}`, updatedBlog);
       toast.success("Blog updated!");
       setTimeout(() => navigate("/dashboard/content-management"), 1000);
     } catch (err) {

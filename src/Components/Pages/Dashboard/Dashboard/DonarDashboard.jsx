@@ -36,7 +36,7 @@ const DonorDashboard = () => {
 
   if (result.isConfirmed) {
     try {
-      await axios.delete(`http://localhost:3000/donation-requests/${id}`);
+      await axios.delete(`https://blood-donation-vert.vercel.app/donation-requests/${id}`);
       setRecentRequests(prev => prev.filter(req => req._id !== id));
 
       Swal.fire('Deleted!', 'Donation request has been deleted.', 'success');
@@ -49,7 +49,7 @@ const DonorDashboard = () => {
 
   const handleStatusChange = async (id, status) => {
     try {
-      await axios.patch(`http://localhost:3000/donation-requests/${id}`, { status });
+      await axios.patch(`https://blood-donation-vert.vercel.app/donation-requests/${id}`, { status });
       setRecentRequests(prev =>
         prev.map(req => req._id === id ? { ...req, status } : req)
       );

@@ -9,7 +9,7 @@ const FundDonation = () => {
   const totalAmount = funds.reduce((sum, fund) => sum + fund.amount, 0);
 
   useEffect(() => {
-    fetch('http://localhost:3000/funds')
+    fetch('https://blood-donation-vert.vercel.app/funds')
       .then((res) => res.json())
       .then((data) => {
         setFunds(data);

@@ -10,7 +10,7 @@ const AllUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/users');
+      const res = await axios.get('https://blood-donation-vert.vercel.app/users');
       setUsers(res.data);
     } catch (err) {
       console.error(err);
@@ -25,7 +25,7 @@ const AllUsers = () => {
   const handleStatusToggle = async (id, currentStatus) => {
     try {
       const updatedStatus = currentStatus === 'active' ? 'blocked' : 'active';
-      await axios.patch(`http://localhost:3000/users/${id}`, { status: updatedStatus });
+      await axios.patch(`https://blood-donation-vert.vercel.app/users/${id}`, { status: updatedStatus });
       toast.success(`User ${updatedStatus}`);
       fetchUsers();
     } catch (err) {
@@ -36,7 +36,7 @@ const AllUsers = () => {
 
   const handleRoleChange = async (id, role) => {
     try {
-      await axios.patch(`http://localhost:3000/users/${id}`, { role });
+      await axios.patch(`https://blood-donation-vert.vercel.app/users/${id}`, { role });
       toast.success(`Role changed to ${role}`);
       fetchUsers();
     } catch (err) {

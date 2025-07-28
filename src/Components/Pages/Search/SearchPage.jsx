@@ -73,7 +73,7 @@ const handleChange = e => {
 
  const handleSearch = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/users');
+    const res = await axios.get('https://blood-donation-vert.vercel.app/users');
     const allUsers = res.data;
 
     console.log('All users fetched:', allUsers);

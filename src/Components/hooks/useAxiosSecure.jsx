@@ -4,7 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 
 
     const axiosInstance = axios.create({
-    baseURL:'http://localhost:3000/',
+    baseURL:'https://blood-donation-vert.vercel.app',
     withCredentials: true,
 })
 
