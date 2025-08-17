@@ -3,7 +3,7 @@ import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaLock, FaBalanceScale, FaInfoC
 
 const FooterLinks = () => {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-20
+    <div className=" mx-auto px-4 py-12 space-y-20
                     bg-white dark:bg-black
                     text-gray-800 dark:text-gray-200">
        {/* About Section */}

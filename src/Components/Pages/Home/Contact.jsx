@@ -31,7 +31,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 px-4 md:px-10 bg-white dark:bg-black text-gray-800 dark:text-gray-200">
+    <section id="contact" className="py-20 px-4 md:px-10 bg-white text-gray-900 ">
       <h2 className="text-4xl md:text-4xl font-bold  mb-3 text-center">Contact Us</h2>
       <motion.div
         initial={{ width: 0 }}
@@ -40,7 +40,7 @@ const Contact = () => {
         className="h-1 bg-red-500 mx-auto mb-6 rounded-full"
       />
 
-      <p className="text-center max-w-3xl mx-auto mb-12 text-lg text-gray-700 dark:text-gray-300">
+      <p className="text-center max-w-3xl mx-auto mb-12 text-lg text-gray-700 ">
         Have any questions or want to contribute to saving lives? Reach out to us through the form below. We are always happy to hear from donors, volunteers, and anyone who wants to make a difference.
       </p>
 
@@ -97,12 +97,12 @@ const Contact = () => {
         )}
       </motion.div>
 
-      <div className="mt-12 text-center text-gray-700 dark:text-gray-300">
+      <div className="mt-12 text-center text-gray-700 ">
         <p className="text-lg font-medium">
           📞 Contact Number: <span className="text-red-600 font-semibold">+880 1234-57890</span>
         </p>
         <p className="mt-2 text-lg font-medium">
-          📍 Address: <span className="text-gray-800 dark:text-gray-100">123 Blood Bank Road, Dhaka, Bangladesh</span>
+          📍 Address: <span className="text-gray-800 ">123 Blood Bank Road, Dhaka, Bangladesh</span>
         </p>
       </div>
     </section>

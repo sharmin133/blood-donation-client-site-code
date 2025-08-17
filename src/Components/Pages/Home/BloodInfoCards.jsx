@@ -33,14 +33,14 @@ After donation, your body replaces the fluid in a few hours, and red blood cells
   };
 
   const renderCard = (key, icon, title, summary, iconColor) => (
-    <div key={key} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 text-center">
+    <div key={key} className="bg-white  rounded-xl shadow-md p-6 text-center">
       <div className="flex gap-3 justify-center pb-4">
         <div className={`text-5xl ${iconColor}`}>
           {icon}
         </div>
         <h2 className="text-3xl font-bold text-red-600 mb-3">{title}</h2>
       </div>
-      <p className="text-gray-700 dark:text-gray-200 mb-4">{summary}</p>
+      <p className="text-gray-700  mb-4">{summary}</p>
       <button
         onClick={() => setSelectedCard(key)}
         className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"

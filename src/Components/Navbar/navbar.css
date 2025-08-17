@@ -1,4 +1,5 @@
 .active{
     text-decoration: underline;
-    color: red;
+    text-underline-offset: 2px;
+    
 }
