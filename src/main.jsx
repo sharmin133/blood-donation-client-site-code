@@ -36,6 +36,7 @@ import Fund from './Components/Pages/FundingPage/Fund.jsx';
 import FundDonation from './Components/Pages/Dashboard/AdminAllRoute/FundDonation.jsx';
 import FooterLinks from './Components/Footer/FooterLinks.jsx';
 import PrivateRoute from './Components/PrivateRoute/PrivateRoute.jsx';
+import ReviewAll from './Components/Pages/Dashboard/AdminAllRoute/ReviewAll.jsx';
 
 
 
@@ -118,7 +119,9 @@ const router = createBrowserRouter([
     {
       path:'all-users', element:<AllUsers></AllUsers>
     },
-    
+    {
+      path:'users-all-review', element: <ReviewAll></ReviewAll>
+    },
 
     {
       path:'all-requests', element:<AllDonationRequests></AllDonationRequests>
