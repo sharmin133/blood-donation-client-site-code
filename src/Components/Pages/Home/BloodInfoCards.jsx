@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaTint, FaSyringe, FaHeartbeat, FaHandsHelping } from 'react-icons/fa';
+import { FaTint, FaSyringe, FaHeartbeat, FaHandsHelping, FaGift, FaQuestionCircle, FaLightbulb } from 'react-icons/fa';
 
 const BloodInfoCards = () => {
   const [selectedCard, setSelectedCard] = useState(null);
@@ -29,18 +29,37 @@ Before each donation, a mini health screening checks your hemoglobin, pulse, and
       content: `Donating blood is a simple and safe process that takes about 30–45 minutes. It includes registration, a short medical screening, the donation itself (about 8–10 minutes), and a brief rest period with refreshments.
 
 After donation, your body replaces the fluid in a few hours, and red blood cells in a few weeks. Most people feel fine and return to normal activities quickly. Regular donation (every 3–4 months) can save many lives each year.`
+    },
+    benefits: {
+      title: 'Benefits of Blood Donation',
+      content: `Donating blood not only saves lives but also benefits the donor. It helps improve heart health, reduces harmful iron stores, and stimulates the production of new blood cells.
+
+Many donors also experience a sense of purpose and fulfillment knowing their contribution directly helps patients in need.`
+    },
+    tips: {
+      title: 'Blood Donation Tips',
+      content: `Follow these tips to ensure a smooth donation experience:
+
+• Eat a healthy meal before donating — avoid fatty foods.  
+• Drink plenty of water to stay hydrated.  
+• Get a good night's sleep before donation day.  
+• Wear comfortable clothing with sleeves that can be rolled up.  
+• Relax and take deep breaths during the donation process.  
+• Avoid heavy exercise or lifting for a few hours afterward.  
+• Enjoy a light snack and juice provided after donation.  
+
+These steps will keep you safe, healthy, and make your donation experience easier.`
     }
   };
-
   const renderCard = (key, icon, title, summary, iconColor) => (
-    <div key={key} className="bg-white  rounded-xl shadow-md p-6 text-center">
+    <div key={key} className="bg-white rounded-xl shadow-2xl p-6 text-center">
       <div className="flex gap-3 justify-center pb-4">
         <div className={`text-5xl ${iconColor}`}>
           {icon}
         </div>
         <h2 className="text-3xl font-bold text-red-600 mb-3">{title}</h2>
       </div>
-      <p className="text-gray-700  mb-4">{summary}</p>
+      <p className="text-gray-700 mb-4">{summary}</p>
       <button
         onClick={() => setSelectedCard(key)}
         className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
@@ -51,8 +70,8 @@ After donation, your body replaces the fluid in a few hours, and red blood cells
   );
 
   return (
-    <div className="relative bg-gray-100 dark:bg-gray-800">
-      <div className="max-w-6xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-8">
+    <div className="relative ">
+      <div className=" mx-auto px-4 py-10 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {renderCard(
           'types',
           <FaTint />,
@@ -81,20 +100,34 @@ After donation, your body replaces the fluid in a few hours, and red blood cells
           'Learn how the simple and safe donation process works from start to finish.',
           'text-yellow-600'
         )}
+        {renderCard(
+          'benefits',
+          <FaGift />,
+          'Benefits of Donation',
+          'Donating blood improves health and gives a sense of purpose.',
+          'text-purple-600'
+        )}
+      {renderCard(
+          'tips',
+          <FaLightbulb />,
+          'Blood Donation Tips',
+          'Practical tips for a smooth and safe blood donation experience.',
+          'text-orange-600'
+        )}
       </div>
 
       {selectedCard && (
         <div className="fixed inset-0 flex items-center justify-center px-4 z-50">
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl max-w-lg w-full relative z-50 shadow-lg">
+          <div className="bg-red-200  p-6 rounded-xl max-w-lg w-full relative z-50 shadow-lg">
             <h2 className="text-2xl font-bold mb-4 text-red-600">
               {modalContent[selectedCard].title}
             </h2>
-            <p className="text-gray-800 dark:text-gray-200 whitespace-pre-line mb-6">
+            <p className="text-black  whitespace-pre-line mb-6">
               {modalContent[selectedCard].content}
             </p>
             <button
               onClick={() => setSelectedCard(null)}
-              className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded"
+              className="bg-black hover:bg-black text-white px-4 py-2 rounded"
             >
               Close
             </button>

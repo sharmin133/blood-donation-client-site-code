@@ -1,2 +1,14 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+
+/* inactive dot gray */
+.swiper-pagination-bullet {
+  background-color: gray !important;
+  opacity: 1 !important;   /* default opacity 0.2 থাকে */
+}
+
+/* active dot red */
+.swiper-pagination-bullet-active {
+  background-color: red !important;
+}

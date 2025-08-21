@@ -37,6 +37,10 @@ import FundDonation from './Components/Pages/Dashboard/AdminAllRoute/FundDonatio
 import FooterLinks from './Components/Footer/FooterLinks.jsx';
 import PrivateRoute from './Components/PrivateRoute/PrivateRoute.jsx';
 import ReviewAll from './Components/Pages/Dashboard/AdminAllRoute/ReviewAll.jsx';
+import CreateCardPage from './Components/Pages/Home/CreateCardPage.jsx';
+import CannotDonate from './Components/Pages/Home/PeopleMayLike/AllInfoYouMayLike/CannotDonate.jsx';
+import RareType from './Components/Pages/Home/PeopleMayLike/AllInfoYouMayLike/RareType.jsx';
+import DonatePlasma from './Components/Pages/Home/PeopleMayLike/AllInfoYouMayLike/DonatePlasma.jsx';
 
 
 
@@ -77,7 +81,20 @@ const router = createBrowserRouter([
       },
       {
         path:'info/:section', element: <FooterLinks></FooterLinks>
-      }
+      },
+      {
+        path:'create-card', element: <CreateCardPage></CreateCardPage>
+      },
+      {
+       path:'other-ways-to-give', element: <CannotDonate></CannotDonate>
+      },
+      {
+       path:'rare-type', element: <RareType></RareType>
+      },
+       
+       {
+       path:'why-donate-plasma', element:<DonatePlasma></DonatePlasma>
+      },
 
 
     ]

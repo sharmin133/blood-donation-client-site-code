@@ -5,11 +5,11 @@ import ReactStars from "react-stars";
 const ReviewAll = () => {
   const [reviews, setReviews] = useState([]);
 
-  useEffect(() => {
-    axios.get("https://blood-donation-vert.vercel.app/reviews")
-      .then((res) => setReviews(res.data))
-      .catch((err) => console.error(err));
-  }, []);
+ useEffect(() => {
+  axios.get("https://blood-donation-vert.vercel.app/reviews")
+    .then((res) => setReviews(res.data))
+    .catch((err) => console.error(err));
+}, []);
 
   return (
     <div className="p-6">
@@ -22,7 +22,9 @@ const ReviewAll = () => {
           <table className="table w-full">
             <thead>
               <tr className="bg-gray-200">
+                
                 <th>User</th>
+                <th>Image</th>
                 <th>Email</th>
                 <th>Rating</th>
                 <th>Review</th>
@@ -33,6 +35,7 @@ const ReviewAll = () => {
               {reviews.map((r) => (
                 <tr key={r._id} className="border-b">
                   <td>{r.userName}</td>
+                   <td><img src={r.photoURL} alt="avatar" className="w-10 h-10 rounded-full" /></td>
                   <td>{r.userEmail}</td>
                   <td>
                     <ReactStars
