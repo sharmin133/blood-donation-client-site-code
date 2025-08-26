@@ -15,7 +15,7 @@ const YouMayAlsoLike = () => {
 
   return (
     <section className="bg-gradient-to-l from-red-100 via-red-200 px-4">
-      <div className="max-w-6xl mx-auto py-10 text-center">
+      <div className="max-w-7xl mx-auto py-10 text-center">
         <h2
           className="text-3xl md:text-5xl font-bold text-black mb-8"
           data-aos="fade-up"

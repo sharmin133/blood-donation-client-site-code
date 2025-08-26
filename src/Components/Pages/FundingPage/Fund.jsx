@@ -1,22 +1,25 @@
 import axios from 'axios';
-import React, { use, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { AuthContext } from '../../context/AuthContext';
 
 const Fund = () => {
   const navigate = useNavigate();
   const [funds, setFunds] = useState([]);
+  const { user } = useContext(AuthContext);
 
-const{user}=use(AuthContext)
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  // Sorting
+  const [sortOrder, setSortOrder] = useState('lowToHigh'); // default
 
   const handleFundClick = () => {
     navigate('/fund-page');
   };
 
-useEffect(() => {
+  useEffect(() => {
     if (user?.uid) {
       axios
         .get(`https://blood-donation-vert.vercel.app/funds/by-user?userId=${user.uid}`)
@@ -29,12 +32,19 @@ useEffect(() => {
     }
   }, [user?.uid]);
 
+  // Sort funds
+  const sortedFunds = [...funds].sort((a, b) => {
+    if (sortOrder === 'lowToHigh') {
+      return a.amount - b.amount;
+    } else {
+      return b.amount - a.amount;
+    }
+  });
 
-
-  // Calculate pagination
-  const totalPages = Math.ceil(funds.length / itemsPerPage);
+  // Pagination
+  const totalPages = Math.ceil(sortedFunds.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const selectedFunds = funds.slice(startIndex, startIndex + itemsPerPage);
+  const selectedFunds = sortedFunds.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePrev = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -45,25 +55,49 @@ useEffect(() => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-4 min-h-screen">
-      <div className="flex justify-between mb-4">
-         <div className="text-center mb-6">
-        <h1 className="text-3xl md:text-4xl font-extrabold  mb-4">
-          Support Life With Your Contribution
-        </h1>
-        <p className="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-          Your generous donation helps us provide support and resources to those in need. 
-          Every contribution matters and makes a difference.
-        </p>
-      </div>
-        <button onClick={handleFundClick} className="btn rounded-2xl p-6 text-2xl bg-red-600 hover:bg-red-800">
-         Give Fund Now
+   <div className='bg-gray-700'>
+     <div className="max-w-5xl mx-auto p-4 min-h-screen">
+      <div className="flex justify-between mb-4 flex-col md:flex-row md:items-center gap-4">
+        <div className="text-center md:text-left mb-4 md:mb-0">
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-4 text-white">
+            Support Life With Your Contribution
+          </h1>
+          <p className="text-gray-300 max-w-2xl mx-auto md:mx-0">
+            Your generous donation helps us provide support and resources to those in need. 
+            Every contribution matters and makes a difference.
+          </p>
+        </div>
+
+        <button
+          onClick={handleFundClick}
+          className="btn rounded-2xl px-6 py-3 text-xl bg-red-600 hover:bg-red-800 transition"
+        >
+          Give Fund Now
         </button>
       </div>
+{/* Sorting Dropdown */}
+<div className="flex justify-end mb-4 items-center">
+  <label className="mr-2 font-semibold text-white">Sort by:</label>
+  <select
+    value={sortOrder}
+    onChange={(e) => setSortOrder(e.target.value)}
+    className="
+      border border-red-400 
+      rounded px-3 py-2 
+      bg-white text-black 
+      focus:outline-none 
+      focus:ring-2 focus:ring-red-500 
+      hover:border-red-500 transition
+    "
+  >
+    <option value="lowToHigh">Low to High</option>
+    <option value="highToLow">High to Low</option>
+  </select>
+</div>
 
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
-          <tr className="">
+          <tr>
             <th className="border border-gray-300 p-2 text-left">Name</th>
             <th className="border border-gray-300 p-2 text-left">Amount</th>
             <th className="border border-gray-300 p-2 text-left">Date</th>
@@ -113,6 +147,7 @@ useEffect(() => {
         </button>
       </div>
     </div>
+   </div>
   );
 };
 

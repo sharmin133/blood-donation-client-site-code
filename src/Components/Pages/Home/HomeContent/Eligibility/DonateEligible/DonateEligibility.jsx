@@ -22,7 +22,7 @@ const DonateEligibility = () => {
   return (
     <div className="px-4 md:px-12 py-10">
       <div
-        className="max-w-6xl mx-auto flex flex-col-reverse md:flex-row items-center gap-8"
+        className=" mx-auto flex flex-col-reverse md:flex-row items-center gap-8"
         data-aos="fade-up"
       >
         {/* Text & Button */}

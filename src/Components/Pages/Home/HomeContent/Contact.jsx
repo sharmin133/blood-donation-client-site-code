@@ -60,7 +60,7 @@ const Contact = () => {
         {/* Image */}
         <div data-aos="fade-right" data-aos-delay="200">
           <img
-            className="rounded-2xl max-w-sm mx-auto"
+            className="rounded-2xl  mx-auto"
             src="https://i.ibb.co.com/tpZgkNb4/agreement-2548138-640.jpg"
             alt="Contact Illustration"
           />
