@@ -165,7 +165,7 @@ const ReviewSection = () => {
       {isModalOpen && (
         <div className="fixed inset-0  bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-red-100 w-1/2 max-w-sm  md:max-w-2xl p-6 rounded-lg">
-            <h3 className="font-bold text-lg mb-4">Submit Your Review</h3>
+            <h3 className="font-bold text-lg text-red-700 mb-4">Submit Your Review</h3>
             <div className="flex justify-center mb-4">
               <ReactStars
                 count={5}
