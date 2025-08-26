@@ -15,12 +15,12 @@ import "swiper/css/pagination";
 // Animation Imports
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { motion, AnimatePresence } from "framer-motion";
 
 const ReviewSection = () => {
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [latestReviews, setLatestReviews] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -55,7 +55,11 @@ const ReviewSection = () => {
       navigate("/login");
       return;
     }
-    document.getElementById("review_modal").showModal();
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   const handleSubmit = async () => {
@@ -76,10 +80,9 @@ const ReviewSection = () => {
     try {
       await axios.post("https://blood-donation-vert.vercel.app/reviews", reviewData);
       toast.success("Thank you for your review! 💖");
-
-      document.getElementById("review_modal").close();
       setRating(0);
       setReview("");
+      handleCloseModal();
 
       // Refresh reviews
       const res = await axios.get("https://blood-donation-vert.vercel.app/reviews");
@@ -96,64 +99,40 @@ const ReviewSection = () => {
   return (
     <div className="py-10 px-4 bg-gray-50 mx-auto text-center">
       {/* Heading */}
-      <motion.h2
+      <h2
         className="text-3xl md:text-5xl font-bold text-black mb-6"
         data-aos="fade-up"
-        initial={{ opacity: 0, y: -30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
       >
         Voices That Inspire
-      </motion.h2>
+      </h2>
 
       <div className="flex flex-col md:flex-row justify-between gap-12 mx-auto px-4 md:px-20">
         {/* Left Text & Button */}
-        <motion.div
-          className="flex flex-col gap-6 max-w-sm"
-          data-aos="fade-right"
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-        >
+        <div className="flex flex-col gap-6 max-w-sm" data-aos="fade-right">
           <p className="text-xl text-gray-800 mb-4">
-            Hear from our blood buddies and share your own experience to inspire others. 
-            Your words can save lives!
+            Hear from our blood buddies and share your own experience to inspire others. Your words can save lives!
           </p>
-
-          <motion.button
+          <button
             className="bg-red-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition"
             onClick={handleOpenModal}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
             Submit Your Opinion
-          </motion.button>
-        </motion.div>
+          </button>
+        </div>
 
         {/* Swiper Carousel */}
-        <motion.div
-          className="w-full max-w-2xl"
-          data-aos="fade-left"
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-        >
+        <div className="w-full max-w-2xl" data-aos="fade-left">
           <Swiper
             modules={[Autoplay, Pagination]}
             autoplay={{ delay: 3000, disableOnInteraction: false }}
             loop={true}
             slidesPerView={1}
-            breakpoints={{ 768: { slidesPerView: 1 } }}
             spaceBetween={20}
             pagination={{ clickable: true }}
           >
             {latestReviews.map((rev) => (
               <SwiperSlide key={rev._id}>
-                <motion.div
-                  className="card bg-gradient-to-r from-red-100 to-red-300 max-w-lg mx-auto shadow-lg p-6 text-left h-64 flex flex-col justify-between"
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ duration: 0.3 }}
-                >
+                <div className="card bg-gradient-to-r from-red-100 to-red-300 max-w-lg mx-auto shadow-lg p-6 text-left h-64 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center gap-3 mb-3">
                       <img
@@ -175,54 +154,45 @@ const ReviewSection = () => {
                     </div>
                     <p className="text-gray-700 italic line-clamp-4">“{rev.review}”</p>
                   </div>
-                </motion.div>
+                </div>
               </SwiperSlide>
             ))}
           </Swiper>
-        </motion.div>
+        </div>
       </div>
 
       {/* Modal */}
-      <AnimatePresence>
-        {document.getElementById("review_modal") && (
-          <motion.dialog
-            id="review_modal"
-            className="modal"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="modal-box">
-              <h3 className="font-bold text-lg mb-4">Submit Your Review</h3>
-              <div className="flex justify-center mb-4">
-                <ReactStars
-                  count={5}
-                  size={40}
-                  value={rating}
-                  onChange={(newRating) => setRating(newRating)}
-                  color1="#ccc"
-                  color2="#facc15"
-                />
-              </div>
-              <textarea
-                value={review}
-                onChange={(e) => setReview(e.target.value)}
-                placeholder="Write your detailed review..."
-                className="textarea textarea-bordered w-full mb-4"
-              ></textarea>
-              <div className="modal-action flex justify-between">
-                <button onClick={handleSubmit} className="btn btn-success">
-                  Submit
-                </button>
-                <form method="dialog">
-                  <button className="btn btn-error">Cancel</button>
-                </form>
-              </div>
+      {isModalOpen && (
+        <div className="fixed inset-0  bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-red-100 w-1/2 max-w-sm  md:max-w-2xl p-6 rounded-lg">
+            <h3 className="font-bold text-lg mb-4">Submit Your Review</h3>
+            <div className="flex justify-center mb-4">
+              <ReactStars
+                count={5}
+                size={40}
+                value={rating}
+                onChange={(newRating) => setRating(newRating)}
+                color1="#ccc"
+                color2="#facc15"
+              />
             </div>
-          </motion.dialog>
-        )}
-      </AnimatePresence>
+            <textarea
+              value={review}
+              onChange={(e) => setReview(e.target.value)}
+              placeholder="Write your detailed review..."
+              className="textarea textarea-bordered w-full mb-4"
+            ></textarea>
+            <div className="flex justify-between">
+              <button onClick={handleSubmit} className="btn btn-success">
+                Submit
+              </button>
+              <button onClick={handleCloseModal} className="btn btn-error">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <ToastContainer position="top-center" autoClose={3000} />
     </div>
