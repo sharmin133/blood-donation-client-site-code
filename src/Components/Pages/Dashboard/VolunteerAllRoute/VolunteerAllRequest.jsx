@@ -37,25 +37,31 @@ const VolunteerAllRequest = () => {
     ? requests
     : requests.filter((req) => req.status === filteredStatus);
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = filteredRequests.slice(startIndex, startIndex + itemsPerPage);
+
+  const statusColors = {
+    pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+    inprogress: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+    done: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    canceled: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+  };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <h2 className="text-2xl font-bold text-red-600 mb-4">All Blood Donation Requests 🩸</h2>
 
       {/* Filter Dropdown */}
-      <div className="mb-4">
-        <label className="mr-2 font-semibold text-gray-700 dark:text-white">Filter by Status:</label>
+      <div className="mb-4 flex items-center gap-2">
+        <label className="font-semibold text-gray-700 dark:text-white">Filter by Status:</label>
         <select
           value={filteredStatus}
           onChange={(e) => {
             setFilteredStatus(e.target.value);
-            setCurrentPage(1); // reset to first page when filter changes
+            setCurrentPage(1);
           }}
-          className="select select-bordered select-sm"
+          className="select select-bordered select-sm w-48"
         >
           <option value="all">All</option>
           <option value="pending">Pending</option>
@@ -84,7 +90,9 @@ const VolunteerAllRequest = () => {
                 <td>{req.bloodGroup}</td>
                 <td>{req.district}</td>
                 <td>
-                  <span className={`badge ${req.status === 'done' ? 'badge-success' : 'badge-warning'}`}>
+                  <span
+                    className={`badge badge-md min-w-[100px] text-center ${statusColors[req.status] || 'bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+                  >
                     {req.status}
                   </span>
                 </td>
@@ -92,7 +100,7 @@ const VolunteerAllRequest = () => {
                   <select
                     value={req.status}
                     onChange={(e) => handleStatusChange(req._id, e.target.value)}
-                    className="select select-sm select-bordered"
+                    className="select select-sm select-bordered w-36"
                   >
                     <option value="pending">Pending</option>
                     <option value="inprogress">In Progress</option>
@@ -118,7 +126,7 @@ const VolunteerAllRequest = () => {
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((prev) => prev - 1)}
-            className="btn btn-sm"
+            className="btn btn-sm btn-outline bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
           >
             Prev
           </button>
@@ -126,7 +134,7 @@ const VolunteerAllRequest = () => {
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((prev) => prev + 1)}
-            className="btn btn-sm"
+            className="btn btn-sm btn-outline bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
           >
             Next
           </button>

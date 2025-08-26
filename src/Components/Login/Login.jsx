@@ -22,11 +22,7 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from || '/';
 
-  const handleLogIn = (e) => {
-    e.preventDefault();
-
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+  const handleLogIn = (email, password) => {
     setSuccessMessage('');
     setErrorMessage('');
 
@@ -40,7 +36,7 @@ const Login = () => {
 
     userLogin(email, password)
       .then((result) => {
-        console.log(result.data)
+        console.log(result)
         setSuccessMessage(true);
         toast.success('User login successful.', {
           onClose: () => loginNavigate(from, { replace: true }),
@@ -52,19 +48,31 @@ const Login = () => {
       });
   };
 
+  // Form submit
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    handleLogIn(email, password);
+  };
+
+  // Quick login buttons
+  const quickLoginAdmin = () => handleLogIn('sharminsharmin@gmail.com', 'Sharmin');
+  const quickLoginVolunteer = () => handleLogIn('shamima@gmail.com', 'Sharmin');
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black px-4 ">
       <ToastContainer position="top-center" autoClose={3000} />
 
       <div
         data-aos="zoom-in"
-        className="card w-full max-w-sm  shadow-lg  border-1 border-red-600 p-6 rounded-xl"
+        className="card w-full max-w-sm shadow-lg border-1 border-red-600 p-6 rounded-xl"
       >
         <h1 className="text-4xl font-bold text-center mb-6 text-red-600 dark:text-red-500">
           Login Now
         </h1>
 
-        <form onSubmit={handleLogIn} className="space-y-4">
+        <form onSubmit={onSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-black dark:text-white">
               Email
@@ -110,14 +118,25 @@ const Login = () => {
           </button>
         </form>
 
-        {errorMessage && (
-          <p className="mt-3 text-sm text-red-500">{errorMessage}</p>
-        )}
+        {errorMessage && <p className="mt-3 text-sm text-red-500">{errorMessage}</p>}
         {successMessage && (
-          <p className="mt-3 text-sm text-green-500">
-            User login successfully.
-          </p>
+          <p className="mt-3 text-sm text-green-500">User login successfully.</p>
         )}
+
+        <div className="mt-4 flex justify-between gap-2">
+          <button
+            onClick={quickLoginAdmin}
+           className="w-1/2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Quick Login as Admin
+          </button>
+          <button
+            onClick={quickLoginVolunteer}
+            className="w-1/2 bg-black dark:bg-white   text-white dark:text-black font-bold py-2 px-4 rounded"
+          >
+            Quick Login as Volunteer
+          </button>
+        </div>
 
         <p className="mt-4 text-sm text-center text-black dark:text-gray-300">
           New to this site?{' '}

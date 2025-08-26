@@ -108,7 +108,7 @@ const CheckoutForm = () => {
   };
 
   return (
-    <div className='bg-white p-4 rounded shadow-md max-w-md mx-auto'>
+    <div className='bg-red-200 p-4 rounded shadow-md max-w-md mx-auto'>
       <form onSubmit={handleSubmit}>
         <input
           type='number'

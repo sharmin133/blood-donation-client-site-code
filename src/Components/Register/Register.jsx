@@ -24,7 +24,7 @@ const Register = () => {
   const [upazilas, setUpazilas] = useState([]);
   const [selectedUpazila, setSelectedUpazila] = useState('');
 
-  const { createUser, setUser } = useContext(AuthContext);
+  const { createUser, setUser, userLogin } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || '/';
@@ -33,6 +33,7 @@ const Register = () => {
     AOS.init({ duration: 800, once: true });
   }, []);
 
+  // District & Upazila data fetch
   useEffect(() => {
     fetch('/districtData.json')
       .then(res => res.json())
@@ -57,15 +58,15 @@ const Register = () => {
       setSelectedUpazila('');
       return;
     }
-
     const districtId = districtsMap[selectedDistrict];
-
     fetch('/upazilaData.json')
       .then(res => res.json())
       .then(jsonData => {
         const tableEntry = jsonData.find(entry => entry.type === 'table' && entry.name === 'upazilas');
         if (tableEntry && Array.isArray(tableEntry.data)) {
-          const filtered = tableEntry.data.filter(u => String(u.district_id) === String(districtId)).map(u => u.name);
+          const filtered = tableEntry.data
+            .filter(u => String(u.district_id) === String(districtId))
+            .map(u => u.name);
           setUpazilas(filtered);
           setSelectedUpazila('');
         }
@@ -91,12 +92,10 @@ const Register = () => {
       setErrorMessage('Please fill in all required fields.');
       return;
     }
-
     if (password !== confirmPassword) {
       setErrorMessage("Passwords don't match.");
       return;
     }
-
     const passwordRegExp = /^(?=.*[A-Z])(?=.*[a-z]).{6,}$/;
     if (!passwordRegExp.test(password)) {
       setErrorMessage('Password must contain uppercase, lowercase, and be at least 6 characters.');
@@ -104,7 +103,6 @@ const Register = () => {
     }
 
     let avatarLink = '';
-
     if (avatarFile) {
       const formData = new FormData();
       formData.append('image', avatarFile);
@@ -123,32 +121,45 @@ const Register = () => {
 
     createUser(email, password)
       .then(() => {
-        updateProfile(auth.currentUser, {
-          displayName: name,
-          photoURL: avatarLink,
-        }).then(async () => {
-          await auth.currentUser.reload();
-          setUser({ ...auth.currentUser });
+        updateProfile(auth.currentUser, { displayName: name, photoURL: avatarLink })
+          .then(async () => {
+            await auth.currentUser.reload();
+            setUser({ ...auth.currentUser });
 
-          await axios.post('https://blood-donation-vert.vercel.app/users', {
-            name,
-            email,
-            photoURL: avatarLink,
-            bloodGroup,
-            district,
-            upazila,
-            role: 'donor',
-            status: 'active',
-          });
+            await axios.post('https://blood-donation-vert.vercel.app/users', {
+              name,
+              email,
+              photoURL: avatarLink,
+              bloodGroup,
+              district,
+              upazila,
+              role: 'donor',
+              status: 'active',
+            });
 
-          toast.success('Registration successful!', {
-            onClose: () => navigate(from, { replace: true }),
+            toast.success('Registration successful!', {
+              onClose: () => navigate(from, { replace: true }),
+            });
           });
-        });
       })
       .catch(error => {
         setErrorMessage(error.message);
         toast.error(error.message);
+      });
+  };
+
+  const handleQuickLogin = (email, password) => {
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    userLogin(email, password)
+      .then(() => {
+        setSuccessMessage('Logged in successfully.');
+        toast.success('Quick login successful!', { onClose: () => navigate(from, { replace: true }) });
+      })
+      .catch(err => {
+        setErrorMessage(err.message);
+        toast.error(err.message);
       });
   };
 
@@ -162,36 +173,54 @@ const Register = () => {
         <h1 className="text-4xl font-bold text-red-700 dark:text-red-500 mb-6 text-center" data-aos="fade-down">
           Sign Up
         </h1>
+        
+        {/* Quick Login Buttons */}
+        <div className="mt-6 flex justify-between gap-2" data-aos="fade-up" data-aos-delay="550">
+          <button
+            type="button"
+            onClick={() => handleQuickLogin('sharminsharmin@gmail.com', 'Sharmin')}
+            className="w-1/2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Quick Login as Admin
+          </button>
+          <button
+            type="button"
+            onClick={() => handleQuickLogin('shamima@gmail.com', 'Sharmin')}
+            className="w-1/2 bg-black dark:bg-white   text-white dark:text-black font-bold py-2 px-4 rounded"
+          >
+            Quick Login as Volunteer
+          </button>
+        </div>
+
         <form onSubmit={handleRegister} className="space-y-4">
+          {/* Name */}
           <div data-aos="fade-up" data-aos-delay="100">
             <label className="block text-sm font-semibold text-black dark:text-white">Name</label>
             <input type="text" name="name" placeholder="Name" className="input input-bordered w-full" required />
           </div>
 
+          {/* Email */}
           <div data-aos="fade-up" data-aos-delay="150">
             <label className="block text-sm font-semibold text-black dark:text-white">Email</label>
             <input type="email" placeholder="Email" name="email" className="input input-bordered w-full" required />
           </div>
 
+          {/* Avatar */}
           <div data-aos="fade-up" data-aos-delay="200">
             <label className="block text-sm font-semibold text-black dark:text-white">Photo</label>
             <input type="file" accept="image/*" name="avatar" className="input input-bordered w-full" />
           </div>
 
+          {/* Blood Group */}
           <div data-aos="fade-up" data-aos-delay="250">
             <label className="block text-sm font-semibold text-black dark:text-white">Blood Group</label>
             <select name="bloodGroup" className="input input-bordered w-full" required defaultValue="">
-              <option value="" disabled>
-                Select your blood group
-              </option>
-              {BLOOD_GROUPS.map(bg => (
-                <option key={bg} value={bg}>
-                  {bg}
-                </option>
-              ))}
+              <option value="" disabled>Select your blood group</option>
+              {BLOOD_GROUPS.map(bg => <option key={bg} value={bg}>{bg}</option>)}
             </select>
           </div>
 
+          {/* District */}
           <div data-aos="fade-up" data-aos-delay="300">
             <label className="block text-sm font-semibold text-black dark:text-white">District</label>
             <select
@@ -202,14 +231,11 @@ const Register = () => {
               required
             >
               <option value="">Select district</option>
-              {Object.keys(districtsData).map(d => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
+              {Object.keys(districtsData).map(d => <option key={d} value={d}>{d}</option>)}
             </select>
           </div>
 
+          {/* Upazila */}
           <div data-aos="fade-up" data-aos-delay="350">
             <label className="block text-sm font-semibold text-black dark:text-white">Upazila</label>
             <select
@@ -221,66 +247,40 @@ const Register = () => {
               disabled={!selectedDistrict}
             >
               <option value="">Select upazila</option>
-              {upazilas.map(u => (
-                <option key={u} value={u}>
-                  {u}
-                </option>
-              ))}
+              {upazilas.map(u => <option key={u} value={u}>{u}</option>)}
             </select>
           </div>
 
+          {/* Password */}
           <div className="relative" data-aos="fade-up" data-aos-delay="400">
             <label className="block text-sm font-semibold text-black dark:text-white">Password</label>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              className="input input-bordered w-full"
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute top-9 right-3 text-red-600"
-            >
+            <input type={showPassword ? 'text' : 'password'} name="password" className="input input-bordered w-full" required />
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute top-9 right-3 text-red-600">
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
+          {/* Confirm Password */}
           <div className="relative" data-aos="fade-up" data-aos-delay="450">
             <label className="block text-sm font-semibold text-black dark:text-white">Confirm Password</label>
-            <input
-              type={showConfirmPassword ? 'text' : 'password'}
-              name="confirm_password"
-              className="input input-bordered w-full"
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute top-9 right-3 text-red-600"
-            >
+            <input type={showConfirmPassword ? 'text' : 'password'} name="confirm_password" className="input input-bordered w-full" required />
+            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute top-9 right-3 text-red-600">
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-lg py-2"
-            data-aos="zoom-in"
-            data-aos-delay="500"
-          >
+          <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-lg rounded-lg py-2" data-aos="zoom-in" data-aos-delay="500">
             Sign Up
           </button>
         </form>
+
 
         {errorMessage && <p className="text-red-600 mt-4 text-center">{errorMessage}</p>}
         {successMessage && <p className="text-green-600 mt-4 text-center">{successMessage}</p>}
 
         <p className="mt-6 text-center text-black dark:text-white">
           Already have an account?{' '}
-          <Link className="text-red-600 underline hover:text-red-800" to="/login">
-            Login
-          </Link>
+          <Link className="text-red-600 underline hover:text-red-800" to="/login">Login</Link>
         </p>
       </div>
     </div>

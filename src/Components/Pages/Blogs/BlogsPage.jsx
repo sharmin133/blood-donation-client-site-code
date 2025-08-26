@@ -25,22 +25,32 @@ const BlogsPage = () => {
       </h1>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {blogs.map(blog => (
-          <div key={blog._id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-            <img src={blog.thumbnail} alt="thumbnail" className="rounded-md h-48 w-full object-cover mb-4" />
-            <h2 className="text-xl font-semibold text-red-600 mb-2">{blog.title}</h2>
-            <p className="text-black dark:text-white  mb-4">
-              {blog.content.replace(/<[^>]+>/g, '').slice(0, 100)}...
-            </p>
-            <Link
-              to={`/blogs/${blog._id}`}
-              className="text-white bg-red-600 px-3 py-1 rounded hover:bg-red-700"
-            >
-              Read More
-            </Link>
-          </div>
-        ))}
-      </div>
+  {blogs.map(blog => (
+    <div 
+      key={blog._id} 
+      className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 flex flex-col"
+    >
+      <img 
+        src={blog.thumbnail} 
+        alt="thumbnail" 
+        className="rounded-md h-48 w-full object-cover mb-4" 
+      />
+      <h2 className="text-xl font-semibold text-red-600 mb-2">
+        {blog.title}
+      </h2>
+      <p className="text-black dark:text-white mb-4 flex-grow">
+        {blog.content.replace(/<[^>]+>/g, '').slice(0, 100)}...
+      </p>
+      <Link
+        to={`/blogs/${blog._id}`}
+        className="text-white bg-red-600 px-3 py-1 rounded hover:bg-red-700 self-start"
+      >
+        Read More
+      </Link>
+    </div>
+  ))}
+</div>
+
     </div>
   );
 };

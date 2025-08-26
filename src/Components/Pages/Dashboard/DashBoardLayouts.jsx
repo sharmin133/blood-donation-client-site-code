@@ -12,18 +12,25 @@ const DashboardLayouts = () => {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-full w-64  p-4  z-40
+          fixed top-0 left-0 h-full w-64 bg-red-100 p-4  z-40
           transform transition-transform duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0 md:static md:flex-shrink-0
         `}
       >
-        <NavLink
+  <NavLink
   to="/dashboard"
-  className="text-2xl font-bold text-center text-red-600 mb-6 block hover:underline hover:text-red-800"
+  style={{ textDecoration: 'none' }}
+  className={({ isActive }) =>
+    `text-2xl font-bold text-center mb-6 block hover:text-red-800 ${
+      isActive
+        ? "bg-red-500 text-white"
+        : "text-red-700 hover:bg-red-200"
+    }`
+  }
   onClick={() => setSidebarOpen(false)}
 >
-Dashboard
+  Dashboard
 </NavLink>
 
         <nav className="flex flex-col space-y-2">
@@ -217,7 +224,7 @@ Dashboard
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 bg-gray-50 dark:bg-black text-black dark:text-white p-4">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-800 text-black dark:text-white p-4">
      
         <button
           className="md:hidden mb-4 p-2 rounded bg-red-100 text-red-600 shadow"

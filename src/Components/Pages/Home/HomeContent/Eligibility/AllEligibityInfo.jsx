@@ -3,7 +3,7 @@ import DonateEligibility from './DonateEligible/DonateEligibility';
 
 const AllEligibityInfo = () => {
     return (
-        <div>
+        <div className='bg-gray-50' >
             <DonateEligibility></DonateEligibility>
             
         </div>

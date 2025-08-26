@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../../context/AuthContext";
 import domtoimage from "dom-to-image-more";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -73,7 +73,7 @@ const CreateCardPage = () => {
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto">
+    <div className="p-6 border-white   max-w-xl mx-auto">
       <ToastContainer position="top-right" autoClose={3000} />
       <h2 className="text-2xl font-bold mb-4 text-center">Your Blood Buddy Card</h2>
 
@@ -168,7 +168,7 @@ const CreateCardPage = () => {
 
       <button
         onClick={handleDownload}
-        className="mt-4 btn btn-primary w-full"
+        className="mt-4 btn bg-red-600 w-full"
       >
         Download Card
       </button>

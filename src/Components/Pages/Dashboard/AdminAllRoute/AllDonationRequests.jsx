@@ -46,13 +46,13 @@ const AllDonationRequests = () => {
 
       {/* Filter Buttons */}
       <div
-        className="mb-6 flex gap-4 justify-center flex-wrap"
+        className="mb-6 flex gap-3 justify-center flex-wrap"
         data-aos="zoom-in"
       >
         {["pending", "inprogress", "done", "canceled", ""].map((status, i) => (
           <button
             key={i}
-            className={`px-4 py-2 rounded-full font-semibold transition-all duration-300 border ${
+            className={`min-w-[100px] px-4 py-2 rounded-full font-semibold transition-all duration-300 border text-center ${
               statusFilter === status
                 ? "bg-red-600 text-white border-red-600"
                 : "bg-transparent text-red-600 dark:text-red-400 border-red-500 hover:bg-red-600 hover:text-white"
@@ -87,28 +87,31 @@ const AllDonationRequests = () => {
                 >
                   <td className="px-4 py-3">{req.requesterName}</td>
                   <td className="px-4 py-3">{req.district}</td>
-                 <td className="px-4 py-3">{req.recipientDistrict}</td>
-        <td className="px-4 py-3">{req.recipientUpazila}</td>
-                  <td className="px-4 py-3 capitalize text-sm font-medium">
-                    <span
-                      className={`px-2 py-1 rounded-full ${
-                        req.status === "pending"
-                          ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                          : req.status === "inprogress"
-                          ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                          : req.status === "done"
-                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                          : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                      }`}
-                    >
-                      {req.status}
-                    </span>
-                  </td>
+                  <td className="px-4 py-3">{req.recipientDistrict}</td>
+                  <td className="px-4 py-3">{req.recipientUpazila}</td>
+                 <td className="px-4 py-3 capitalize text-sm font-medium">
+  <span
+    className={`inline-flex items-center justify-center min-w-[90px] h-8 px-3 rounded-full text-center ${
+      req.status === "pending"
+        ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+        : req.status === "inprogress"
+        ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+        : req.status === "done"
+        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+        : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+    }`}
+  >
+    {req.status}
+  </span>
+</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-center py-6 text-red-600 dark:text-red-400">
+                <td
+                  colSpan="5"
+                  className="text-center py-6 text-red-600 dark:text-red-400"
+                >
                   No donation requests found.
                 </td>
               </tr>
@@ -128,7 +131,7 @@ const AllDonationRequests = () => {
             <button
               key={i}
               onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 rounded ${
+              className={`min-w-[40px] px-3 py-2 rounded text-center font-medium ${
                 currentPage === i + 1
                   ? "bg-red-600 text-white"
                   : "bg-gray-200 text-gray-800 hover:bg-red-500 hover:text-white dark:bg-gray-700 dark:text-white"

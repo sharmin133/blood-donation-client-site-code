@@ -1,12 +1,13 @@
 import React from 'react';
-import Banner from './Banner';
-import Contact from './Contact';
-import BloodInfoCards from './BloodInfoCards';
-import OurBranch from './OurBranch';
-import ReviewSection from './ReviewSection';
-import BloodCardSection from './BloodCardSection';
-import AllEligibityInfo from './Eligibility/AllEligibityInfo';
+
+import Banner from './HomeContent/Banner';
+import Contact from './HomeContent/Contact';
+import BloodInfoCards from './HomeContent/BloodInfoCards';
+import AllEligibityInfo from './HomeContent/Eligibility/AllEligibityInfo';
+import ReviewSection from './HomeContent/ReviewSection';
+import BloodCardSection from './HomeContent/BloodCardSection';
 import YouMayAlsoLike from './PeopleMayLike/YouMayAlsoLike/YouMayAlsoLike';
+import OurBranch from './HomeContent/OurBranch';
 
 const Home = () => {
     return (
@@ -14,10 +15,11 @@ const Home = () => {
             <Banner></Banner>
             <BloodInfoCards></BloodInfoCards>
             <AllEligibityInfo></AllEligibityInfo>
+             <BloodCardSection></BloodCardSection>
             <ReviewSection></ReviewSection>
-            <BloodCardSection></BloodCardSection>
+           
             <YouMayAlsoLike></YouMayAlsoLike>
-            <Contact></Contact>
+           <Contact></Contact>
             <OurBranch></OurBranch>
         </div>
     );

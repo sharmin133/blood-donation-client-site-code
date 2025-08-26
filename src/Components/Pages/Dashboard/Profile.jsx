@@ -60,7 +60,7 @@ const Profile = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className="max-w-xl mx-auto p-4 shadow-md bg-white rounded">
+    <div className="max-w-xl mx-auto p-4 md:m-20 shadow-md bg-white rounded">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl text-red-500 font-semibold">My Profile</h2>
         {!editable ? (

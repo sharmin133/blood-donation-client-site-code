@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 
 const EligibilityQuiz = () => {
-   const questions = [
+  const questions = [
     { text: "Are you between 18–65 years old?", valid: "yes" },
     { text: "Do you weigh at least 50 kg?", valid: "yes" },
     { text: "Are you currently feeling healthy and well?", valid: "yes" },
     { text: "Have you donated blood in the last 3 months?", valid: "no" },
     { text: "Do you have any recent infections or illnesses?", valid: "no" },
-    { text: "Do you have any chronic diseases (e.g. heart, diabetes)?", valid: "no" }, // extra card
-    { text: "Have you had surgery in the last 6 months?", valid: "no" }, // extra card
+    { text: "Do you have any chronic diseases (e.g. heart, diabetes)?", valid: "no" }, 
+    { text: "Have you had surgery in the last 6 months?", valid: "no" },
   ];
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -18,10 +18,7 @@ const EligibilityQuiz = () => {
   const handleAnswer = (answer) => {
     const currentQuestion = questions[currentStep];
 
-    if (
-      (answer === "yes" && !currentQuestion.mustBeYes) ||
-      (answer === "no" && currentQuestion.mustBeYes)
-    ) {
+    if (answer !== currentQuestion.valid) {
       setEligible(false);
       setFinished(true);
       return;
@@ -36,7 +33,7 @@ const EligibilityQuiz = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 border rounded-lg shadow-md text-center">
+    <div className="p-6 bg-red-100 border rounded-lg shadow-md text-center">
       {!finished ? (
         <>
           <h3 className="text-xl font-semibold mb-4 text-red-600">

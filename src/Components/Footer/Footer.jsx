@@ -11,10 +11,10 @@ const Footer = () => {
         <span className="self-center text-2xl font-bold whitespace-nowrap text-black">RedHope</span>
       </a>
     <ul className="flex flex-wrap gap-4   mb-10">
-        <li><Link to="/info/about" className="hover:underline">About</Link></li>
-        <li><Link to="/info/privacy" className="hover:underline">Privacy Policy</Link></li>
-        <li><Link to="/info/licensing" className="hover:underline">Licensing</Link></li> {/* fixed no space */}
-        <li><Link to="/info/contact" className="hover:underline">Contact</Link></li>
+        <li><Link to="about-us" className="hover:underline">About</Link></li>
+        <li><Link to="about-us" className="hover:underline">Privacy Policy</Link></li>
+        <li><Link to="about-us" className="hover:underline">Licensing</Link></li> {/* fixed no space */}
+        <li><Link to="about-us" className="hover:underline">Contact</Link></li>
       </ul>
 
     </div>

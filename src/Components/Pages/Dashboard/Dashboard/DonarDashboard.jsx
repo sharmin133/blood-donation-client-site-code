@@ -4,48 +4,57 @@ import { Link, useNavigate } from 'react-router';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
-
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from 'recharts';
 
 const DonorDashboard = () => {
-  const {user, userData } = useContext(AuthContext);
+  const { user, userData } = useContext(AuthContext);
   const [recentRequests, setRecentRequests] = useState([]);
+  const [allRequests, setAllRequests] = useState([]);
   const navigate = useNavigate();
 
+  const statusColors = {
+    pending: '#facc15',      // yellow => btn-warning
+    inprogress: '#3b82f6',   // blue => btn-info
+    done: '#22c55e',          // green => btn-success
+    canceled: '#ef4444',      // red => btn-error
+  };
 
   useEffect(() => {
     if (userData?.email) {
-    axios.get(`/donation-requests/requester/${userData.email}`)
-      .then(res => {
-        const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        setRecentRequests(sorted.slice(0, 3));
-      })
-      .catch(err => console.error(err));
-  }
-}, [userData]);
-
- const handleDelete = async (id) => {
-  const result = await Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this donation request?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Yes, delete it!'
-  });
-
-  if (result.isConfirmed) {
-    try {
-      await axios.delete(`https://blood-donation-vert.vercel.app/donation-requests/${id}`);
-      setRecentRequests(prev => prev.filter(req => req._id !== id));
-
-      Swal.fire('Deleted!', 'Donation request has been deleted.', 'success');
-    } catch (err) {
-      console.error('Failed to delete request', err);
-      toast.error('Failed to delete donation request.');
+      // Recent requests
+      axios.get(`https://blood-donation-vert.vercel.app/donation-requests/requester/${userData.email}`)
+        .then(res => {
+          const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          setRecentRequests(sorted.slice(0, 3));
+          setAllRequests(res.data); // chart
+        })
+        .catch(err => console.error(err));
     }
-  }
-};
+  }, [userData]);
+
+  const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this donation request?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`https://blood-donation-vert.vercel.app/donation-requests/${id}`);
+        setRecentRequests(prev => prev.filter(req => req._id !== id));
+        setAllRequests(prev => prev.filter(req => req._id !== id));
+        Swal.fire('Deleted!', 'Donation request has been deleted.', 'success');
+      } catch (err) {
+        console.error('Failed to delete request', err);
+        toast.error('Failed to delete donation request.');
+      }
+    }
+  };
 
   const handleStatusChange = async (id, status) => {
     try {
@@ -53,17 +62,28 @@ const DonorDashboard = () => {
       setRecentRequests(prev =>
         prev.map(req => req._id === id ? { ...req, status } : req)
       );
+      setAllRequests(prev =>
+        prev.map(req => req._id === id ? { ...req, status } : req)
+      );
     } catch (err) {
       console.error('Failed to update status', err);
     }
   };
+
+  // Chart Data: status-wise count
+  const chartData = [
+    { name: 'Pending', value: allRequests.filter(r => r.status === 'pending').length, status: 'pending' },
+    { name: 'In Progress', value: allRequests.filter(r => r.status === 'inprogress').length, status: 'inprogress' },
+    { name: 'Done', value: allRequests.filter(r => r.status === 'done').length, status: 'done' },
+    { name: 'Canceled', value: allRequests.filter(r => r.status === 'canceled').length, status: 'canceled' },
+  ];
 
   return (
     <div className="p-6">
       <h2 className="text-4xl font-bold text-red-600 text-center mb-6">
         Welcome, {userData?.name}!
       </h2>
-      <p className="text-gray-700 dark:text-gray-300 text-2xl mt-2 text-center">Role: {user?.role || 'Donar'}</p>
+      <p className="text-gray-700 dark:text-gray-300 text-2xl mt-2 text-center">Role: {user?.role || 'Donor'}</p>
 
       {recentRequests.length > 0 && (
         <div>
@@ -130,6 +150,26 @@ const DonorDashboard = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Chart */}
+          <div className="mt-6">
+            <h3 className="text-xl font-semibold mb-4 text-center">Your Donations Overview</h3>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow p-4">
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis allowDecimals={false} />
+                  <Tooltip />
+                  <Bar dataKey="value" radius={[6,6,0,0]}>
+                    {chartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={statusColors[entry.status]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
 
           <div className="mt-4 text-center">

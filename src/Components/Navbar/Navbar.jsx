@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Link, NavLink } from 'react-router'; // ✅ FIXED: use react-router-dom, not react-router
+import { Link, NavLink } from 'react-router';
 import "./navbar.css";
 
 const Navbar = () => {
@@ -38,8 +38,8 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-[#FF0000]  sticky w-full z-50">
-      <div className="px-20 flex flex-wrap items-center justify-between mx-auto p-4">
+    <nav className="bg-[#FF0000] top-0 sticky w-full z-50">
+      <div className="md:px-20 flex flex-wrap sticky items-center justify-between mx-auto p-4">
 
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
@@ -82,15 +82,18 @@ const Navbar = () => {
               <NavLink to="/blogs" onClick={handleLinkClick} className="nav-link">Blog</NavLink>
             </li>
 
-            <li>
-              <NavLink to="/fund" onClick={handleLinkClick} className="nav-link">Funding</NavLink>
-            </li>
+           
+            <li><NavLink to='about-us' onClick={handleLinkClick} className="nav-link">About </NavLink></li>
 
             {user && (
               <>
+               <li>
+              <NavLink to="/fund" onClick={handleLinkClick} className="nav-link">Funding</NavLink>
+            </li>
                 <li>
                   <NavLink to="/dashboard" onClick={handleLinkClick} className="nav-link md:hidden">Dashboard</NavLink>
                 </li>
+
                 <li>
                   <button onClick={handleSignOut} className="block w-full text-left nav-link md:hidden">Log Out</button>
                 </li>

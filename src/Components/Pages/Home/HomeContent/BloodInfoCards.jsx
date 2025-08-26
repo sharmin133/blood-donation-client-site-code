@@ -1,8 +1,18 @@
-import React, { useState } from 'react';
-import { FaTint, FaSyringe, FaHeartbeat, FaHandsHelping, FaGift, FaQuestionCircle, FaLightbulb } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { FaTint, FaSyringe, FaHeartbeat, FaHandsHelping, FaGift, FaLightbulb } from 'react-icons/fa';
 
 const BloodInfoCards = () => {
   const [selectedCard, setSelectedCard] = useState(null);
+
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true,
+    });
+  }, []);
 
   const modalContent = {
     types: {
@@ -51,18 +61,28 @@ Many donors also experience a sense of purpose and fulfillment knowing their con
 These steps will keep you safe, healthy, and make your donation experience easier.`
     }
   };
+
   const renderCard = (key, icon, title, summary, iconColor) => (
-    <div key={key} className="bg-white rounded-xl shadow-2xl p-6 text-center">
-      <div className="flex gap-3 justify-center pb-4">
-        <div className={`text-5xl ${iconColor}`}>
-          {icon}
+    <div 
+      key={key} 
+      className="bg-gray-100 rounded-xl shadow-2xl p-6 flex flex-col justify-between text-center h-full"
+      data-aos="fade-up"
+      data-aos-delay="100"
+    >
+      <div>
+        <div className="flex flex-col items-center gap-3 pb-4">
+          <div className={`text-5xl ${iconColor}`}>
+            {icon}
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-black">{title}</h2>
         </div>
-        <h2 className="text-3xl font-bold text-red-600 mb-3">{title}</h2>
+        <p className="text-gray-800 text-base sm:text-lg mb-6">{summary}</p>
       </div>
-      <p className="text-gray-700 mb-4">{summary}</p>
+
       <button
         onClick={() => setSelectedCard(key)}
-        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+        className="bg-white hover:bg-red-200 text-red-700 font-bold border-2 px-4 py-2 rounded w-fit mx-auto"
+        data-aos="zoom-in"
       >
         Learn More
       </button>
@@ -70,64 +90,26 @@ These steps will keep you safe, healthy, and make your donation experience easie
   );
 
   return (
-    <div className="relative ">
-      <div className=" mx-auto px-4 py-10 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {renderCard(
-          'types',
-          <FaTint />,
-          'About Blood Types',
-          'There are more than 8 blood types. Knowing yours is crucial for safe transfusion.',
-          'text-blue-600'
-        )}
-        {renderCard(
-          'components',
-          <FaSyringe />,
-          'About Blood Components',
-          'Blood can be separated into red cells, plasma, and platelets to treat specific needs.',
-          'text-green-600'
-        )}
-        {renderCard(
-          'eligibility',
-          <FaHeartbeat />,
-          'Donor Eligibility',
-          'Before donating, ensure you meet health, age, and weight requirements.',
-          'text-pink-600'
-        )}
-        {renderCard(
-          'process',
-          <FaHandsHelping />,
-          'Donation Process',
-          'Learn how the simple and safe donation process works from start to finish.',
-          'text-yellow-600'
-        )}
-        {renderCard(
-          'benefits',
-          <FaGift />,
-          'Benefits of Donation',
-          'Donating blood improves health and gives a sense of purpose.',
-          'text-purple-600'
-        )}
-      {renderCard(
-          'tips',
-          <FaLightbulb />,
-          'Blood Donation Tips',
-          'Practical tips for a smooth and safe blood donation experience.',
-          'text-orange-600'
-        )}
+    <div className="relative bg-gradient-to-r from-red-100 via-red-200 px-4 md:px-12 py-16">
+      {/* Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {renderCard('types', <FaTint />, 'About Blood Types', 'There are more than 8 blood types. Knowing yours is crucial for safe transfusion.', 'text-blue-600')}
+        {renderCard('components', <FaSyringe />, 'Blood Components', 'Blood can be separated into red cells, plasma, and platelets to treat specific needs.', 'text-green-600')}
+        {renderCard('eligibility', <FaHeartbeat />, 'Donor Eligibility', 'Before donating, ensure you meet health, age, and weight requirements.', 'text-pink-600')}
+        {renderCard('process', <FaHandsHelping />, 'Donation Process', 'Learn how the simple and safe donation process works from start to finish.', 'text-yellow-600')}
+        {renderCard('benefits', <FaGift />, 'Benefits of Donation', 'Donating blood improves health and gives a sense of purpose.', 'text-purple-600')}
+        {renderCard('tips', <FaLightbulb />, 'Blood Donation Tips', 'Practical tips for a smooth and safe blood donation experience.', 'text-orange-600')}
       </div>
 
+      {/* Modal */}
       {selectedCard && (
-        <div className="fixed inset-0 flex items-center justify-center px-4 z-50">
-          <div className="bg-red-200  p-6 rounded-xl max-w-lg w-full relative z-50 shadow-lg">
-            <h2 className="text-2xl font-bold mb-4 text-red-600">
-              {modalContent[selectedCard].title}
-            </h2>
-            <p className="text-black  whitespace-pre-line mb-6">
-              {modalContent[selectedCard].content}
-            </p>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
+          <div className="bg-red-100 p-6 rounded-xl max-w-md w-full relative shadow-lg" data-aos="zoom-in">
+            <h2 className="text-2xl font-bold mb-4 text-red-600">{modalContent[selectedCard].title}</h2>
+            <p className="text-black text-base sm:text-lg whitespace-pre-line mb-6">{modalContent[selectedCard].content}</p>
             <button
               onClick={() => setSelectedCard(null)}
-              className="bg-black hover:bg-black text-white px-4 py-2 rounded"
+              className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded w-full"
             >
               Close
             </button>

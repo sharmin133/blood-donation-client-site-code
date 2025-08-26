@@ -37,10 +37,11 @@ import FundDonation from './Components/Pages/Dashboard/AdminAllRoute/FundDonatio
 import FooterLinks from './Components/Footer/FooterLinks.jsx';
 import PrivateRoute from './Components/PrivateRoute/PrivateRoute.jsx';
 import ReviewAll from './Components/Pages/Dashboard/AdminAllRoute/ReviewAll.jsx';
-import CreateCardPage from './Components/Pages/Home/CreateCardPage.jsx';
+
 import CannotDonate from './Components/Pages/Home/PeopleMayLike/AllInfoYouMayLike/CannotDonate.jsx';
 import RareType from './Components/Pages/Home/PeopleMayLike/AllInfoYouMayLike/RareType.jsx';
 import DonatePlasma from './Components/Pages/Home/PeopleMayLike/AllInfoYouMayLike/DonatePlasma.jsx';
+import CreateCardPage from './Components/Pages/Home/HomeContent/CreateCardPage.jsx';
 
 
 
@@ -76,11 +77,12 @@ const router = createBrowserRouter([
       {
         path:'fund', element: <PrivateRoute><Fund></Fund></PrivateRoute>
       },
+     
       {
         path:'/fund-page', element: <PrivateRoute> <FundingPage></FundingPage></PrivateRoute>
       },
       {
-        path:'info/:section', element: <FooterLinks></FooterLinks>
+        path:'about-us', element: <FooterLinks></FooterLinks>
       },
       {
         path:'create-card', element: <CreateCardPage></CreateCardPage>

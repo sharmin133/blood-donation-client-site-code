@@ -44,19 +44,20 @@ const DonationRequestDetails = () => {
   if (!request) return <div className="p-10">Loading...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto min-h-screen p-6 pt-20">
+    <div className='bg-gray-500 ' >
+      <div className="max-w-3xl  text-gray-600 mx-auto min-h-screen p-6 pt-20">
       <h2 className="text-3xl font-bold text-red-700 mb-6">Donation Request Details 🩸</h2>
 
-      <div className="border p-6 rounded shadow">
-        <p><strong>Recipient Name:</strong> {request.recipientName}</p>
-        <p><strong>Blood Group:</strong> {request.bloodGroup}</p>
-        <p><strong>District:</strong> {request.recipientDistrict}</p>
-        <p><strong>Upazila:</strong> {request.recipientUpazila}</p>
-        <p><strong>Hospital:</strong> {request.hospitalName}</p>
-        <p><strong>Donation Date:</strong> {request.donationDate}</p>
-        <p><strong>Donation Time:</strong> {request.donationTime}</p>
-        <p><strong>Status:</strong> <span className="capitalize">{request.status}</span></p>
-        <p><strong>Requester Email:</strong> {request.requesterEmail}</p>
+      <div className="border p-6 rounded bg-red-100 shadow">
+        <p className="text-xl font-semibold text-red-700"><strong></strong> {request.recipientName}</p>
+        <p className='text-black'><strong>Blood Group:</strong> {request.bloodGroup}</p>
+        <p className='text-black'><strong>District:</strong> {request.recipientDistrict}</p>
+        <p className='text-black'><strong>Upazila:</strong> {request.recipientUpazila}</p>
+        <p className='text-black'><strong>Hospital:</strong> {request.hospitalName}</p>
+        <p className='text-black'><strong>Donation Date:</strong> {request.donationDate}</p>
+        <p className='text-black'><strong>Donation Time:</strong> {request.donationTime}</p>
+        <p className='text-black'><strong>Status:</strong> <span className="capitalize">{request.status}</span></p>
+        <p className='text-black'><strong>Requester Email:</strong> {request.requesterEmail}</p>
 
         {request.status === 'pending' && (
           <button
@@ -70,7 +71,7 @@ const DonationRequestDetails = () => {
 
       {/* Donate Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0  bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-md w-full shadow-lg">
             <h3 className="text-xl font-bold mb-4 text-red-600">Confirm Your Donation</h3>
             <form onSubmit={e => {
@@ -114,6 +115,7 @@ const DonationRequestDetails = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };
