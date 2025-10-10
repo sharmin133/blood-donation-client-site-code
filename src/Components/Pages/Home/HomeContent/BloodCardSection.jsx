@@ -68,14 +68,14 @@ const BloodCardSection = () => {
             transition={{ duration: 0.3 }}
           >
             <img
-              src="https://i.ibb.co.com/rfT9JS3N/img7.jpg"
+              src="https://i.ibb.co.com/Vc5kgvwp/imm-1.png"
               alt="Example User"
               className="mx-auto w-24 h-24 rounded-full"
             />
-            <h3 className="font-bold text-lg text-red-700 mt-2">Mst. Sharmin</h3>
-            <p className="text-black font-semibold">Blood Group: A+</p>
-            <p className="text-black font-semibold">District: Dhaka</p>
-            <p className="text-black font-semibold">Upazila: Dhanmondi</p>
+            <h3 className="font-bold text-lg text-red-700 mt-2">Aarohi Zara</h3>
+            <p className="text-black font-semibold">Blood Group: B+</p>
+            <p className="text-black font-semibold">District: Naogaon</p>
+            <p className="text-black font-semibold">Upazila: Naogaon</p>
           </motion.div>
         </motion.div>
       </div>
