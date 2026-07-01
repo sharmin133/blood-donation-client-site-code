@@ -11,10 +11,12 @@ const Banner = () => {
   // 60 random dots
   const dots = Array.from({ length: 80 }, () => ({
     left: 50 + Math.random() * 120, // % position
-    size: 3 + Math.random() * 5,    // 3-8px
-    color: ["#ef4444", "#dc2626", "#b91c1c", "#991b1b", "#7f1d1d"][Math.floor(Math.random() * 5)],
+    size: 3 + Math.random() * 5, // 3-8px
+    color: ["#ef4444", "#dc2626", "#b91c1c", "#991b1b", "#7f1d1d"][
+      Math.floor(Math.random() * 5)
+    ],
     delay: Math.random() * 2,
-    duration: 2 + Math.random() * 2
+    duration: 2 + Math.random() * 2,
   }));
 
   return (
@@ -45,9 +47,11 @@ const Banner = () => {
       ))}
 
       {/* Linear gradient overlay */}
-      <div className="absolute inset-0"
+      <div
+        className="absolute inset-0"
         style={{
-          background: "linear-gradient(to left, rgba(255,0,0,0.15), rgba(255,0,0,0))"
+          background:
+            "linear-gradient(to left, rgba(255,0,0,0.15), rgba(255,0,0,0))",
         }}
       ></div>
 
@@ -57,13 +61,15 @@ const Banner = () => {
           Donate Blood, <span className="block md:inline"> Save Lives</span>
         </h1>
         <div className="flex flex-col md:flex-row justify-center gap-2 md:gap-4 flex-wrap">
-          <Link to='/login'>
-            <button className="bg-red-600 hover:bg-red-700 text-white md:font-semibold md:py-3 md:px-6 py-2 px-2 rounded-full transition w-auto">
+          <Link to="/login">
+            <button className="bg-red-600 hover:bg-red-700 text-white shadow-md md:font-semibold md:py-3 md:px-6 py-2 px-2 rounded-full transition w-auto cursor-pointer">
               Join as a Donor
             </button>
           </Link>
-          <Link to='/search'>
-            <button className="bg-white border-2 hover:bg-gray-100 text-red-600 md:font-semibold md:py-3 md:px-6 py-1 px-2 rounded-full transition w-auto">
+          <Link to="/search">
+            <button className="bg-white border-1 hover:bg-red-100 shadow-md text-red-600
+             md:font-semibold md:py-3 md:px-6 py-1 px-2 rounded-full transition w-auto
+              cursor-pointer">
               Search Donors
             </button>
           </Link>
@@ -72,13 +78,17 @@ const Banner = () => {
 
       {/* Tailwind custom keyframes for dots */}
       <style>
-        {dots.map((dot, idx) => `
+        {dots
+          .map(
+            (dot, idx) => `
           @keyframes drop-${idx} {
             0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
             50% { opacity: 1; }
             100% { transform: translateY(600px) rotate(360deg); opacity: 0; }
           }
-        `).join('')}
+        `,
+          )
+          .join("")}
       </style>
     </section>
   );
