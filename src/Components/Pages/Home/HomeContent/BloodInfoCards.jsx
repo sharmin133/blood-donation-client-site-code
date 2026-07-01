@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { FaTint, FaSyringe, FaHeartbeat, FaHandsHelping, FaGift, FaLightbulb } from 'react-icons/fa';
+import { FaTint, FaSyringe, FaHeartbeat, FaHandsHelping, FaGift, FaLightbulb, FaTimes } from 'react-icons/fa';
 
 const BloodInfoCards = () => {
   const [selectedCard, setSelectedCard] = useState(null);
@@ -12,111 +12,171 @@ const BloodInfoCards = () => {
       easing: 'ease-in-out',
       once: true,
     });
+
+    // Load a distinctive display font for the section heading
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&display=swap';
+    document.head.appendChild(link);
+    return () => document.head.removeChild(link);
   }, []);
+
+  // Lock background scroll while modal is open
+  useEffect(() => {
+    document.body.style.overflow = selectedCard ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [selectedCard]);
 
   const modalContent = {
     types: {
       title: 'About Blood Types',
-      content: `There are more than 8 known blood types based on the ABO and Rh systems. 
-Type O-negative is the universal donor, while AB-positive is the universal recipient. Knowing your blood type ensures compatibility and safety during blood transfusions. Blood type inheritance is also determined genetically.
+      content: `There are 8 main blood types, grouped by the ABO and Rh systems. O-negative is the universal donor — it can go to almost anyone in an emergency. AB-positive is the universal recipient, able to receive any type. Your blood type is inherited, and knowing it is essential for safe transfusions.
 
-In emergency cases, hospitals often rely on O-negative blood because it can be given to almost anyone. However, only about 7% of the population has it. Therefore, donors of rare blood types are always in high demand.`
+Only about 7% of people are O-negative, yet hospitals rely on it constantly for emergencies where there's no time to test a patient's type. That's why O-negative donors are always in especially high demand.`
     },
     components: {
       title: 'About Blood Components',
-      content: `Blood contains four key components: red blood cells, white blood cells, platelets, and plasma. Each plays a critical role in patient care. For example, plasma contains clotting factors and proteins that are vital for burn victims and those with liver disease.
+      content: `Whole blood is made of four parts: red cells, white cells, platelets, and plasma — each with its own job. Plasma alone carries the clotting factors and proteins that burn victims and liver patients depend on.
 
-Component donation (like platelet or plasma donation) allows specific help for patients and is often used for cancer treatment, surgeries, and trauma care. This targeted donation helps medical teams treat patients more effectively.`
+Donating a single component, like platelets or plasma, lets your donation go further. Separated components treat cancer patients, surgery cases, and trauma victims more precisely than whole blood alone, and you can often donate components more frequently.`
     },
     eligibility: {
       title: 'Donor Eligibility',
-      content: `To donate blood, you must generally be between 18–65 years old, in good health, and meet a minimum weight requirement (typically 50 kg/110 lbs). You must not have had any recent infections, surgeries, or high-risk activities.
+      content: `Most donors are 18–65 years old, in good general health, and at least 50 kg (110 lbs). Recent infections, surgeries, tattoos, or certain travel history can mean a short waiting period before you're eligible again.
 
-Before each donation, a mini health screening checks your hemoglobin, pulse, and blood pressure. If you're unsure, consult your local blood donation center. Remember, eligibility helps ensure both donor and recipient safety.`
+Every visit starts with a quick screening — hemoglobin, pulse, and blood pressure — to protect both you and the patient receiving your donation. Unsure if you qualify? Your local blood center can check in minutes.`
     },
     process: {
       title: 'The Blood Donation Process',
-      content: `Donating blood is a simple and safe process that takes about 30–45 minutes. It includes registration, a short medical screening, the donation itself (about 8–10 minutes), and a brief rest period with refreshments.
+      content: `The whole visit takes 30–45 minutes, but the actual draw is just 8–10 minutes. It goes: quick registration, a short health check, the donation itself, then a few minutes to rest with a snack and juice.
 
-After donation, your body replaces the fluid in a few hours, and red blood cells in a few weeks. Most people feel fine and return to normal activities quickly. Regular donation (every 3–4 months) can save many lives each year.`
+Your body replaces the fluid within hours and the red cells within a few weeks. Most donors are back to normal activity the same day. Donate every 3–4 months and you could help save dozens of lives a year.`
     },
     benefits: {
       title: 'Benefits of Blood Donation',
-      content: `Donating blood not only saves lives but also benefits the donor. It helps improve heart health, reduces harmful iron stores, and stimulates the production of new blood cells.
+      content: `Giving blood isn't one-directional. The process can support cardiovascular health and helps regulate iron levels in the body, while prompting your bone marrow to produce fresh blood cells.
 
-Many donors also experience a sense of purpose and fulfillment knowing their contribution directly helps patients in need.`
+Beyond the physical, most donors describe a real sense of purpose — a tangible, 45-minute action that directly reaches someone in a hospital bed the same week.`
     },
     tips: {
       title: 'Blood Donation Tips',
-      content: `Follow these tips to ensure a smooth donation experience:
+      content: `A little preparation makes donation day easier:
 
-• Eat a healthy meal before donating — avoid fatty foods.  
-• Drink plenty of water to stay hydrated.  
-• Get a good night's sleep before donation day.  
-• Wear comfortable clothing with sleeves that can be rolled up.  
-• Relax and take deep breaths during the donation process.  
-• Avoid heavy exercise or lifting for a few hours afterward.  
-• Enjoy a light snack and juice provided after donation.  
+• Eat a solid, iron-rich meal beforehand — skip anything greasy.
+• Hydrate well, before and after.
+• Sleep well the night before.
+• Wear sleeves you can roll up past the elbow.
+• Breathe slowly and stay relaxed during the draw.
+• Skip heavy lifting or intense workouts for a few hours after.
+• Take the offered snack and juice — don't rush out.
 
-These steps will keep you safe, healthy, and make your donation experience easier.`
+Small habits like these keep the experience smooth and make it easier to come back next time.`
     }
   };
 
-  const renderCard = (key, icon, title, summary, iconColor) => (
-    <div 
-      key={key} 
-      className="bg-gray-100 rounded-xl shadow-2xl p-6 flex flex-col justify-between text-center h-full"
-      data-aos="fade-up"
-      data-aos-delay="100"
-    >
-      <div>
-        <div className="flex flex-col items-center gap-3 pb-4">
-          <div className={`text-5xl ${iconColor}`}>
-            {icon}
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-black">{title}</h2>
-        </div>
-        <p className="text-gray-800 text-base sm:text-lg mb-6">{summary}</p>
-      </div>
-
-      <button
-        onClick={() => setSelectedCard(key)}
-        className="bg-white hover:bg-red-200 text-red-700 font-bold border-2 px-4 py-2 rounded w-fit mx-auto"
-        data-aos="zoom-in"
-      >
-        Learn More
-      </button>
-    </div>
-  );
+  const cards = [
+    { key: 'types', icon: <FaTint />, title: 'Blood Types', summary: 'Eight types, one universal donor. Learn what makes O-negative so critical.', color: 'from-blue-500 to-blue-600', tint: 'from-white to-blue-50' },
+    { key: 'components', icon: <FaSyringe />, title: 'Blood Components', summary: 'Red cells, plasma, and platelets — split apart, they treat more patients.', color: 'from-emerald-500 to-emerald-600', tint: 'from-white to-emerald-50' },
+    { key: 'eligibility', icon: <FaHeartbeat />, title: 'Donor Eligibility', summary: 'Age, weight, and health basics to check before you book a donation.', color: 'from-pink-500 to-pink-600', tint: 'from-white to-pink-50' },
+    { key: 'process', icon: <FaHandsHelping />, title: 'Donation Process', summary: 'From check-in to juice box — what actually happens in 30 minutes.', color: 'from-amber-500 to-amber-600', tint: 'from-white to-amber-50' },
+    { key: 'benefits', icon: <FaGift />, title: 'Benefits of Donation', summary: 'Donating gives back too — for your heart, your cells, and your sense of purpose.', color: 'from-purple-500 to-purple-600', tint: 'from-white to-purple-50' },
+    { key: 'tips', icon: <FaLightbulb />, title: 'Donation Tips', summary: 'Small habits that make donation day easy and comfortable.', color: 'from-orange-500 to-orange-600', tint: 'from-white to-orange-50' },
+  ];
 
   return (
-    <div className="relative bg-gradient-to-r from-red-100 via-red-200 px-4 md:px-12 py-16">
+    <section className="relative bg-gradient-to-b from-red-50 to-red-100 px-4 md:px-12 py-20">
+      {/* Section heading */}
+      <div className="text-center max-w-2xl mx-auto mb-14" data-aos="fade-up">
+        <span className="inline-block text-red-600 font-semibold tracking-wide text-sm uppercase mb-2">
+          Know Before You Donate
+        </span>
+        <h2
+          className="text-3xl sm:text-5xl font-bold text-gray-900 italic tracking-tight"
+          style={{ fontFamily: " montenegrin-gothic-one-regular" }}
+        >
+          Everything About <span className="text-red-700">Blood Donation</span>
+        </h2>
+        <p className="text-gray-600 mt-3 text-base sm:text-lg">
+          Quick, practical answers on types, eligibility, and the donation process itself.
+        </p>
+      </div>
+
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {renderCard('types', <FaTint />, 'About Blood Types', 'There are more than 8 blood types. Knowing yours is crucial for safe transfusion.', 'text-blue-600')}
-        {renderCard('components', <FaSyringe />, 'Blood Components', 'Blood can be separated into red cells, plasma, and platelets to treat specific needs.', 'text-green-600')}
-        {renderCard('eligibility', <FaHeartbeat />, 'Donor Eligibility', 'Before donating, ensure you meet health, age, and weight requirements.', 'text-pink-600')}
-        {renderCard('process', <FaHandsHelping />, 'Donation Process', 'Learn how the simple and safe donation process works from start to finish.', 'text-yellow-600')}
-        {renderCard('benefits', <FaGift />, 'Benefits of Donation', 'Donating blood improves health and gives a sense of purpose.', 'text-purple-600')}
-        {renderCard('tips', <FaLightbulb />, 'Blood Donation Tips', 'Practical tips for a smooth and safe blood donation experience.', 'text-orange-600')}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {cards.map(({ key, icon, title, summary, color, tint }, i) => (
+          <div
+            key={key}
+            className={`group relative bg-gradient-to-br ${tint} rounded-2xl shadow-md hover:shadow-2xl
+                       border border-white/60 overflow-hidden
+                       p-7 flex flex-col justify-between text-center h-full
+                       transition-all duration-300 hover:-translate-y-1.5`}
+            data-aos="fade-up"
+            data-aos-delay={i * 80}
+          >
+            {/* top accent bar */}
+            <span className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${color}`} />
+
+            {/* faint decorative glow */}
+            <div className={`absolute -right-10 -bottom-10 w-40 h-40 rounded-full bg-gradient-to-br ${color} opacity-[0.08] blur-2xl`} />
+
+            <div className="relative">
+              <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${color}
+                                flex items-center justify-center text-white text-2xl
+                                shadow-lg mb-5 group-hover:scale-110 transition-transform duration-300`}>
+                {icon}
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+              <p className="text-gray-700 text-base leading-relaxed mb-6">{summary}</p>
+            </div>
+
+            <button
+              onClick={() => setSelectedCard(key)}
+              className="relative text-red-700 font-semibold hover:text-red-800 hover:underline
+                         underline-offset-4 cursor-pointer w-fit mx-auto transition-colors"
+            >
+              Learn more →
+            </button>
+          </div>
+        ))}
       </div>
 
       {/* Modal */}
       {selectedCard && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
-          <div className="bg-red-100 p-6 rounded-xl max-w-md w-full relative shadow-lg" data-aos="zoom-in">
-            <h2 className="text-2xl font-bold mb-4 text-red-600">{modalContent[selectedCard].title}</h2>
-            <p className="text-black text-base sm:text-lg whitespace-pre-line mb-6">{modalContent[selectedCard].content}</p>
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50 px-4"
+          onClick={() => setSelectedCard(null)}
+        >
+          <div
+            className="bg-white p-7 sm:p-8 rounded-2xl max-w-md w-full relative shadow-2xl border border-red-100"
+            data-aos="zoom-in"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               onClick={() => setSelectedCard(null)}
-              className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded w-full"
+              aria-label="Close"
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full
+                         text-gray-400 hover:text-red-700 hover:bg-red-50 transition-colors cursor-pointer"
+            >
+              <FaTimes />
+            </button>
+
+            <h2 className="text-2xl font-bold mb-4 text-red-700 pr-8">
+              {modalContent[selectedCard].title}
+            </h2>
+            <p className="text-gray-700 text-base leading-relaxed whitespace-pre-line mb-6">
+              {modalContent[selectedCard].content}
+            </p>
+
+            <button
+              onClick={() => setSelectedCard(null)}
+              className="bg-red-700 hover:bg-red-800 text-white font-semibold px-4 py-2.5 rounded-lg w-full transition-colors cursor-pointer"
             >
               Close
             </button>
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

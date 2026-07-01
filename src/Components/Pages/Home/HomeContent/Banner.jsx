@@ -57,8 +57,10 @@ const Banner = () => {
 
       {/* Text & buttons */}
       <div className="relative z-20 text-black px-4 text-center">
-        <h1 className="text-2xl md:text-5xl font-bold mb-6 md:pr-20">
-          Donate Blood, <span className="block md:inline"> Save Lives</span>
+       
+        <h1 className="text-2xl md:text-5xl font-bold mb-6 md:pr-20 italic "
+        style={{ fontFamily: " montenegrin-gothic-one-regular" }}>
+          Donate <span className="text-red-600">Blood</span>, <span className="block md:inline"> Save Lives</span>
         </h1>
         <div className="flex flex-col md:flex-row justify-center gap-2 md:gap-4 flex-wrap">
           <Link to="/login">
