@@ -6,7 +6,7 @@ const FooterLinks = () => {
     <div className=" mx-auto  px-4 py-12 space-y-20
                     bg-white dark:bg-black
                     text-gray-800 dark:text-gray-200">
-    <div className="md:mx-20">
+    <div className="max-w-7xl mx-auto px-4 md:px-10 lg:px-20">
          {/* About Section */}
       <section id="about">
         <h2 className="text-3xl font-bold flex items-center gap-2 mb-4

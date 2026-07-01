@@ -1,7 +1,18 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import { Link, NavLink } from 'react-router';
+import React, { useContext, useState, useRef, useEffect } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { Link, NavLink } from "react-router";
+import { FaChevronDown } from "react-icons/fa";
 import "./navbar.css";
+
+// Centralized nav links
+const NAV_LINKS = [
+  { to: "/", label: "Home" },
+  { to: "/donation-requests", label: "Donation Request" },
+  { to: "/blogs", label: "Blog" },
+  { to: "about-us", label: "About" },
+  { to: "/fund", label: "Funding", protected: true },
+  { to: "/dashboard", label: "Dashboard", protected: true, mobileOnly: true },
+];
 
 const Navbar = () => {
   const { user, signOutUser } = useContext(AuthContext);
@@ -12,7 +23,6 @@ const Navbar = () => {
   const handleSignOut = () => {
     signOutUser()
       .then(() => {
-        console.log('signout successfully');
         setIsMobileMenuOpen(false);
         setDropdownOpen(false);
       })
@@ -26,7 +36,7 @@ const Navbar = () => {
     setDropdownOpen(false);
   };
 
-  // Close dropdown if clicked outside
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -37,106 +47,115 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  return (
-    <nav className="bg-[#FF0000] top-0 sticky w-full z-50">
-      <div className="md:px-20 flex flex-wrap sticky items-center justify-between mx-auto p-4">
+  const visibleLinks = (mobile) =>
+    NAV_LINKS.filter((link) => {
+      if (link.protected && !user) return false;
+      if (link.mobileOnly && !mobile) return false;
+      return true;
+    });
 
+  return (
+    <nav className="bg-red-700 top-0 sticky w-full z-50 shadow-md relative ">
+      <div className=" flex flex-wrap items-center justify-between mx-auto p-4 max-w-7xl">
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src="/Image/blood logo.png" className="h-12 w-12 rounded-full" alt="redHope Logo" />
-          <span className="self-center text-2xl  whitespace-nowrap text-black font-bold">
+        <Link
+          to="/"
+          className="flex items-center space-x-3 rtl:space-x-reverse"
+        >
+          <img
+            src="/Image/blood logo.png"
+            className="h-12 w-12 rounded-full"
+            alt="redHope Logo"
+          />
+          <span className="self-center text-2xl whitespace-nowrap text-red-100 font-bold">
             RedHope
           </span>
         </Link>
 
-        {/* Mobile menu toggle */}
+        {/* Mobile menu toggle  */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           type="button"
-          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm  rounded-lg md:hidden "
+          className="inline-flex items-center p-2 w-10 h-10 justify-center rounded-lg lg:hidden text-white hover:bg-red-700 cursor-pointer relative z-50"
         >
           <span className="sr-only">Open main menu</span>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <div className="w-6 h-6 relative">
+            <span
+              className={`absolute left-0 top-1/2 w-6 h-0.5 bg-white rounded transition-all duration-300 ease-in-out
+                ${isMobileMenuOpen ? "rotate-45" : "-translate-y-2"}`}
+            />
+            <span
+              className={`absolute left-0 top-1/2 w-6 h-0.5 bg-white rounded transition-all duration-300 ease-in-out
+                ${isMobileMenuOpen ? "opacity-0" : "opacity-100"}`}
+            />
+            <span
+              className={`absolute left-0 top-1/2 w-6 h-0.5 bg-white rounded transition-all duration-300 ease-in-out
+                ${isMobileMenuOpen ? "-rotate-45" : "translate-y-2"}`}
+            />
+          </div>
         </button>
 
-        {/* Nav links (responsive) */}
-        <div
-          className={`w-full md:flex md:w-auto ${isMobileMenuOpen ? 'block' : 'hidden'}`}
-          id="navbar-user"
-        >
-          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 
-               md:flex-row md:space-x-8 md:mt-0 md:border-0  text-lg
-               ">
-
-            <li>
-              <NavLink to="/" onClick={handleLinkClick} className="nav-link">Home</NavLink>
-            </li>
-
-            <li>
-              <NavLink to="/donation-requests" onClick={handleLinkClick} className="nav-link">Donation Request</NavLink>
-            </li>
-
-            <li>
-              <NavLink to="/blogs" onClick={handleLinkClick} className="nav-link">Blog</NavLink>
-            </li>
-
-           
-            <li><NavLink to='about-us' onClick={handleLinkClick} className="nav-link">About </NavLink></li>
-
-            {user && (
-              <>
-               <li>
-              <NavLink to="/fund" onClick={handleLinkClick} className="nav-link">Funding</NavLink>
-            </li>
-                <li>
-                  <NavLink to="/dashboard" onClick={handleLinkClick} className="nav-link md:hidden">Dashboard</NavLink>
-                </li>
-
-                <li>
-                  <button onClick={handleSignOut} className="block w-full text-left nav-link md:hidden">Log Out</button>
-                </li>
-              </>
-            )}
-
-            {!user && (
-              <>
-                <li className="md:hidden">
-                  <Link to="/login" onClick={handleLinkClick} className="nav-link ">Log In</Link>
-                </li>
-                <li className="md:hidden">
-                  <Link to="/register" onClick={handleLinkClick} className="nav-link">Sign Up</Link>
-                </li>
-              </>
-            )}
+        {/* Desktop Nav links */}
+        <div className="hidden lg:flex lg:w-auto" id="navbar-user-desktop">
+          <ul className="flex flex-row items-center space-x-8 font-medium  text-white">
+            {visibleLinks(false).map((link) => (
+              <li key={link.to}>
+                <NavLink
+                  to={link.to}
+                  className="nav-link hover:text-red-200 transition-colors"
+                >
+                  {link.label}
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </div>
 
-        {/* Desktop dropdown for logged-in user */}
-        <div className="hidden md:flex items-center space-x-3">
+        {/* Desktop right side  */}
+        <div className="hidden lg:flex items-center">
           {user ? (
             <div className="relative" ref={dropdownRef}>
-              <img
-                key={user?.photoURL}
-                className="md:w-12 md:h-12 w-8 h-8 rounded-full border-2 border-red-500 cursor-pointer"
-                src={user?.photoURL}
-                alt={user?.displayName}
-                title={user?.displayName}
+              <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-              />
+                className="flex items-center gap-3 px-4 py-2 rounded-full
+                bg-white/10 border border-white/30
+                hover:bg-white/20 hover:border-white
+                transition-all duration-300 cursor-pointer"
+              >
+                <img
+                  className="w-10 h-10 rounded-full object-cover border-2 border-white/50"
+                  src={user?.photoURL}
+                  alt={user?.displayName}
+                />
+                <span className="text-white font-medium max-w-[120px] truncate">
+                  {user?.displayName}
+                </span>
+                <FaChevronDown
+                  className={`text-white text-xs transition-transform duration-300 ${
+                    dropdownOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50">
+                <div className="absolute right-0 mt-3 w-52 rounded-xl bg-red-700 border border-white/20 shadow-xl overflow-hidden z-50">
+                  <div className="px-4 py-3 border-b border-white/20 text-white bg-red-600">
+                    <span className="font-semibold">
+                      Hi, {user?.displayName}!
+                    </span>
+                  </div>
+
                   <Link
                     to="/dashboard"
                     onClick={handleLinkClick}
-                    className="block px-4 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="block px-4 py-3 text-white border-b border-white/20 hover:bg-red-600/40 transition"
                   >
                     Dashboard
                   </Link>
+
                   <button
                     onClick={handleSignOut}
-                    className="w-full text-left px-4 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="w-full text-left px-4 py-3 cursor-pointer text-white border-b border-white/20 hover:bg-red-600/40 transition"
                   >
                     Log Out
                   </button>
@@ -144,19 +163,90 @@ const Navbar = () => {
               )}
             </div>
           ) : (
-            <div className="flex gap-2">
-              <Link to="/register">
-                <span className="md:text-lg bg-white text-red-600 rounded-2xl px-4 py-2 font-medium">
-                  Sign Up
-                </span>
-              </Link>
+            <div className="flex gap-3">
               <Link to="/login">
-                <span className="md:text-lg bg-white text-red-600 rounded-2xl px-4 py-2 font-medium">
+                <button className="bg-red-100 text-red-700 px-5 py-2 rounded-full font-semibold hover:bg-red-50 transition cursor-pointer">
                   Log In
-                </span>
+                </button>
+              </Link>
+              <Link to="/register">
+                <button
+                  className="bg-transparent text-white border
+                 border-red-100 px-5 py-2 rounded-full font-semibold
+                  hover:bg-red-100 hover:text-red-700 transition cursor-pointer"
+                >
+                  Sign Up
+                </button>
               </Link>
             </div>
           )}
+        </div>
+
+        {/* Mobile full dropdown menu  */}
+        <div
+          className={`lg:hidden absolute left-0 right-0 top-full px-4 transition-all duration-300 ease-in-out
+          ${isMobileMenuOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"}`}
+        >
+          <div className="bg-red-700 rounded-xl p-4 mt-2 shadow-xl">
+            <ul className="flex flex-col font-medium text-lg text-white divide-y divide-white/10">
+              {visibleLinks(true).map((link) => (
+                <li key={link.to}>
+                  <NavLink
+                    to={link.to}
+                    onClick={handleLinkClick}
+                    className="block py-3 hover:text-red-200 transition-colors"
+                  >
+                    {link.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+
+            {/* Mobile bottom section */}
+            <div className="mt-4 pt-4 border-t border-white/10">
+              {user ? (
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <img
+                      className="w-10 h-10 rounded-full object-cover border-2 border-white/50"
+                      src={user?.photoURL}
+                      alt={user?.displayName}
+                    />
+                    <span className="text-white font-medium max-w-[140px] truncate">
+                      {user?.displayName}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="bg-red-100 text-red-700 px-4 py-2 rounded-full font-semibold hover:bg-red-50 transition cursor-pointer"
+                  >
+                    Log Out
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <Link
+                    to="/login"
+                    onClick={handleLinkClick}
+                    className="flex-1"
+                  >
+                    <button className="w-full bg-red-100 text-red-700 px-5 py-2 rounded-full font-semibold hover:bg-red-50 transition cursor-pointer">
+                      Log In
+                    </button>
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={handleLinkClick}
+                    className="flex-1"
+                  >
+                    <button className="w-full bg-transparent text-white border border-red-100 px-5 py-2 rounded-full font-semibold hover:bg-red-100 hover:text-red-700 transition cursor-pointer">
+                      Sign Up
+                    </button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </nav>

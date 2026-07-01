@@ -5,7 +5,7 @@ import Footer from '../Footer/Footer';
 
 const DashBoardRoot = () => {
     return (
-        <div>
+           <div className="max-w-[1920px] mx-auto overflow-x-hidden">
              <Navbar></Navbar>
              <Outlet></Outlet>
              <Footer></Footer>

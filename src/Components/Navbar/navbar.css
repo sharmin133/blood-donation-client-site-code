@@ -1,5 +1,14 @@
-.active{
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    
+.nav-link {
+  color: white;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #ffe4e6;
+}
+
+.nav-link.active {
+  color: #fecaca;
+  font-weight: 700;
 }
