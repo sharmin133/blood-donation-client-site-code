@@ -86,23 +86,26 @@ Small habits like these keep the experience smooth and make it easier to come ba
   return (
     <section className="relative bg-gradient-to-b from-red-50 to-red-100 px-4 md:px-12 py-20">
       {/* Section heading */}
-      <div className="text-center max-w-2xl mx-auto mb-14" data-aos="fade-up">
-        <span className="inline-block text-red-600 font-semibold tracking-wide text-sm uppercase mb-2">
-          Know Before You Donate
-        </span>
+      <div className="text-center  mx-auto mb-14" data-aos="fade-up">
+        <span className="inline-flex items-center gap-2 bg-red-700 text-white text-xs font-semibold
+                                 tracking-widest uppercase px-4 py-1.5 rounded-full mb-4 shadow-md">
+                 <FaTint className="text-red-200" /> Know Before You Donate
+               </span>
         <h2
-          className="text-3xl sm:text-5xl font-bold text-gray-900 italic tracking-tight"
-          style={{ fontFamily: " montenegrin-gothic-one-regular" }}
+          className="text-3xl md:text-5xl text-red-800 uppercase leading-[0.95] mb-4"
+          style={{ fontFamily: "'Montenegrin Gothic One', serif" }}
         >
-          Everything About <span className="text-red-700">Blood Donation</span>
+          Everything About {' '}
+          <span className="text-gray-900">Blood Donation</span>
         </h2>
+
         <p className="text-gray-600 mt-3 text-base sm:text-lg">
           Quick, practical answers on types, eligibility, and the donation process itself.
         </p>
       </div>
 
       {/* Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {cards.map(({ key, icon, title, summary, color, tint }, i) => (
           <div
             key={key}

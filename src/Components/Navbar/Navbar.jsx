@@ -56,7 +56,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-red-700 top-0 sticky w-full z-50 shadow-md relative ">
-      <div className=" flex flex-wrap items-center justify-between mx-auto p-4 max-w-7xl">
+      <div className=" flex flex-wrap items-center justify-between mx-auto p-4  max-w-7xl">
         {/* Logo */}
         <Link
           to="/"

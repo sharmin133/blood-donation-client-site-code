@@ -4,6 +4,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import domtoimage from "dom-to-image-more";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaTint, FaDownload, FaIdCard, FaCamera } from "react-icons/fa";
 
 const CreateCardPage = () => {
   const { user } = useContext(AuthContext);
@@ -17,12 +18,21 @@ const CreateCardPage = () => {
 
   const cardRef = useRef();
 
+  useEffect(() => {
+    // Load Montenegrin Gothic One display font (matches rest of site)
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Montenegrin+Gothic+One&display=swap";
+    document.head.appendChild(link);
+    return () => document.head.removeChild(link);
+  }, []);
+
   // Fetch user data
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await axios.get("https://blood-donation-vert.vercel.app/users");
-        const currentUser = res.data.find(u => u.email === user.email);
+        const currentUser = res.data.find((u) => u.email === user.email);
         if (currentUser) {
           setFormData({
             name: currentUser.name || "",
@@ -50,7 +60,7 @@ const CreateCardPage = () => {
     if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => {
-      setFormData(prev => ({ ...prev, photo: reader.result }));
+      setFormData((prev) => ({ ...prev, photo: reader.result }));
     };
     reader.readAsDataURL(file);
   };
@@ -58,7 +68,8 @@ const CreateCardPage = () => {
   const handleDownload = () => {
     if (!cardRef.current) return;
 
-    domtoimage.toPng(cardRef.current)
+    domtoimage
+      .toPng(cardRef.current)
       .then((dataUrl) => {
         const link = document.createElement("a");
         link.href = dataUrl;
@@ -72,107 +83,164 @@ const CreateCardPage = () => {
       });
   };
 
+  const inputClass =
+    "w-full px-4 py-2.5 rounded-lg border border-red-100 bg-white text-gray-800 " +
+    "focus:outline-none focus:ring-1 focus:ring-red-300 focus:border-red-400 transition";
+
+  const disabledInputClass =
+    "w-full px-4 py-2.5 rounded-lg border border-red-100 bg-red-50 text-gray-500 cursor-not-allowed";
+
+  const labelClass = "block text-sm font-semibold text-gray-700 mb-1.5";
+
   return (
-    <div className="p-6 border-white   max-w-xl mx-auto">
+    <section className="relative bg-gradient-to-b from-white via-red-50 to-white px-4 md:px-12 py-16 overflow-hidden min-h-screen">
       <ToastContainer position="top-right" autoClose={3000} />
-      <h2 className="text-2xl font-bold mb-4 text-center">Your Blood Buddy Card</h2>
 
-      {/* Editable form */}
-      <form className="shadow-md rounded-lg p-6 space-y-4 mb-6">
-        <div>
-          <label>Name</label>
-          <input
-            type="text"
-            value={formData.name}
-            disabled
-            className="input input-bordered w-full bg-gray-200"
-          />
-        </div>
+      {/* decorative background glow */}
+      <div className="absolute -top-10 -right-10 w-72 h-72 bg-red-300/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-red-200/30 rounded-full blur-3xl pointer-events-none" />
 
-        <div>
-          <label>Blood Group</label>
-          <input
-            type="text"
-            value={formData.bloodGroup}
-            disabled
-            className="input input-bordered w-full bg-gray-200"
-          />
-        </div>
-
-        <div>
-          <label>District</label>
-          <input
-            type="text"
-            name="district"
-            value={formData.district}
-            onChange={handleChange}
-            className="input input-bordered w-full"
-          />
-        </div>
-
-        <div>
-          <label>Upazila</label>
-          <input
-            type="text"
-            name="upazila"
-            value={formData.upazila}
-            onChange={handleChange}
-            className="input input-bordered w-full"
-          />
-        </div>
-
-        <div>
-          <label>Photo</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handlePhotoChange}
-            className="input input-bordered w-full"
-          />
-        </div>
-      </form>
-
-      {/* Card Preview */}
-      <div
-        ref={cardRef}
-        style={{
-          width: "320px",
-          margin: "0 auto",
-          padding: "20px",
-          borderRadius: "12px",
-          backgroundColor: "#ffffff",
-          color: "#000000",
-          textAlign: "center",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-        }}
-      >
-        {formData.photo && (
-          <img
-            src={formData.photo}
-            alt="User"
-            style={{
-              width: "100px",
-              height: "100px",
-              borderRadius: "50%",
-              marginBottom: "12px",
-            }}
-          />
-        )}
-        <h3 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "6px" }}>
-          {formData.name}
-        </h3>
-        <p>Blood Group: {formData.bloodGroup}</p>
-        <p>District: {formData.district}</p>
-        <p>Upazila: {formData.upazila}</p>
+      {/* Heading */}
+      <div className="relative text-center max-w-xl mx-auto mb-12">
+        <span className="inline-flex items-center gap-2 bg-red-50 text-red-700 text-xs font-semibold
+                          tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 border border-red-200">
+          <FaIdCard className="text-red-500" /> Build Your Card
+        </span>
+        <h2
+          className="text-3xl md:text-5xl text-gray-900 uppercase leading-[0.95]"
+          style={{ fontFamily: "'Montenegrin Gothic One', serif" }}
+        >
+          Your Blood <br className="hidden md:block" />
+          <span className="bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
+            Buddy Card
+          </span>
+        </h2>
       </div>
 
-      <button
-        onClick={handleDownload}
-        className="mt-4 btn bg-red-600 w-full"
-      >
-        Download Card
-      </button>
-    </div>
+      <div className="relative max-w-5xl mx-auto flex flex-col md:flex-row items-start justify-center gap-10">
+
+        {/* Editable form */}
+        <form className="w-full md:max-w-md bg-white rounded-2xl shadow-lg border border-red-100 p-6 md:p-8 space-y-5">
+          <div>
+            <label className={labelClass}>Name</label>
+            <input type="text" value={formData.name} disabled className={disabledInputClass} />
+          </div>
+
+          <div>
+            <label className={labelClass}>Blood Group</label>
+            <input type="text" value={formData.bloodGroup} disabled className={disabledInputClass} />
+          </div>
+
+          <div>
+            <label className={labelClass}>District</label>
+            <input
+              type="text"
+              name="district"
+              placeholder="e.g. Naogaon"
+              value={formData.district}
+              onChange={handleChange}
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Upazila</label>
+            <input
+              type="text"
+              name="upazila"
+              placeholder="e.g. Naogaon Sadar"
+              value={formData.upazila}
+              onChange={handleChange}
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Photo</label>
+            <label className="flex items-center gap-3 px-4 py-2.5 rounded-lg border-2 border-dashed
+                               border-red-200 bg-red-50/50 text-red-700 text-sm font-medium
+                               hover:bg-red-100 transition cursor-pointer">
+              <FaCamera />
+              {formData.photo ? "Change photo" : "Upload a photo"}
+              <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
+            </label>
+          </div>
+        </form>
+
+        {/* Card Preview + Download */}
+        <div className="w-full md:w-auto flex flex-col items-center">
+        <div className="mb-5">
+  <span
+    className="inline-flex items-center gap-3 px-5 py-2.5
+    rounded-full bg-white shadow-lg border border-red-200"
+  >
+    <span className="relative flex h-3 w-3">
+      <span className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75 animate-ping"></span>
+      <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600"></span>
+    </span>
+
+    <span className="text-[11px] font-bold uppercase tracking-[0.35em] text-red-700">
+      Live Preview
+    </span>
+  </span>
+</div>
+
+          <div
+            ref={cardRef}
+            className="w-72 rounded-2xl overflow-hidden shadow-2xl"
+          >
+            {/* Card header strip */}
+            <div className="bg-gradient-to-r from-red-600 to-red-800 px-5 py-4 flex items-center justify-between">
+              <span className="text-white font-bold tracking-wide text-sm">RedHope</span>
+              <FaTint className="text-red-200 text-lg" />
+            </div>
+
+            {/* Card body */}
+            <div className="bg-white p-6 text-center border border-t-0 border-red-100">
+              {formData.photo ? (
+                <img
+                  src={formData.photo}
+                  alt="User"
+                  className="mx-auto w-24 h-24 rounded-full object-cover border-4 border-red-100 shadow-md mb-4"
+                />
+              ) : (
+                <div className="mx-auto w-24 h-24 rounded-full bg-red-50 border-4 border-red-100
+                                 flex items-center justify-center text-red-300 text-3xl mb-4">
+                  <FaCamera />
+                </div>
+              )}
+
+              <h3 className="font-bold text-xl text-gray-900 mb-1">
+                {formData.name || "Your Name"}
+              </h3>
+
+              <span className="inline-block bg-red-700 text-white text-sm font-bold px-4 py-1 rounded-full mb-4">
+                {formData.bloodGroup || "--"}
+              </span>
+
+              <div className="text-left text-sm text-gray-600 space-y-1.5 border-t border-red-100 pt-4">
+                <p className="flex justify-between">
+                  <span className="text-gray-400">District</span>
+                  <span className="font-semibold text-gray-800">{formData.district || "—"}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-400">Upazila</span>
+                  <span className="font-semibold text-gray-800">{formData.upazila || "—"}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={handleDownload}
+            className="mt-6 w-72 inline-flex items-center justify-center gap-2 bg-red-700 text-white
+                       font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-red-800 transition-colors cursor-pointer"
+          >
+            <FaDownload className="text-sm" /> Download Card
+          </button>
+        </div>
+      </div>
+    </section>
   );
 };
 
