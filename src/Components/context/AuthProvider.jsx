@@ -1,85 +1,89 @@
 import React, { useEffect, useState } from 'react';
 
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword,  signOut } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
 import { auth } from '../../Firebase/.firebase.init';
 import { AuthContext } from './AuthContext';
 
+const AuthProvider = ({ children }) => {
+  const [userData, setUserData] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  const createUser = (email, password) => {
+    setLoading(true);
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
 
+  const userLogin = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password);
+  };
 
-const AuthProvider = ({children}) => {
+  const signOutUser = () => {
+    setLoading(true);
+    return signOut(auth);
+  };
 
- 
-    const [userData, setUserData] = useState(null);
-    const[user,setUser]=useState(null);
-    const[loading,setLoading]=useState(true)
-    const createUser=(email,password)=>{
-        setLoading(true)
-        return createUserWithEmailAndPassword(auth,email,password)
+  // Quick demo logins — reuse userLogin under the hood
+  const quickLoginAdmin = () => userLogin('sharminsharmin@gmail.com', 'Sharmin');
+  const quickLoginVolunteer = () => userLogin('shamima@gmail.com', 'Sharmin');
+  const quickLoginUser = () => userLogin('shamima123@gmail.com', 'Sharmin');
 
-    }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
 
+      if (currentUser?.email) {
+        try {
+          const res = await fetch(
+            `https://blood-donation-vert.vercel.app/users/email/${currentUser.email}`
+          );
 
+          if (!res.ok) {
+            console.warn('User not found in DB');
+            return;
+          }
 
-    const userLogin=(email,password)=>{
-        setLoading(true)
-        return signInWithEmailAndPassword(auth,email,password)
-    }
-
-    const signOutUser=()=>{
-        setLoading(true)
-        return signOut(auth);
-    }
-
- useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-    setUser(currentUser);
-    setLoading(false);
-
-    if (currentUser?.email) {
-      try {
-        const res = await fetch(`https://blood-donation-vert.vercel.app/users/email/${currentUser.email}`);
-
-        if (!res.ok) {
-          console.warn("User not found in DB");
-          return;
+          const data = await res.json();
+          setUserData(data);
+        } catch (err) {
+          console.error('Failed to fetch user data:', err);
         }
-
-        const data = await res.json();
-        setUserData(data);
-      } catch (err) {
-        console.error('Failed to fetch user data:', err);
       }
-    }
-  });
+    });
 
-  return () => unsubscribe();
-}, []);
+    return () => unsubscribe();
+  }, []);
 
- const userStatus = userData?.status || null;
+  const userStatus = userData?.status || null;
 
-    const userInfo={
-        user,
-        setUser,
-         userData,
-         userStatus,     
-         setUserData,
-        loading,
-       createUser,
-       userLogin,
-       signOutUser,
-      
-      
-    }
+  const userInfo = {
+    user,
+    setUser,
+    userData,
+    userStatus,
+    setUserData,
+    loading,
+    createUser,
+    userLogin,
+    signOutUser,
+    quickLoginAdmin,
+    quickLoginVolunteer,
+    quickLoginUser,
+  };
 
-    return (
-         <AuthContext.Provider value={userInfo}>
-
-            {children}
-        </AuthContext.Provider>
-
-
-    );
+  return (
+    <AuthContext.Provider value={userInfo}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;

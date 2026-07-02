@@ -162,14 +162,14 @@ const ReviewSection = () => {
         >
           Voices That <span className="bg-gradient-to-r from-red-700 to-gray-900 bg-clip-text text-transparent">Inspire</span>
         </h2>
-        <p className="relative text-gray-600 mt-3 text-base sm:text-lg max-w-xl mx-auto">
+        <p className="relative text-gray-600 mt-3 text-base sm:text-lg max-w-2xl mx-auto">
           Real words from real donors — hear their stories, or share your own.
         </p>
       </div>
 
-      <div className="relative flex flex-col md:flex-row justify-between items-center gap-12 max-w-6xl mx-auto">
+      <div className="relative flex flex-col md:flex-row justify-between items-center gap-12 max-w-7xl mx-auto">
         {/* Left Text & Button */}
-        <div className="flex flex-col gap-6 max-w-sm text-center md:text-left" data-aos="fade-right">
+        <div className="flex flex-col gap-6 max-w-xl text-center md:text-left" data-aos="fade-right">
           <p className="text-lg text-gray-700 leading-relaxed">
             Hear from our blood buddies and share your own experience to
             inspire others. Your words can save lives.

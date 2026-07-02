@@ -136,7 +136,7 @@ const Contact = () => {
         />
       ))}
 
-      <div className="relative max-w-6xl mx-auto">
+      <div className="relative max-w-7xl mx-auto">
         {/* Heading */}
         <div className="text-center mb-14" data-aos="fade-up">
           <div className="flex items-center justify-center gap-3 mb-3">

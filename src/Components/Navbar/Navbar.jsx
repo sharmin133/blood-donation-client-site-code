@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link, NavLink } from "react-router";
-import { FaChevronDown } from "react-icons/fa";
+import { FaChevronDown, FaUserShield, FaHandsHelping, FaUser } from "react-icons/fa";
 import "./navbar.css";
 
 // Centralized nav links
@@ -14,11 +14,27 @@ const NAV_LINKS = [
   { to: "/dashboard", label: "Dashboard", protected: true, mobileOnly: true },
 ];
 
+// Demo login roles — wired to AuthContext's quickLoginAdmin / quickLoginVolunteer / quickLoginUser
+const DEMO_ROLES = [
+  { key: "admin", label: "Login as Admin", icon: <FaUserShield /> },
+  { key: "volunteer", label: "Login as Volunteer", icon: <FaHandsHelping /> },
+  { key: "user", label: "Login as User", icon: <FaUser /> },
+];
+
 const Navbar = () => {
-  const { user, signOutUser } = useContext(AuthContext);
+  const {
+    user,
+    signOutUser,
+    quickLoginAdmin,
+    quickLoginVolunteer,
+    quickLoginUser,
+  } = useContext(AuthContext);
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [demoDropdownOpen, setDemoDropdownOpen] = useState(false);
   const dropdownRef = useRef();
+  const demoDropdownRef = useRef();
 
   const handleSignOut = () => {
     signOutUser()
@@ -34,13 +50,24 @@ const Navbar = () => {
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
     setDropdownOpen(false);
+    setDemoDropdownOpen(false);
   };
 
+  const handleDemoLogin = (roleKey) => {
+    if (roleKey === "admin") quickLoginAdmin?.();
+    if (roleKey === "volunteer") quickLoginVolunteer?.();
+    if (roleKey === "user") quickLoginUser?.();
+    setDemoDropdownOpen(false);
+    setIsMobileMenuOpen(false);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
+      }
+      if (demoDropdownRef.current && !demoDropdownRef.current.contains(event.target)) {
+        setDemoDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -112,7 +139,51 @@ const Navbar = () => {
         </div>
 
         {/* Desktop right side  */}
-        <div className="hidden lg:flex items-center">
+        <div className="hidden lg:flex items-center gap-3">
+          {/* Demo login dropdown — only visible when logged out */}
+          {!user && (
+            <div className="relative" ref={demoDropdownRef}>
+              <button
+                onClick={() => setDemoDropdownOpen(!demoDropdownOpen)}
+                className="flex items-center gap-2 px-4 py-2 rounded-full
+                bg-transparent border border-red-100 text-white
+                hover:bg-white/10 transition-all duration-300 cursor-pointer text-sm font-semibold"
+              >
+                Demo Login
+                <FaChevronDown
+                  className={`text-white text-xs transition-transform duration-300 ${
+                    demoDropdownOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {demoDropdownOpen && (
+                <div className="absolute right-0 mt-3 w-56 rounded-xl bg-white border border-red-100 shadow-xl overflow-hidden z-50">
+                  <div className="px-4 py-2.5 border-b border-red-100 bg-red-50">
+                    <span className="text-xs font-semibold text-red-700 uppercase tracking-wide">
+                      Try the platform as
+                    </span>
+                  </div>
+                  {DEMO_ROLES.map((role) => (
+                    <button
+                      key={role.key}
+                      onClick={() => handleDemoLogin(role.key)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700
+                                 hover:bg-red-50 hover:text-red-700 transition cursor-pointer
+                                 border-b border-red-50 last:border-0"
+                    >
+                      <span className="w-8 h-8 rounded-full bg-red-100 text-red-600
+                                       flex items-center justify-center text-sm shrink-0">
+                        {role.icon}
+                      </span>
+                      {role.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {user ? (
             <div className="relative" ref={dropdownRef}>
               <button
@@ -203,7 +274,7 @@ const Navbar = () => {
             </ul>
 
             {/* Mobile bottom section */}
-            <div className="mt-4 pt-4 border-t border-white/10">
+            <div className="mt-4 pt-4 border-t border-white/10 space-y-4">
               {user ? (
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
@@ -243,6 +314,30 @@ const Navbar = () => {
                       Sign Up
                     </button>
                   </Link>
+                </div>
+              )}
+
+              {/* Demo login (mobile) — only visible when logged out */}
+              {!user && (
+                <div className="rounded-xl border border-white/20 overflow-hidden">
+                  <div className="px-4 py-2.5 bg-white/10">
+                    <span className="text-xs font-semibold text-red-100 uppercase tracking-wide">
+                      Try the platform as
+                    </span>
+                  </div>
+                  {DEMO_ROLES.map((role) => (
+                    <button
+                      key={role.key}
+                      onClick={() => handleDemoLogin(role.key)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left text-white
+                                 hover:bg-white/10 transition cursor-pointer border-t border-white/10"
+                    >
+                      <span className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-sm shrink-0">
+                        {role.icon}
+                      </span>
+                      {role.label}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>

@@ -5,12 +5,12 @@ import { Link } from 'react-router';
 
 const Footer = () => {
     return (
-     <footer className="bg-[#FF0000]  shadow-sm  ">
-  <div className="w-full max-w-7xl mx-auto px-4 md:px-10 lg:px-20 py-4 md:py-8">
+     <footer className="bg-red-700   shadow-sm  ">
+  <div className="w-full max-w-7xl mx-auto px-4  py-4 md:py-8">
     <div className="sm:flex sm:items-center sm:justify-between">
       <a href="" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
         <img src="/Image/blood logo.png" className="h-8 rounded-full" alt="" />
-        <span className="self-center text-2xl font-bold whitespace-nowrap text-black">RedHope</span>
+        <span className="self-center text-2xl whitespace-nowrap text-red-100 font-bold">RedHope</span>
       </a>
     <ul className="flex flex-wrap gap-4   mb-10">
         <li><Link to="about-us" className="hover:underline">About</Link></li>
