@@ -18,7 +18,7 @@ const NAV_LINKS = [
 const DEMO_ROLES = [
   { key: "admin", label: "Login as Admin", icon: <FaUserShield /> },
   { key: "volunteer", label: "Login as Volunteer", icon: <FaHandsHelping /> },
-  { key: "user", label: "Login as User", icon: <FaUser /> },
+  { key: "user", label: "Login as Donor", icon: <FaUser /> },
 ];
 
 const Navbar = () => {

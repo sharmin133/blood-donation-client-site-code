@@ -33,7 +33,7 @@ const AuthProvider = ({ children }) => {
   // Quick demo logins — reuse userLogin under the hood
   const quickLoginAdmin = () => userLogin('sharminsharmin@gmail.com', 'Sharmin');
   const quickLoginVolunteer = () => userLogin('shamima@gmail.com', 'Sharmin');
-  const quickLoginUser = () => userLogin('shamima123@gmail.com', 'Sharmin');
+  const quickLoginUser = () => userLogin('farhanamou1234@gmail.com', 'farhanamou1234@gmail.coM');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
