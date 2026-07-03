@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { FaTint } from 'react-icons/fa';
+import Pagination from '../../../Pagination/Pagination';
+
+const STATUS_STYLES = {
+  pending: 'bg-amber-100 text-amber-700 border-amber-200',
+  inprogress: 'bg-blue-100 text-blue-700 border-blue-200',
+  done: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  canceled: 'bg-gray-200 text-gray-600 border-gray-300',
+};
+
+const STATUS_OPTIONS = ['all', 'pending', 'inprogress', 'done', 'canceled'];
 
 const VolunteerAllRequest = () => {
   const [requests, setRequests] = useState([]);
   const [filteredStatus, setFilteredStatus] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [visibleCount, setVisibleCount] = useState(7);
+  const batchSize = 7;
 
   const fetchRequests = async () => {
     try {
@@ -37,109 +48,100 @@ const VolunteerAllRequest = () => {
     ? requests
     : requests.filter((req) => req.status === filteredStatus);
 
-  const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = filteredRequests.slice(startIndex, startIndex + itemsPerPage);
-
-  const statusColors = {
-    pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    inprogress: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    done: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    canceled: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-  };
+  const currentItems = filteredRequests.slice(0, visibleCount);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h2 className="text-2xl font-bold text-red-600 mb-4">All Blood Donation Requests 🩸</h2>
+    <div className="max-w-7xl mx-auto">
+      {/* Heading */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+        <div>
+          <span className="inline-flex items-center gap-2 bg-red-50 text-red-700 text-xs font-semibold
+                            tracking-widest uppercase px-4 py-1.5 rounded-full mb-2 border border-red-200">
+            <FaTint className="text-red-500" /> Donation Management
+          </span>
+          <h2 className="text-3xl font-bold text-gray-900">All Blood Donation Requests</h2>
+        </div>
 
-      {/* Filter Dropdown */}
-      <div className="mb-4 flex items-center gap-2">
-        <label className="font-semibold text-gray-700 dark:text-white">Filter by Status:</label>
+        {/* Filter */}
         <select
           value={filteredStatus}
           onChange={(e) => {
             setFilteredStatus(e.target.value);
-            setCurrentPage(1);
+            setVisibleCount(batchSize);
           }}
-          className="select select-bordered select-sm w-48"
+          className="px-4 py-2.5 rounded-lg border border-red-100 bg-white text-gray-800 font-medium
+                     focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 transition cursor-pointer"
         >
-          <option value="all">All</option>
-          <option value="pending">Pending</option>
-          <option value="inprogress">In Progress</option>
-          <option value="done">Done</option>
-          <option value="canceled">Canceled</option>
+          {STATUS_OPTIONS.map((status) => (
+            <option key={status} value={status}>
+              {status === 'all' ? 'All Requests' : status.charAt(0).toUpperCase() + status.slice(1)}
+            </option>
+          ))}
         </select>
       </div>
 
-      {/* Data Table */}
-      <div className="overflow-x-auto">
-        <table className="table table-zebra w-full">
-          <thead>
-            <tr>
-              <th>Requester Name</th>
-              <th>Blood Group</th>
-              <th>District</th>
-              <th>Status</th>
-              <th>Update Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentItems.length > 0 ? currentItems.map((req) => (
-              <tr key={req._id}>
-                <td>{req.requesterName}</td>
-                <td>{req.bloodGroup}</td>
-                <td>{req.district}</td>
-                <td>
-                  <span
-                    className={`badge badge-md min-w-[100px] text-center ${statusColors[req.status] || 'bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300'}`}
+      {/* Table */}
+      {currentItems.length === 0 ? (
+        <div className="text-center py-16 bg-white rounded-2xl border border-red-100">
+          <p className="text-gray-500">No requests found.</p>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-red-100 shadow-md bg-white overflow-hidden">
+          <div className="overflow-auto max-h-[520px]">
+            <table className="w-full text-sm table-fixed min-w-[760px]">
+              <thead className="sticky top-0 z-10">
+                <tr className="bg-gradient-to-r from-red-600 to-red-800 text-white">
+                  <th className="px-4 py-3.5 text-left font-semibold w-1/4">Requester Name</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-28">Blood Group</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-1/5">District</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-28">Status</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-44">Update Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentItems.map((req, idx) => (
+                  <tr
+                    key={req._id}
+                    className={`border-t border-red-50 h-[65px] ${idx % 2 === 1 ? 'bg-red-50/40' : 'bg-white'} hover:bg-red-50 transition-colors`}
                   >
-                    {req.status}
-                  </span>
-                </td>
-                <td>
-                  <select
-                    value={req.status}
-                    onChange={(e) => handleStatusChange(req._id, e.target.value)}
-                    className="select select-sm select-bordered w-36"
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="inprogress">In Progress</option>
-                    <option value="done">Done</option>
-                    <option value="canceled">Canceled</option>
-                  </select>
-                </td>
-              </tr>
-            )) : (
-              <tr>
-                <td colSpan="5" className="text-center text-gray-500 py-4">
-                  No requests found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-4 gap-2">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-            className="btn btn-sm btn-outline bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
-          >
-            Prev
-          </button>
-          <span className="text-sm pt-2">Page {currentPage} of {totalPages}</span>
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            className="btn btn-sm btn-outline bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
-          >
-            Next
-          </button>
+                    <td className="px-4 py-3 font-medium text-gray-900 truncate">{req.requesterName}</td>
+                    <td className="px-4 py-3 text-gray-600">{req.bloodGroup}</td>
+                    <td className="px-4 py-3 text-gray-600 truncate">{req.district}</td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-block text-xs font-semibold uppercase px-2.5 py-1 rounded-full border capitalize ${
+                        STATUS_STYLES[req.status] || 'bg-gray-100 text-gray-600 border-gray-200'
+                      }`}>
+                        {req.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <select
+                        value={req.status}
+                        onChange={(e) => handleStatusChange(req._id, e.target.value)}
+                        className="px-3 py-2 rounded-lg border border-red-100 bg-white text-gray-800 text-sm font-medium
+                                   focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 transition cursor-pointer"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="inprogress">In Progress</option>
+                        <option value="done">Done</option>
+                        <option value="canceled">Canceled</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
+
+      {/* See More */}
+      <Pagination
+        total={filteredRequests.length}
+        visible={visibleCount}
+        onSeeMore={() => setVisibleCount((c) => c + batchSize)}
+        batchSize={batchSize}
+      />
     </div>
   );
 };

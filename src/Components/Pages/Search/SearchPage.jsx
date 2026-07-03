@@ -76,7 +76,7 @@ const handleChange = e => {
     const res = await axios.get('https://blood-donation-vert.vercel.app/users');
     const allUsers = res.data;
 
-    console.log('All users fetched:', allUsers);
+    //console.log('All users fetched:', allUsers);
 
     const matched = allUsers.filter(user => {
       const bloodMatch = searchData.bloodGroup ? user.bloodGroup === searchData.bloodGroup : true;

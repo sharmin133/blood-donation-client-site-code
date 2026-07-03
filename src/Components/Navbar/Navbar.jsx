@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { FaChevronDown, FaUserShield, FaHandsHelping, FaUser } from "react-icons/fa";
 import "./navbar.css";
 
@@ -22,6 +22,7 @@ const DEMO_ROLES = [
 ];
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const {
     user,
     signOutUser,
@@ -53,13 +54,24 @@ const Navbar = () => {
     setDemoDropdownOpen(false);
   };
 
-  const handleDemoLogin = (roleKey) => {
-    if (roleKey === "admin") quickLoginAdmin?.();
-    if (roleKey === "volunteer") quickLoginVolunteer?.();
-    if (roleKey === "user") quickLoginUser?.();
+  const handleDemoLogin = async (roleKey) => {
+  try {
+    if (roleKey === "admin") {
+      await quickLoginAdmin?.();
+    } else if (roleKey === "volunteer") {
+      await quickLoginVolunteer?.();
+    } else if (roleKey === "user") {
+      await quickLoginUser?.();
+    }
+
     setDemoDropdownOpen(false);
     setIsMobileMenuOpen(false);
-  };
+
+    navigate("/dashboard");
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   useEffect(() => {
     const handleClickOutside = (event) => {

@@ -1,247 +1,169 @@
-import { Outlet, NavLink } from "react-router";
+import { Outlet, NavLink, Link, useNavigate } from "react-router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import {
+  FaTint,
+  FaTachometerAlt,
+  FaUser,
+  FaUsers,
+  FaClipboardList,
+  FaNewspaper,
+  FaStar,
+  FaHandHoldingUsd,
+  FaPlusCircle,
+  FaListUl,
+  FaSignOutAlt,
+  FaUserShield,
+  FaHandsHelping,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
+
+const ROLE_META = {
+  admin: { label: "Admin", icon: <FaUserShield /> },
+  volunteer: { label: "Volunteer", icon: <FaHandsHelping /> },
+  donor: { label: "Donor", icon: <FaUser /> },
+};
 
 const DashboardLayouts = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { userData } = useContext(AuthContext);
+  const { userData, signOutUser } = useContext(AuthContext);
+  const navigate = useNavigate();
   const role = userData?.role;
+  const roleMeta = ROLE_META[role] || { label: "Member", icon: <FaUser /> };
+
+  const handleSignOut = () => {
+    signOutUser()
+      .then(() => {
+        navigate("/");
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const linkClass = ({ isActive }) =>
+    `flex items-center gap-3 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+      isActive
+        ? "bg-red-700 text-white shadow-md"
+        : "text-gray-600 hover:bg-red-50 hover:text-red-700"
+    }`;
 
   return (
-    <div className="min-h-screen bg-red-100 md:flex">
+    <div className="h-screen bg-gradient-to-b from-white via-red-50 to-white md:flex max-w-[1920px] mx-auto overflow-hidden">
+
+      {/* Mobile toggle */}
+      <button
+        className="md:hidden fixed top-4 right-4 z-50 p-3 rounded-full bg-red-700 text-white shadow-lg cursor-pointer"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label="Toggle sidebar"
+      >
+        {sidebarOpen ? <FaTimes /> : <FaBars />}
+      </button>
+
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-full w-64 bg-red-100 p-4  z-40
+          fixed top-0 left-0 h-full w-72 bg-white border-r border-red-100 shadow-xl z-40
+          flex flex-col
           transform transition-transform duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 md:static md:flex-shrink-0
+          md:translate-x-0 md:sticky md:top-0 md:h-screen md:flex-shrink-0
         `}
       >
-  <NavLink
-  to="/dashboard"
-  style={{ textDecoration: 'none' }}
-  className={({ isActive }) =>
-    `text-2xl font-bold text-center mb-6 block hover:text-red-800 ${
-      isActive
-        ? "bg-red-500 text-white"
-        : "text-red-700 hover:bg-red-200"
-    }`
-  }
-  onClick={() => setSidebarOpen(false)}
->
-  Dashboard
-</NavLink>
+        <Link
+          to="/"
+          onClick={() => setSidebarOpen(false)}
+          className="flex items-center gap-3 px-6 py-6 bg-gradient-to-r from-red-600 to-red-800"
+        >
+          <span className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-white text-lg shrink-0">
+            <FaTint />
+          </span>
+          <span className="text-white text-xl font-bold tracking-wide">RedHope</span>
+        </Link>
 
-        <nav className="flex flex-col space-y-2">
+        <div className="px-6 pt-5 pb-3">
+          <span className="inline-flex items-center gap-2 bg-red-50 text-red-700 text-xs font-semibold
+                           uppercase tracking-wide px-3 py-1.5 rounded-full border border-red-200">
+            {roleMeta.icon} {roleMeta.label} Dashboard
+          </span>
+        </div>
 
-             <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  `px-3 py-2 rounded font-bold ${
-                    isActive
-                      ? "bg-red-500 text-white"
-                      : "text-red-700 hover:bg-red-200"
-                  }`
-                }
-                onClick={() => setSidebarOpen(false)}
-              >
-                Home
-              </NavLink>
-
-          <NavLink
-            to="/dashboard/profile"
-            className={({ isActive }) =>
-              `px-3 py-2 rounded  font-bold ${
-                isActive
-                  ? "bg-red-500 text-white"
-                  : "text-red-700 hover:bg-red-200"
-              }`
-            }
-            onClick={() => setSidebarOpen(false)}
-          >
-            My Profile
+        <nav className="flex-1 flex flex-col gap-1.5 px-4 overflow-y-auto">
+          <NavLink to="/dashboard" end className={linkClass} onClick={() => setSidebarOpen(false)}>
+            <FaTachometerAlt className="text-xs" /> Dashboard
           </NavLink>
 
-       
+          <NavLink to="/dashboard/profile" className={linkClass} onClick={() => setSidebarOpen(false)}>
+            <FaUser className="text-xs" /> My Profile
+          </NavLink>
 
           {role === "admin" && (
             <>
-              <NavLink
-                to="/dashboard/all-users"
-                className={({ isActive }) =>
-                  `px-3 py-2 rounded  font-bold ${
-                    isActive
-                      ? "bg-red-500 text-white"
-                      : "text-red-700 hover:bg-red-200"
-                  }`
-                }
-                onClick={() => setSidebarOpen(false)}
-              >
-                All Users
+              <NavLink to="/dashboard/all-users" className={linkClass} onClick={() => setSidebarOpen(false)}>
+                <FaUsers className="text-xs" /> All Users
               </NavLink>
-              <NavLink
-                to="/dashboard/all-requests"
-                className={({ isActive }) =>
-                  `px-3 py-2 rounded  font-bold ${
-                    isActive
-                      ? "bg-red-500 text-white"
-                      : "text-red-700 hover:bg-red-200"
-                  }`
-                }
-                onClick={() => setSidebarOpen(false)}
-              >
-                All Requests
+              <NavLink to="/dashboard/all-requests" className={linkClass} onClick={() => setSidebarOpen(false)}>
+                <FaClipboardList className="text-xs" /> All Requests
               </NavLink>
-
-               <NavLink
-                to="/dashboard/content-management"
-                className={({ isActive }) =>
-                  `px-3 py-2 rounded  font-bold ${
-                    isActive
-                      ? "bg-red-500 text-white"
-                      : "text-red-700 hover:bg-red-200"
-                  }`
-                }
-                onClick={() => setSidebarOpen(false)}
-              >
-               Content Management
+              <NavLink to="/dashboard/content-management" className={linkClass} onClick={() => setSidebarOpen(false)}>
+                <FaNewspaper className="text-xs" /> Content Management
               </NavLink>
-
-
-              
-              <NavLink
-  to="/dashboard/users-all-review"
-  className={({ isActive }) =>
-    `px-3 py-2 rounded  font-bold ${
-      isActive
-        ? "bg-red-500 text-white"
-        : "text-red-700 hover:bg-red-200"
-    }`
-  }
-  onClick={() => setSidebarOpen(false)}
->
-  All Review
-</NavLink>
-
-
-              <NavLink
-  to="/dashboard/users-fund-donation"
-  className={({ isActive }) =>
-    `px-3 py-2 rounded  font-bold ${
-      isActive
-        ? "bg-red-500 text-white"
-        : "text-red-700 hover:bg-red-200"
-    }`
-  }
-  onClick={() => setSidebarOpen(false)}
->
-  All Funds
-</NavLink>
-
-
+              <NavLink to="/dashboard/users-all-review" className={linkClass} onClick={() => setSidebarOpen(false)}>
+                <FaStar className="text-xs" /> All Reviews
+              </NavLink>
+              <NavLink to="/dashboard/users-fund-donation" className={linkClass} onClick={() => setSidebarOpen(false)}>
+                <FaHandHoldingUsd className="text-xs" /> All Funds
+              </NavLink>
             </>
           )}
 
           {role === "volunteer" && (
             <>
-              <NavLink
-                to="/dashboard/all-blood-donation-request"
-                className={({ isActive }) =>
-                  `px-3 py-2 rounded  font-bold ${
-                    isActive
-                      ? "bg-red-500 text-white"
-                      : "text-red-700 hover:bg-red-200"
-                  }`
-                }
-                onClick={() => setSidebarOpen(false)}
-              >
-                All Request
+              <NavLink to="/dashboard/all-blood-donation-request" className={linkClass} onClick={() => setSidebarOpen(false)}>
+                <FaClipboardList className="text-xs" /> All Requests
               </NavLink>
-             
-
-               <NavLink
-                to="/dashboard/content-management"
-                className={({ isActive }) =>
-                  `px-3 py-2 rounded font-bold ${
-                    isActive
-                      ? "bg-red-500 text-white"
-                      : "text-red-700 hover:bg-red-200"
-                  }`
-                }
-                onClick={() => setSidebarOpen(false)}
-              >
-               Content Management
+              <NavLink to="/dashboard/content-management" className={linkClass} onClick={() => setSidebarOpen(false)}>
+                <FaNewspaper className="text-xs" /> Content Management
               </NavLink>
-
-              <NavLink
-  to="/dashboard/users-fund-donation"
-  className={({ isActive }) =>
-    `px-3 py-2 rounded  font-bold ${
-      isActive
-        ? "bg-red-500 text-white"
-        : "text-red-700 hover:bg-red-200"
-    }`
-  }
-  onClick={() => setSidebarOpen(false)}
->
-  All Funds
-</NavLink>
+              <NavLink to="/dashboard/users-fund-donation" className={linkClass} onClick={() => setSidebarOpen(false)}>
+                <FaHandHoldingUsd className="text-xs" /> All Funds
+              </NavLink>
             </>
           )}
 
           {role === "donor" && (
             <>
-              <NavLink
-                to="/dashboard/create-donation-request"
-                className={({ isActive }) =>
-                  `px-3 py-2 rounded  font-bold ${
-                    isActive
-                      ? "bg-red-500 text-white"
-                      : "text-red-700 hover:bg-red-200"
-                  }`
-                }
-                onClick={() => setSidebarOpen(false)}
-              >
-              Create Donar Request
+              <NavLink to="/dashboard/create-donation-request" className={linkClass} onClick={() => setSidebarOpen(false)}>
+                <FaPlusCircle className="text-xs" /> Create Donation Request
               </NavLink>
-              <NavLink
-                to="/dashboard/my-requests"
-                className={({ isActive }) =>
-                  `px-3 py-2 rounded font-bold ${
-                    isActive
-                      ? "bg-red-500 text-white"
-                      : "text-red-700 hover:bg-red-200"
-                  }`
-                }
-                onClick={() => setSidebarOpen(false)}
-              >
-                My Requests
+              <NavLink to="/dashboard/my-requests" className={linkClass} onClick={() => setSidebarOpen(false)}>
+                <FaListUl className="text-xs" /> My Requests
               </NavLink>
             </>
           )}
         </nav>
+
+        {/* Sign out — pinned to bottom */}
+        <div className="p-4 border-t border-red-100">
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center justify-center gap-2 bg-red-700 hover:bg-red-800
+                       text-white font-semibold px-4 py-3 rounded-xl shadow-md transition-colors cursor-pointer"
+          >
+            <FaSignOutAlt /> Sign Out
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 bg-gray-50 dark:bg-gray-800 text-black dark:text-white p-4">
-     
-        <button
-          className="md:hidden mb-4 p-2 rounded bg-red-100 text-red-600 shadow"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          aria-label="Toggle sidebar"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-
+      <main className="flex-1 h-screen overflow-y-auto p-4 md:p-8 pt-20 md:pt-8">
         <Outlet />
       </main>
     </div>
@@ -249,5 +171,3 @@ const DashboardLayouts = () => {
 };
 
 export default DashboardLayouts;
-
-

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { FaHandHoldingUsd } from 'react-icons/fa';
+import Pagination from '../../../Pagination/Pagination';
 
 const FundDonation = () => {
   const [funds, setFunds] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [visibleCount, setVisibleCount] = useState(7);
+  const batchSize = 7;
 
   const totalAmount = funds.reduce((sum, fund) => sum + fund.amount, 0);
 
@@ -18,85 +20,75 @@ const FundDonation = () => {
       .catch(() => setLoading(false));
   }, []);
 
-  const totalPages = Math.ceil(funds.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentFunds = funds.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
+  const currentFunds = funds.slice(0, visibleCount);
 
   if (loading) return <p className="text-center text-red-600">Loading donations...</p>;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
-      <h2 className="text-3xl font-bold mb-2 text-red-600 dark:text-red-400 text-center">
-        Fund Donations
-      </h2>
+    <div className="max-w-7xl mx-auto">
+      {/* Heading */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
+        <div>
+          <span className="inline-flex items-center gap-2 bg-red-50 text-red-700 text-xs font-semibold
+                            tracking-widest uppercase px-4 py-1.5 rounded-full mb-2 border border-red-200">
+            <FaHandHoldingUsd className="text-red-500" /> Fund Management
+          </span>
+          <h2 className="text-3xl font-bold text-gray-900">Fund Donations</h2>
+        </div>
 
-      {/* Total Amount at Top */}
-      <div className="text-right mb-4 text-2xl font-semibold ">
-        Total Donated: ${(totalAmount / 100).toFixed(2)}
+        {/* Total Amount */}
+        <div className="bg-gradient-to-r from-red-600 to-red-800 text-white rounded-2xl px-6 py-3 shadow-md">
+          <p className="text-xs font-semibold uppercase tracking-widest opacity-80">Total Donated</p>
+          <p className="text-2xl font-bold">${(totalAmount / 100).toFixed(2)}</p>
+        </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg shadow-md">
-        <table className="min-w-full table-auto border border-gray-300 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white">
-          <thead className="bg-red-50 dark:bg-red-700 text-black dark:text-white">
-            <tr>
-              <th className="p-3 border border-gray-300 dark:border-gray-700 text-left">Name</th>
-              <th className="p-3 border border-gray-300 dark:border-gray-700 text-left">Amount</th>
-              <th className="p-3 border border-gray-300 dark:border-gray-700 text-left">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentFunds.length === 0 ? (
-              <tr>
-                <td colSpan="3" className="text-center p-4 text-gray-500">No donations found</td>
-              </tr>
-            ) : (
-              currentFunds.map((fund) => (
-                <tr key={fund._id} className="hover:bg-red-100 dark:hover:bg-red-950 transition">
-                  <td className="p-3 border border-gray-300 dark:border-gray-700">{fund.name}</td>
-                  <td className="p-3 border border-gray-300 dark:border-gray-700">
-                    ${(fund.amount / 100).toFixed(2)}
-                  </td>
-                  <td className="p-3 border border-gray-300 dark:border-gray-700">
-                    {new Date(fund.createdAt).toLocaleDateString()}
-                  </td>
+      {currentFunds.length === 0 ? (
+        <div className="text-center py-16 bg-white rounded-2xl border border-red-100">
+          <p className="text-gray-500">No donations found.</p>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-red-100 shadow-md bg-white overflow-hidden">
+          <div className="overflow-auto max-h-[520px]">
+            <table className="w-full text-sm table-fixed min-w-[600px]">
+              <thead className="sticky top-0 z-10">
+                <tr className="bg-gradient-to-r from-red-600 to-red-800 text-white">
+                  <th className="px-4 py-3.5 text-left font-semibold w-12">#</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-1/3">Name</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-1/3">Amount</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-1/3">Date</th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {currentFunds.map((fund, idx) => (
+                  <tr
+                    key={fund._id}
+                    className={`border-t border-red-50 h-[65px] ${idx % 2 === 1 ? 'bg-red-50/40' : 'bg-white'} hover:bg-red-50 transition-colors`}
+                  >
+                    <td className="px-4 py-3 text-gray-500">{idx + 1}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900 truncate">{fund.name}</td>
+                    <td className="px-4 py-3 text-gray-600">
+                      ${(fund.amount / 100).toFixed(2)}
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">
+                      {new Date(fund.createdAt).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
-      {/* Pagination */}
-    <div className="mt-6 flex justify-center items-center gap-4">
-  <button
-    onClick={handlePrev}
-    disabled={currentPage === 1}
-    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-400"
-  >
-    Previous
-  </button>
-  <span className="text-lg font-medium dark:text-white">
-    Page {currentPage} of {totalPages || 1}
-  </span>
-  <button
-    onClick={handleNext}
-    disabled={currentPage === totalPages || totalPages === 0}
-    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-400"
-  >
-    Next
-  </button>
-</div>
-    
+      {/* See More */}
+      <Pagination
+        total={funds.length}
+        visible={visibleCount}
+        onSeeMore={() => setVisibleCount((c) => c + batchSize)}
+        batchSize={batchSize}
+      />
     </div>
   );
 };

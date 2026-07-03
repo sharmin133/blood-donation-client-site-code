@@ -1,16 +1,83 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaPlus, FaTrash, FaEdit, FaUpload, FaUndo } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaEdit, FaUpload, FaUndo, FaNewspaper, FaEllipsisV } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 import { AuthContext } from '../../../context/AuthContext';
+import Pagination from '../../../Pagination/Pagination';
+
+const STATUS_STYLES = {
+  published: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  draft: 'bg-amber-100 text-amber-700 border-amber-200',
+};
+
+const ActionMenu = ({ blog, userRole, onStatusToggle, onEdit, onDelete }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const runAndClose = (fn) => {
+    fn();
+    setOpen(false);
+  };
+
+  return (
+    <div className="relative inline-block" ref={ref}>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-8 h-8 flex items-center justify-center rounded-full border border-red-100
+                   text-red-700 hover:bg-red-50 transition-colors cursor-pointer"
+        aria-label="Actions"
+      >
+        <FaEllipsisV className="text-xs" />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 mt-2 w-48 rounded-xl bg-white border border-red-100 shadow-xl z-20 overflow-hidden">
+          <button
+            onClick={() => runAndClose(() => onEdit(blog._id))}
+            className="w-full flex items-center gap-2 text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition cursor-pointer"
+          >
+            <FaEdit className="text-xs" /> Edit Blog
+          </button>
+
+          {userRole === 'admin' && (
+            <button
+              onClick={() => runAndClose(() => onStatusToggle(blog._id, blog.status))}
+              className="w-full flex items-center gap-2 text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition cursor-pointer border-t border-red-50"
+            >
+              {blog.status === 'draft' ? <FaUpload className="text-xs" /> : <FaUndo className="text-xs" />}
+              {blog.status === 'draft' ? 'Publish' : 'Unpublish'}
+            </button>
+          )}
+
+          {userRole === 'admin' && (
+            <button
+              onClick={() => runAndClose(() => onDelete(blog._id))}
+              className="w-full flex items-center gap-2 text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition cursor-pointer border-t border-red-50"
+            >
+              <FaTrash className="text-xs" /> Delete Blog
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ContentManagement = () => {
   const [blogs, setBlogs] = useState([]);
   const [filter, setFilter] = useState('all');
   const [userRole, setUserRole] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const blogsPerPage = 5; 
+  const [visibleCount, setVisibleCount] = useState(7);
+  const batchSize = 7;
 
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -69,132 +136,112 @@ const ContentManagement = () => {
     }
   };
 
-  // Filtering blogs
   const filteredBlogs = filter === 'all' ? blogs : blogs.filter((blog) => blog.status === filter);
-
-  // Pagination logic
-  const indexOfLastBlog = currentPage * blogsPerPage;
-  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
-  const currentBlogs = filteredBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
-  const totalPages = Math.ceil(filteredBlogs.length / blogsPerPage);
+  const currentBlogs = filteredBlogs.slice(0, visibleCount);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-red-700 dark:text-red-500">Content Management 📝</h1>
-        <button
-          onClick={() => navigate('/dashboard/content-management/add-blog')}
-          className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg shadow"
-        >
-          <FaPlus /> Add Blog
-        </button>
-      </div>
+    <div className="max-w-7xl mx-auto">
+      {/* Heading */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+        <div>
+          <span className="inline-flex items-center gap-2 bg-red-50 text-red-700 text-xs font-semibold
+                            tracking-widest uppercase px-4 py-1.5 rounded-full mb-2 border border-red-200">
+            <FaNewspaper className="text-red-500" /> Content Management
+          </span>
+          <h2 className="text-3xl font-bold text-gray-900">All Blogs</h2>
+        </div>
 
-      {/* Filter */}
-      <div className="mb-4">
-        <label className="font-medium text-gray-700 dark:text-white mr-2">Filter by status:</label>
-        <select
-          value={filter}
-          onChange={(e) => {
-            setFilter(e.target.value);
-            setCurrentPage(1); // reset to first page on filter change
-          }}
-          className="select select-bordered"
-        >
-          <option value="all">All</option>
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
-        </select>
+        <div className="flex items-center gap-3">
+          <select
+            value={filter}
+            onChange={(e) => {
+              setFilter(e.target.value);
+              setVisibleCount(batchSize);
+            }}
+            className="px-4 py-2.5 rounded-lg border border-red-100 bg-white text-gray-800 font-medium
+                       focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 transition cursor-pointer"
+          >
+            <option value="all">All Blogs</option>
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+
+          <button
+            onClick={() => navigate('/dashboard/content-management/add-blog')}
+            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold
+                       px-4 py-2.5 rounded-lg shadow-sm transition-colors cursor-pointer"
+          >
+            <FaPlus className="text-xs" /> Add Blog
+          </button>
+        </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="table table-zebra w-full">
-          <thead>
-            <tr className="bg-red-100 dark:bg-red-700 text-black dark:text-white">
-              <th>Image</th>
-              <th>Title</th>
-              <th>Status</th>
-              <th>Created At</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentBlogs.map((blog) => (
-              <tr key={blog._id}>
-                <td>
-                  <img src={blog.thumbnail} alt="thumb" className="w-16 h-16 object-cover rounded" />
-                </td>
-                <td>{blog.title}</td>
-                <td>
-                  <span className={`badge ${blog.status === 'published' ? 'badge-success' : 'badge-warning'}`}>
-                    {blog.status}
-                  </span>
-                </td>
-                <td>{new Date(blog.createdAt).toLocaleDateString()}</td>
-                <td className="flex gap-2">
-                  {userRole === 'admin' && (
-                    <button
-                      onClick={() => handleStatusToggle(blog._id, blog.status)}
-                      className={`btn btn-sm ${blog.status === 'draft' ? 'btn-success' : 'btn-warning'}`}
-                    >
-                      {blog.status === 'draft' ? <FaUpload /> : <FaUndo />}
-                    </button>
-                  )}
-                  <button
-                    onClick={() => navigate(`/dashboard/content-management/edit-blog/${blog._id}`)}
-                    className="btn btn-sm btn-info"
+      {currentBlogs.length === 0 ? (
+        <div className="text-center py-16 bg-white rounded-2xl border border-red-100">
+          <p className="text-gray-500">No blogs found.</p>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-red-100 shadow-md bg-white overflow-hidden">
+          <div className="overflow-auto max-h-[520px]">
+            <table className="w-full text-sm table-fixed min-w-[760px]">
+              <thead className="sticky top-0 z-10">
+                <tr className="bg-gradient-to-r from-red-600 to-red-800 text-white">
+                  <th className="px-4 py-3.5 text-left font-semibold w-20">Image</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-1/3">Title</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-28">Status</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-32">Created At</th>
+                  <th className="px-4 py-3.5 text-right font-semibold w-20">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentBlogs.map((blog, idx) => (
+                  <tr
+                    key={blog._id}
+                    className={`border-t border-red-50 h-[65px] ${idx % 2 === 1 ? 'bg-red-50/40' : 'bg-white'} hover:bg-red-50 transition-colors`}
                   >
-                    <FaEdit />
-                  </button>
-                  {userRole === 'admin' && (
-                    <button
-                      onClick={() => handleDelete(blog._id)}
-                      className="btn btn-sm btn-error"
-                    >
-                      <FaTrash />
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-            {currentBlogs.length === 0 && (
-              <tr>
-                <td colSpan="5" className="text-center py-6 text-gray-500">No blogs found.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                    <td className="px-4 py-3">
+                      <img
+                        src={blog.thumbnail}
+                        alt="thumb"
+                        className="w-10 h-10 rounded-full object-cover border border-red-100"
+                      />
+                    </td>
+                    <td className="px-4 py-3 font-medium text-gray-900 truncate">{blog.title}</td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-block text-xs font-semibold uppercase px-2.5 py-1 rounded-full border capitalize ${
+                        STATUS_STYLES[blog.status] || 'bg-gray-100 text-gray-600 border-gray-200'
+                      }`}>
+                        {blog.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-gray-600 truncate">
+                      {new Date(blog.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <ActionMenu
+                        blog={blog}
+                        userRole={userRole}
+                        onStatusToggle={handleStatusToggle}
+                        onEdit={(id) => navigate(`/dashboard/content-management/edit-blog/${id}`)}
+                        onDelete={handleDelete}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
-      {/* Pagination Controls */}
-      <div className="flex justify-center mt-6 space-x-2">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="btn btn-sm"
-        >
-          Previous
-        </button>
-
-        {[...Array(totalPages)].map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setCurrentPage(idx + 1)}
-            className={`btn btn-sm ${currentPage === idx + 1 ? 'btn-primary' : 'btn-outline'}`}
-          >
-            {idx + 1}
-          </button>
-        ))}
-
-        <button
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={currentPage === totalPages}
-          className="btn btn-sm"
-        >
-          Next
-        </button>
-      </div>
+      {/* See More */}
+      <Pagination
+        total={filteredBlogs.length}
+        visible={visibleCount}
+        onSeeMore={() => setVisibleCount((c) => c + batchSize)}
+        batchSize={batchSize}
+      />
     </div>
   );
 };

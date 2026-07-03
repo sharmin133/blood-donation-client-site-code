@@ -1,147 +1,127 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { FaHandHoldingMedical } from 'react-icons/fa';
+import Pagination from '../../../Pagination/Pagination';
+
+const STATUS_STYLES = {
+  pending: 'bg-amber-100 text-amber-700 border-amber-200',
+  inprogress: 'bg-blue-100 text-blue-700 border-blue-200',
+  done: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  canceled: 'bg-gray-200 text-gray-600 border-gray-300',
+};
+
+const STATUS_OPTIONS = ['all', 'pending', 'inprogress', 'done', 'canceled'];
 
 const AllDonationRequests = () => {
   const [donationRequests, setDonationRequests] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [visibleCount, setVisibleCount] = useState(7);
+  const batchSize = 7;
 
-  useEffect(() => {
-    axios
-      .get("https://blood-donation-vert.vercel.app/donation-requests")
-      .then((res) => setDonationRequests(res.data))
-      .catch(() => toast.error("Failed to load donation requests"));
-
-    AOS.init({
-      duration: 800,
-      once: true,
-    });
-  }, []);
-
-  const handleStatusFilter = (status) => {
-    setStatusFilter(status);
-    setCurrentPage(1);
+  const fetchRequests = async () => {
+    try {
+      const res = await axios.get('https://blood-donation-vert.vercel.app/donation-requests');
+      setDonationRequests(res.data);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to load donation requests');
+    }
   };
 
-  const filteredRequests = statusFilter
-    ? donationRequests.filter((req) => req.status === statusFilter)
-    : donationRequests;
+  useEffect(() => {
+    fetchRequests();
+  }, []);
 
-  const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
-  const startIdx = (currentPage - 1) * itemsPerPage;
-  const paginatedRequests = filteredRequests.slice(startIdx, startIdx + itemsPerPage);
+  const filteredRequests =
+    statusFilter === 'all'
+      ? donationRequests
+      : donationRequests.filter((req) => req.status === statusFilter);
+
+  const currentRequests = filteredRequests.slice(0, visibleCount);
 
   return (
-    <div className="container mx-auto px-4 py-10">
-      <h2
-        className="text-3xl font-bold text-red-700 dark:text-red-500 mb-6 text-center"
-        data-aos="fade-down"
-      >
-        All Blood Donation Requests
-      </h2>
+    <div className="max-w-7xl mx-auto">
+      {/* Heading */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+        <div>
+          <span className="inline-flex items-center gap-2 bg-red-50 text-red-700 text-xs font-semibold
+                            tracking-widest uppercase px-4 py-1.5 rounded-full mb-2 border border-red-200">
+            <FaHandHoldingMedical className="text-red-500" /> Donation Management
+          </span>
+          <h2 className="text-3xl font-bold text-gray-900">All Blood Donation Requests</h2>
+        </div>
 
-      {/* Filter Buttons */}
-      <div
-        className="mb-6 flex gap-3 justify-center flex-wrap"
-        data-aos="zoom-in"
-      >
-        {["pending", "inprogress", "done", "canceled", ""].map((status, i) => (
-          <button
-            key={i}
-            className={`min-w-[100px] px-4 py-2 rounded-full font-semibold transition-all duration-300 border text-center ${
-              statusFilter === status
-                ? "bg-red-600 text-white border-red-600"
-                : "bg-transparent text-red-600 dark:text-red-400 border-red-500 hover:bg-red-600 hover:text-white"
-            }`}
-            onClick={() => handleStatusFilter(status)}
-          >
-            {status === "" ? "All" : status.charAt(0).toUpperCase() + status.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      {/* Donation Requests Table */}
-      <div className="overflow-x-auto" data-aos="fade-up">
-        <table className="min-w-full bg-white dark:bg-black shadow rounded-lg overflow-hidden">
-          <thead>
-            <tr className="bg-red-600 text-white dark:bg-red-700">
-              <th className="px-4 py-3 text-left">Name</th>
-              <th className="px-4 py-3 text-left">District</th>
-              <th className="px-4 py-3 text-left">Upazila</th>
-              <th className="px-4 py-3 text-left">Date</th>
-              <th className="px-4 py-3 text-left">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedRequests.length > 0 ? (
-              paginatedRequests.map((req, i) => (
-                <tr
-                  key={req._id}
-                  className="border-b dark:border-gray-800"
-                  data-aos="fade-up"
-                  data-aos-delay={i * 100}
-                >
-                  <td className="px-4 py-3">{req.requesterName}</td>
-                  <td className="px-4 py-3">{req.district}</td>
-                  <td className="px-4 py-3">{req.recipientDistrict}</td>
-                  <td className="px-4 py-3">{req.recipientUpazila}</td>
-                 <td className="px-4 py-3 capitalize text-sm font-medium">
-  <span
-    className={`inline-flex items-center justify-center min-w-[90px] h-8 px-3 rounded-full text-center ${
-      req.status === "pending"
-        ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-        : req.status === "inprogress"
-        ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-        : req.status === "done"
-        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-        : "bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-    }`}
-  >
-    {req.status}
-  </span>
-</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan="5"
-                  className="text-center py-6 text-red-600 dark:text-red-400"
-                >
-                  No donation requests found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div
-          className="flex justify-center items-center mt-6 space-x-2"
-          data-aos="fade-up"
-          data-aos-delay="400"
+        {/* Filter */}
+        <select
+          value={statusFilter}
+          onChange={(e) => {
+            setStatusFilter(e.target.value);
+            setVisibleCount(batchSize);
+          }}
+          className="px-4 py-2.5 rounded-lg border border-red-100 bg-white text-gray-800 font-medium
+                     focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 transition cursor-pointer"
         >
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`min-w-[40px] px-3 py-2 rounded text-center font-medium ${
-                currentPage === i + 1
-                  ? "bg-red-600 text-white"
-                  : "bg-gray-200 text-gray-800 hover:bg-red-500 hover:text-white dark:bg-gray-700 dark:text-white"
-              }`}
-            >
-              {i + 1}
-            </button>
+          {STATUS_OPTIONS.map((status) => (
+            <option key={status} value={status}>
+              {status === 'all' ? 'All Requests' : status.charAt(0).toUpperCase() + status.slice(1)}
+            </option>
           ))}
+        </select>
+      </div>
+
+      {/* Table */}
+      {currentRequests.length === 0 ? (
+        <div className="text-center py-16 bg-white rounded-2xl border border-red-100">
+          <p className="text-gray-500">No donation requests match this filter.</p>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-red-100 shadow-md bg-white overflow-hidden">
+          <div className="overflow-auto max-h-[520px]">
+            <table className="w-full text-sm table-fixed min-w-[760px]">
+              <thead className="sticky top-0 z-10">
+                <tr className="bg-gradient-to-r from-red-600 to-red-800 text-white">
+                  <th className="px-4 py-3.5 text-left font-semibold w-12">#</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-1/6">Name</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-1/6">District</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-1/6">Upazila</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-1/6">Date</th>
+                  <th className="px-4 py-3.5 text-left font-semibold w-28">Status</th>
+                </tr>
+              </thead>
+             <tbody>
+  {currentRequests.map((req, idx) => (
+    <tr
+      key={req._id}
+      className={`border-t border-red-50 h-[65px] ${idx % 2 === 1 ? 'bg-red-50/40' : 'bg-white'} hover:bg-red-50 transition-colors`}
+    >
+      <td className="px-4 py-3 text-gray-500">{idx + 1}</td>
+      <td className="px-4 py-3 font-medium text-gray-900 truncate">{req.requesterName}</td>
+      <td className="px-4 py-3 text-gray-600 truncate">{req.district}</td>
+      <td className="px-4 py-3 text-gray-600 truncate">{req.recipientUpazila}</td>
+      <td className="px-4 py-3 text-gray-600 truncate">{req.donationDate || '-'}</td>
+      <td className="px-4 py-3">
+        <span className={`inline-block text-xs font-semibold uppercase px-2.5 py-1 rounded-full border capitalize ${
+          STATUS_STYLES[req.status] || 'bg-gray-100 text-gray-600 border-gray-200'
+        }`}>
+          {req.status}
+        </span>
+      </td>
+    </tr>
+  ))}
+</tbody>
+            </table>
+          </div>
         </div>
       )}
+
+      {/* See More */}
+      <Pagination
+        total={filteredRequests.length}
+        visible={visibleCount}
+        onSeeMore={() => setVisibleCount((c) => c + batchSize)}
+        batchSize={batchSize}
+      />
     </div>
   );
 };
