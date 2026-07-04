@@ -15,11 +15,11 @@ const CreateCardPage = () => {
     upazila: "",
     photo: "",
   });
+  const [downloading, setDownloading] = useState(false);
 
   const cardRef = useRef();
 
   useEffect(() => {
-    // Load Montenegrin Gothic One display font (matches rest of site)
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = "https://fonts.googleapis.com/css2?family=Montenegrin+Gothic+One&display=swap";
@@ -27,7 +27,6 @@ const CreateCardPage = () => {
     return () => document.head.removeChild(link);
   }, []);
 
-  // Fetch user data
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -65,22 +64,50 @@ const CreateCardPage = () => {
     reader.readAsDataURL(file);
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!cardRef.current) return;
+    setDownloading(true);
 
-    domtoimage
-      .toPng(cardRef.current)
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = "blood-buddy-card.png";
-        link.click();
-        toast.success("Card downloaded successfully!");
-      })
-      .catch((err) => {
-        console.error("Download failed", err);
-        toast.error("Failed to download card.");
+    try {
+      // Make sure the custom font + any images are fully loaded before
+      // rasterizing, otherwise dom-to-image can capture a half-rendered frame.
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+
+      const images = cardRef.current.querySelectorAll("img");
+      await Promise.all(
+        Array.from(images).map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise((resolve) => {
+                img.onload = resolve;
+                img.onerror = resolve;
+              })
+        )
+      );
+
+      const dataUrl = await domtoimage.toPng(cardRef.current, {
+        bgcolor: "#ffffff",
+        cacheBust: true,
+        style: {
+          // strip any stray outline/border dom-to-image might introduce
+          // while cloning the node for rasterization
+          outline: "none",
+        },
       });
+
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = "blood-buddy-card.png";
+      link.click();
+      toast.success("Card downloaded successfully!");
+    } catch (err) {
+      console.error("Download failed", err);
+      toast.error("Failed to download card.");
+    } finally {
+      setDownloading(false);
+    }
   };
 
   const inputClass =
@@ -96,7 +123,6 @@ const CreateCardPage = () => {
     <section className="relative bg-gradient-to-b from-white via-red-50 to-white px-4 md:px-12 py-16 overflow-hidden min-h-screen">
       <ToastContainer position="top-right" autoClose={3000} />
 
-      {/* decorative background glow */}
       <div className="absolute -top-10 -right-10 w-72 h-72 bg-red-300/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-red-200/30 rounded-full blur-3xl pointer-events-none" />
 
@@ -169,74 +195,115 @@ const CreateCardPage = () => {
 
         {/* Card Preview + Download */}
         <div className="w-full md:w-auto flex flex-col items-center">
-        <div className="mb-5">
-  <span
-    className="inline-flex items-center gap-3 px-5 py-2.5
-    rounded-full bg-white shadow-lg border border-red-200"
-  >
-    <span className="relative flex h-3 w-3">
-      <span className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75 animate-ping"></span>
-      <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600"></span>
-    </span>
-
-    <span className="text-[11px] font-bold uppercase tracking-[0.35em] text-red-700">
-      Live Preview
-    </span>
-  </span>
-</div>
-
-          <div
-            ref={cardRef}
-            className="w-72 rounded-2xl overflow-hidden shadow-2xl"
-          >
-            {/* Card header strip */}
-            <div className="bg-gradient-to-r from-red-600 to-red-800 px-5 py-4 flex items-center justify-between">
-              <span className="text-white font-bold tracking-wide text-sm">RedHope</span>
-              <FaTint className="text-red-200 text-lg" />
-            </div>
-
-            {/* Card body */}
-            <div className="bg-white p-6 text-center border border-t-0 border-red-100">
-              {formData.photo ? (
-                <img
-                  src={formData.photo}
-                  alt="User"
-                  className="mx-auto w-24 h-24 rounded-full object-cover border-4 border-red-100 shadow-md mb-4"
-                />
-              ) : (
-                <div className="mx-auto w-24 h-24 rounded-full bg-red-50 border-4 border-red-100
-                                 flex items-center justify-center text-red-300 text-3xl mb-4">
-                  <FaCamera />
-                </div>
-              )}
-
-              <h3 className="font-bold text-xl text-gray-900 mb-1">
-                {formData.name || "Your Name"}
-              </h3>
-
-              <span className="inline-block bg-red-700 text-white text-sm font-bold px-4 py-1 rounded-full mb-4">
-                {formData.bloodGroup || "--"}
+          <div className="mb-5">
+            <span
+              className="inline-flex items-center gap-3 px-5 py-2.5
+              rounded-full bg-white shadow-lg border border-red-200"
+            >
+              <span className="relative flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75 animate-ping"></span>
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600"></span>
               </span>
 
-              <div className="text-left text-sm text-gray-600 space-y-1.5 border-t border-red-100 pt-4">
-                <p className="flex justify-between">
-                  <span className="text-gray-400">District</span>
-                  <span className="font-semibold text-gray-800">{formData.district || "—"}</span>
-                </p>
-                <p className="flex justify-between">
-                  <span className="text-gray-400">Upazila</span>
-                  <span className="font-semibold text-gray-800">{formData.upazila || "—"}</span>
-                </p>
-              </div>
-            </div>
+              <span className="text-[11px] font-bold uppercase tracking-[0.35em] text-red-700">
+                Live Preview
+              </span>
+            </span>
           </div>
+
+          {/*
+            IMPORTANT: no `flex` inside cardRef — dom-to-image-more renders
+            flex children with a stray visible border in the exported PNG.
+            Using table/table-cell display achieves the identical
+            "space-between" look without that artifact.
+          */}
+          {/* Card Preview + Download */}
+<div
+  ref={cardRef}
+  className="w-72 rounded-2xl overflow-hidden shadow-2xl"
+  style={{ border: "none" }}
+>
+  {/* Card header strip */}
+  <div
+    className="bg-gradient-to-r from-red-600 to-red-800 px-5 py-4"
+    style={{ display: "table", width: "100%", tableLayout: "fixed", border: "none" }}
+  >
+    <span
+      className="text-white font-bold tracking-wide text-sm"
+      style={{ display: "table-cell", verticalAlign: "middle", textAlign: "left", border: "none" }}
+    >
+      RedHope
+    </span>
+    <span style={{ display: "table-cell", verticalAlign: "middle", textAlign: "right", border: "none" }}>
+      <FaTint className="text-red-200 text-lg inline-block" style={{ border: "none" }} />
+    </span>
+  </div>
+
+  {/* Card body */}
+  <div
+    className="bg-white p-6 text-center"
+    style={{ borderLeft: "1px solid #fecaca", borderRight: "1px solid #fecaca", borderBottom: "1px solid #fecaca", borderTop: "none" }}
+  >
+    {formData.photo ? (
+      <img
+        src={formData.photo}
+        alt="User"
+        crossOrigin="anonymous"
+        className="mx-auto w-24 h-24 rounded-full object-cover shadow-md mb-4"
+        style={{ border: "4px solid #fee2e2" }}
+      />
+    ) : (
+      <div
+        className="mx-auto w-24 h-24 rounded-full bg-red-50 flex items-center justify-center text-red-300 text-3xl mb-4"
+        style={{ border: "4px solid #fee2e2" }}
+      >
+        <FaCamera style={{ border: "none" }} />
+      </div>
+    )}
+
+    <h3 className="font-bold text-xl text-gray-900 mb-1" style={{ border: "none" }}>
+      {formData.name || "Your Name"}
+    </h3>
+
+    <span
+      className="inline-block bg-red-700 text-white text-sm font-bold px-4 py-1 rounded-full mb-4"
+      style={{ border: "none" }}
+    >
+      {formData.bloodGroup || "--"}
+    </span>
+
+    <div
+      className="text-left text-sm text-gray-600 pt-4"
+      style={{ borderTop: "1px solid #fee2e2" }}
+    >
+      <div style={{ display: "table", width: "100%", tableLayout: "fixed", marginBottom: "6px", border: "none" }}>
+        <span style={{ display: "table-cell", textAlign: "left", border: "none" }} className="text-gray-400">
+          District
+        </span>
+        <span style={{ display: "table-cell", textAlign: "right", border: "none" }} className="font-semibold text-gray-800">
+          {formData.district || "—"}
+        </span>
+      </div>
+      <div style={{ display: "table", width: "100%", tableLayout: "fixed", border: "none" }}>
+        <span style={{ display: "table-cell", textAlign: "left", border: "none" }} className="text-gray-400">
+          Upazila
+        </span>
+        <span style={{ display: "table-cell", textAlign: "right", border: "none" }} className="font-semibold text-gray-800">
+          {formData.upazila || "—"}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
 
           <button
             onClick={handleDownload}
+            disabled={downloading}
             className="mt-6 w-72 inline-flex items-center justify-center gap-2 bg-red-700 text-white
-                       font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-red-800 transition-colors cursor-pointer"
+                       font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-red-800
+                       disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
-            <FaDownload className="text-sm" /> Download Card
+            <FaDownload className="text-sm" /> {downloading ? "Preparing..." : "Download Card"}
           </button>
         </div>
       </div>

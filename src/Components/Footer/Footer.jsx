@@ -1,69 +1,222 @@
-
-//footer
-import React from 'react';
-import { Link } from 'react-router';
+import { Link } from "react-router";
+import { useEffect } from "react";
 
 const Footer = () => {
-    return (
-     <footer className="bg-red-700   shadow-sm  ">
-  <div className="w-full max-w-7xl mx-auto px-4  py-4 md:py-8">
-    <div className="sm:flex sm:items-center sm:justify-between">
-      <a href="" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
-        <img src="/Image/blood logo.png" className="h-8 rounded-full" alt="" />
-        <span className="self-center text-2xl whitespace-nowrap text-red-100 font-bold">RedHope</span>
-      </a>
-    <ul className="flex flex-wrap gap-4   mb-10">
-        <li><Link to="about-us" className="hover:underline">About</Link></li>
-        <li><Link to="about-us" className="hover:underline">Privacy Policy</Link></li>
-        <li><Link to="about-us" className="hover:underline">Licensing</Link></li> 
-        <li><Link to="about-us" className="hover:underline">Contact</Link></li>
-      </ul>
+  useEffect(() => {
+    const link1 = document.createElement("link");
+    link1.rel = "preconnect";
+    link1.href = "https://fonts.googleapis.com";
 
-    </div>
+    const link2 = document.createElement("link");
+    link2.rel = "stylesheet";
+    link2.href =
+      "https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600;700&display=swap";
 
-    <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-500 lg:my-8" />
+    document.head.appendChild(link1);
+    document.head.appendChild(link2);
 
-    {/* New copyright + social icons section */}
+    return () => {
+      document.head.removeChild(link1);
+      document.head.removeChild(link2);
+    };
+  }, []);
 
+  return (
+    <footer className="bg-red-700 px-[6vw] pt-14 text-white/70 font-['Inter']">
+      <div className="grid grid-cols-2 gap-8 pb-10 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
+        {/* Brand */}
+        <div>
+          <Link to="/" className="flex items-center gap-2.5">
+            <svg viewBox="0 0 32 32" className="h-7 w-7">
+              <path
+                d="M16 3C16 3 6 15.5 6 21.5C6 27 10.5 30.5 16 30.5C21.5 30.5 26 27 26 21.5C26 15.5 16 3 16 3Z"
+                fill="#A3102A"
+              />
+              <circle cx="16" cy="21" r="3" fill="#FFFFFF" />
+            </svg>
+            <span className="font-['Sora'] text-[19px] font-bold text-white">RedHope</span>
+          </Link>
 
-    <div className="sm:flex sm:items-center sm:justify-between">
-      <span className="  sm:text-center ">
-        © 2025 <a href="" className="hover:underline">RedHope™</a>. All Rights Reserved.
-      </span>
-      <div className="flex mt-4 sm:justify-center sm:mt-0">
-        <a href="#" className="text-blue-600 dark:hover:text-blue-800">
-          <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 8 19">
-            <path fillRule="evenodd" d="M6.135 3H8V0H6.135a4.147 4.147 0 0 0-4.142 4.142V6H0v3h2v9.938h3V9h2.021l.592-3H5V3.591A.6.6 0 0 1 5.592 3h.543Z" clipRule="evenodd"/>
-          </svg>
-          <span className="sr-only">Facebook page</span>
-        </a>
-        <a href="#" className="text-blue-600 dark:hover:text-blue-800 ms-5">
-          <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 21 16">
-            <path d="M16.942 1.556a16.3 16.3 0 0 0-4.126-1.3 12.04 12.04 0 0 0-.529 1.1 15.175 15.175 0 0 0-4.573 0 11.585 11.585 0 0 0-.535-1.1 16.274 16.274 0 0 0-4.129 1.3A17.392 17.392 0 0 0 .182 13.218a15.785 15.785 0 0 0 4.963 2.521c.41-.564.773-1.16 1.084-1.785a10.63 10.63 0 0 1-1.706-.83c.143-.106.283-.217.418-.33a11.664 11.664 0 0 0 10.118 0c.137.113.277.224.418.33-.544.328-1.116.606-1.71.832a12.52 12.52 0 0 0 1.084 1.785 16.46 16.46 0 0 0 5.064-2.595 17.286 17.286 0 0 0-2.973-11.59ZM6.678 10.813a1.941 1.941 0 0 1-1.8-2.045 1.93 1.93 0 0 1 1.8-2.047 1.919 1.919 0 0 1 1.8 2.047 1.93 1.93 0 0 1-1.8 2.045Zm6.644 0a1.94 1.94 0 0 1-1.8-2.045 1.93 1.93 0 0 1 1.8-2.047 1.918 1.918 0 0 1 1.8 2.047 1.93 1.93 0 0 1-1.8 2.045Z"/>
-          </svg>
-          <span className="sr-only">Discord community</span>
-        </a>
-        <a href="#" className="text-gray-900 dark:hover:text-white ms-5">
-          <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 17">
-            <path fillRule="evenodd" d="M20 1.892a8.178 8.178 0 0 1-2.355.635 4.074 4.074 0 0 0 1.8-2.235 8.344 8.344 0 0 1-2.605.98A4.13 4.13 0 0 0 13.85 0a4.068 4.068 0 0 0-4.1 4.038 4 4 0 0 0 .105.919A11.705 11.705 0 0 1 1.4.734a4.006 4.006 0 0 0 1.268 5.392 4.165 4.165 0 0 1-1.859-.5v.05A4.057 4.057 0 0 0 4.1 9.635a4.19 4.19 0 0 1-1.856.07 4.108 4.108 0 0 0 3.831 2.807A8.36 8.36 0 0 1 0 14.184 11.732 11.732 0 0 0 6.291 16 11.502 11.502 0 0 0 17.964 4.5c0-.177 0-.35-.012-.523A8.143 8.143 0 0 0 20 1.892Z" clipRule="evenodd"/>
-          </svg>
-          <span className="sr-only">Twitter page</span>
-        </a>
-        <a href="#" className="text-gray-900 dark:hover:text-white ms-5">
-          <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 .333A9.911 9.911 0 0 0 6.866 19.65c.5.092.678-.215.678-.477 0-.237-.01-1.017-.014-1.845-2.757.6-3.338-1.169-3.338-1.169a2.627 2.627 0 0 0-1.1-1.451c-.9-.615.07-.6.07-.6a2.084 2.084 0 0 1 1.518 1.021 2.11 2.11 0 0 0 2.884.823c.044-.503.268-.973.63-1.325-2.2-.25-4.516-1.1-4.516-4.9A3.832 3.832 0 0 1 4.7 7.068a3.56 3.56 0 0 1 .095-2.623s.832-.266 2.726 1.016a9.409 9.409 0 0 1 4.962 0c1.89-1.282 2.717-1.016 2.717-1.016.366.83.402 1.768.1 2.623a3.827 3.827 0 0 1 1.02 2.659c0 3.807-2.319 4.644-4.525 4.889a2.366 2.366 0 0 1 .673 1.834c0 1.326-.012 2.394-.012 2.72 0 .263.18.572.681.475A9.911 9.911 0 0 0 10 .333Z" clipRule="evenodd"/>
-          </svg>
-          <span className="sr-only">GitHub account</span>
+          <p className="mt-4 max-w-[270px] text-[13.5px] leading-[1.7] text-white/55">
+            A verified network of donors, hospitals, and blood banks. RedHope coordinates every
+            request, match, and drive from a single, auditable platform.
+          </p>
 
+          <div className="mt-5 flex flex-wrap gap-2.5">
+            <div className="flex items-center gap-1.5 rounded-md border border-white/15 px-2.5 py-1.5 text-[11px] font-semibold text-white/70">
+              <svg viewBox="0 0 20 20" fill="none" className="h-3.5 w-3.5">
+                <path
+                  d="M10 2 4 4.5v5c0 4.4 2.9 7.7 6 8.5 3.1-.8 6-4.1 6-8.5v-5L10 2Z"
+                  stroke="#fff"
+                  strokeWidth="1.4"
+                />
+              </svg>
+              ISO 15189
+            </div>
+            <div className="flex items-center gap-1.5 rounded-md border border-white/15 px-2.5 py-1.5 text-[11px] font-semibold text-white/70">
+              <svg viewBox="0 0 20 20" fill="none" className="h-3.5 w-3.5">
+                <circle cx="10" cy="10" r="7.3" stroke="#fff" strokeWidth="1.4" />
+                <path d="M6.8 10.2 9 12.4l4.4-5" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" />
+              </svg>
+              WHO Aligned
+            </div>
+            <div className="flex items-center gap-1.5 rounded-md border border-white/15 px-2.5 py-1.5 text-[11px] font-semibold text-white/70">
+              <svg viewBox="0 0 20 20" fill="none" className="h-3.5 w-3.5">
+                <rect x="3" y="4" width="14" height="12.5" rx="1.5" stroke="#fff" strokeWidth="1.4" />
+              </svg>
+              National Registry
+            </div>
+          </div>
 
+          <div className="mt-[22px] flex gap-2.5">
+            
+              <a href="#"
+              aria-label="Facebook"
+              className="flex h-[34px] w-[34px] items-center justify-center rounded-md bg-white/[.06] transition-colors hover:bg-[#A3102A]"
+            >
+              <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-white">
+                <path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H16.7V3.7C16.3 3.65 15.2 3.5 14 3.5c-2.5 0-4.2 1.5-4.2 4.3v2.1H7.1V13h2.7v8h3.7Z" />
+              </svg>
+            </a>
+            
+              <a href="#"
+              aria-label="X"
+              className="flex h-[34px] w-[34px] items-center justify-center rounded-md bg-white/[.06] transition-colors hover:bg-[#A3102A]"
+            >
+              <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-white">
+                <path d="M4 3h4.2l4 5.6L16.8 3H20l-6.3 8.1L20.4 21h-4.2l-4.4-6.1L6.9 21H3.7l6.7-8.6L4 3Z" />
+              </svg>
+            </a>
+            
+              <a href="#"
+              aria-label="LinkedIn"
+              className="flex h-[34px] w-[34px] items-center justify-center rounded-md bg-white/[.06] transition-colors hover:bg-[#A3102A]"
+            >
+              <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-white">
+                <path d="M4.98 3.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM3.5 9h3v11.5h-3V9Zm6.2 0h2.9v1.6h.04c.4-.76 1.4-1.6 2.9-1.6 3.1 0 3.7 2 3.7 4.6v6.9h-3v-6.1c0-1.5 0-3.3-2-3.3-2 0-2.3 1.6-2.3 3.2v6.2h-3V9Z" />
+              </svg>
+            </a>
+            
+              <a href="#"
+              aria-label="GitHub"
+              className="flex h-[34px] w-[34px] items-center justify-center rounded-md bg-white/[.06] transition-colors hover:bg-[#A3102A]"
+            >
+              <svg viewBox="0 0 24 24" className="h-[15px] w-[15px] fill-white">
+                <path d="M12 2.2a9.8 9.8 0 0 0-3.1 19.1c.5.1.7-.2.7-.5v-1.8c-2.7.6-3.3-1.3-3.3-1.3-.4-1.1-1-1.4-1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.6-1.4-2.2-.2-4.5-1.1-4.5-4.8 0-1.1.4-1.9 1-2.6-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.3 9.3 0 0 1 4.9 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.5 1 2.6 0 3.7-2.3 4.6-4.5 4.8.4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A9.8 9.8 0 0 0 12 2.2Z" />
+              </svg>
+            </a>
+          </div>
+        </div>
 
-        </a>
+        {/* Platform */}
+        <div>
+          <h4 className="mb-[18px] text-[12px] font-bold uppercase tracking-[.08em] text-white/40">
+            Platform
+          </h4>
+          <ul className="flex flex-col gap-3">
+            <li>
+              <Link to="/" className="text-[14px] text-white/75 transition-colors hover:text-white">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/dashboard/create-donation-request"
+                className="text-[14px] text-white/75 transition-colors hover:text-white"
+              >
+                Donation Request
+              </Link>
+            </li>
+            <li>
+              <Link to="/blogs" className="text-[14px] text-white/75 transition-colors hover:text-white">
+                Blog
+              </Link>
+            </li>
+            <li>
+              <Link to="/fund-page" className="text-[14px] text-white/75 transition-colors hover:text-white">
+                Funding
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Resources */}
+        <div>
+          <h4 className="mb-[18px] text-[12px] font-bold uppercase tracking-[.08em] text-white/40">
+            Resources
+          </h4>
+          <ul className="flex flex-col gap-3">
+            <li>
+              <a href="#" className="text-[14px] text-white/75 transition-colors hover:text-white">
+                Eligibility Guide
+              </a>
+            </li>
+            <li>
+              <Link to="/search" className="text-[14px] text-white/75 transition-colors hover:text-white">
+                Find a Drive
+              </Link>
+            </li>
+            <li>
+              <a href="#" className="text-[14px] text-white/75 transition-colors hover:text-white">
+                For Hospitals
+              </a>
+            </li>
+            <li>
+              <a href="#" className="text-[14px] text-white/75 transition-colors hover:text-white">
+                FAQs
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        {/* Legal */}
+        <div>
+          <h4 className="mb-[18px] text-[12px] font-bold uppercase tracking-[.08em] text-white/40">
+            Legal
+          </h4>
+          <ul className="flex flex-col gap-3">
+            <li>
+              <Link to="/about-us" className="text-[14px] text-white/75 transition-colors hover:text-white">
+                About
+              </Link>
+            </li>
+            <li>
+              <Link to="/about-us" className="text-[14px] text-white/75 transition-colors hover:text-white">
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link to="/about-us" className="text-[14px] text-white/75 transition-colors hover:text-white">
+                Licensing
+              </Link>
+            </li>
+            <li>
+              <Link to="/about-us" className="text-[14px] text-white/75 transition-colors hover:text-white">
+                Contact
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </div>
-</footer>
 
-    );
+      <div className="h-px w-full bg-white/10" />
+
+      <div className="flex flex-wrap items-center justify-between gap-2.5 py-5 text-[12.5px] text-white/45">
+        <span>© 2026 RedHope™. All rights reserved.</span>
+        <span>
+          <a href="#" className="ml-[18px] transition-colors hover:text-white">
+            Status
+          </a>
+          <a href="#" className="ml-[18px] transition-colors hover:text-white">
+            Sitemap
+          </a>
+          <a href="#" className="ml-[18px] transition-colors hover:text-white">
+            Accessibility
+          </a>
+        </span>
+      </div>
+    </footer>
+  );
 };
 
 export default Footer;
