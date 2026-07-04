@@ -222,13 +222,13 @@ const Banner = () => {
 
             {/* node labels, positioned to match SVG coords as % of box */}
             <div className="absolute inset-0">
-              <span className="absolute -translate-x-1/2 text-[10.5px] font-semibold text-[#5B6472]" style={{ left: "50%", top: "1%" }}>
+              <span className="absolute -translate-x-1/2 text-[10.5px] font-semibold text-[#5B6472]" style={{ left: "50%", top: "-1%" }}>
                 Donor
               </span>
-              <span className="absolute -translate-x-1/2 text-[10.5px] font-semibold text-[#5B6472]" style={{ left: "94%", top: "48%" }}>
+              <span className="absolute -translate-x-1/2 text-[10.5px] font-semibold text-[#5B6472]" style={{ left: "90%", top: "48%" }}>
                 Hospital
               </span>
-              <span className="absolute -translate-x-1/2 text-[10.5px] font-semibold text-[#5B6472]" style={{ left: "50%", top: "89%" }}>
+              <span className="absolute -translate-x-1/2 text-[10.5px] font-semibold text-[#5B6472]" style={{ left: "50%", top: "95%" }}>
                 Blood Bank
               </span>
               <span className="absolute -translate-x-1/2 text-[10.5px] font-semibold text-[#5B6472] whitespace-nowrap" style={{ left: "6%", top: "48%" }}>
